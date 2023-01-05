@@ -4,18 +4,15 @@ public class Setor {
     private SetorTipos tipo;
     private Coordenada coordenada;
     private Paredes[] paredes;
+    private boolean[] portas;
     private ArrayList<Inimigo> inimigos;
     private boolean fonte;
     private boolean visitado;
 
-    public Setor(SetorTipos tipo, Coordenada coordenada, Paredes[] paredes, ArrayList<Inimigo> inimigos, boolean fonte,
-            boolean visitado) {
+    public Setor(SetorTipos tipo, boolean fonte) {
         this.tipo = tipo;
-        this.coordenada = coordenada;
-        this.paredes = paredes;
-        this.inimigos = inimigos;
         this.fonte = fonte;
-        this.visitado = visitado;
+        this.portas = new boolean[4];
     }
 
     public SetorTipos getTipo() {
@@ -40,6 +37,14 @@ public class Setor {
 
     public void setParedes(Paredes[] paredes) {
         this.paredes = paredes;
+    }
+
+    public void setPorta(int indexPorta, boolean aberta){
+        this.portas[indexPorta] = aberta;
+    }
+
+    public boolean isAberta(int indexPorta){
+        return this.portas[indexPorta];
     }
 
     public ArrayList<Inimigo> getInimigos() {
