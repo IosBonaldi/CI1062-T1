@@ -4,7 +4,16 @@ public class Suporte extends Jogador {
         super(aTK, dEF, vivo, pontuacao, setor);
     }
 
-    public void curar() {
-
+    /**
+     * Recupera a defesa de um jogador em dois pontos.
+     *
+     * @param alvo o jogador que terá sua defesa recuperada.
+     */
+    public void curar(Jogador alvo) {
+        // Garante que a recuperação só ocorra se o alvo estiver no mesmo setor do
+        // suporte (ou seja o próprio)
+        if (this.setor == alvo.setor) {
+            alvo.DEF += 2;
+        }
     }
 }
