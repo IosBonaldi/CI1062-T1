@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.zip.ZipError;
 
 public class Tabuleiro {
     private Setor[][] setores;
@@ -17,7 +19,8 @@ public class Tabuleiro {
             for(int j = 0; j < colunas; j++)
                 setores[i][j] = new Setor(SetorTipos.NORMAL, false);
 
-        setores[ran.ints(0, 5).findFirst().getAsInt()][ran.ints(0, 5).findFirst().getAsInt()].setFonte(true);
+        setores[4][4].setFonte(true);
+        //setores[ran.ints(0, 5).findFirst().getAsInt()][ran.ints(0, 5).findFirst().getAsInt()].setFonte(true);
 
         gerarPortas();
     }
@@ -31,56 +34,82 @@ public class Tabuleiro {
     }
 
     private void gerarPortas() {
-        acharVirus(new Coordenada(linhas/2, colunas/2), new Coordenada(linhas/2, colunas/2), false);
+        ArrayList<Coordenada> setoresVisitados = new ArrayList<Coordenada>();
+        acharVirus(new Coordenada(linhas/2, colunas/2), setoresVisitados, false);
+        System.out.printf("Aaaa");
+        //abrirPortas(setoresVisitados);
     }
 
-    private void acharVirus(Coordenada coord, Coordenada coordAntiga, boolean virusAchado){
+    private void acharVirus(Coordenada coord, ArrayList<Coordenada> setoresVisitados, boolean virusAchado){
         if(virusAchado == true)
             return;
         if(!coordenadaEhValida(coord))
             return;
         if(setores[coord.getX()][coord.getY()].isFonte()){
             virusAchado = true;
+            setoresVisitados.add(coord);
             return;
         }
+        setoresVisitados.add(coord);
 
-        Coordenada nova_coord = coord;
+        Coordenada novaCoord = new Coordenada(coord.getX(), coord.getY());
+        ArrayList<Coordenada> coordenadasAleatorias = coordenadasAleatorias(coord);
 
         /* (x+1, y) */
-        nova_coord.setX(nova_coord.getX() + 1);
-        if(nova_coord != coordAntiga){
-            /* Abrir portas de nova_coord para a coordAntiga */
-            abrirPorta(nova_coord, coord);
-            acharVirus(nova_coord, coord, virusAchado);
-        }
+        novaCoord.setX(novaCoord.getX() + 1);
+        if(!setorFoiVisitado(novaCoord, setoresVisitados))
+            acharVirus(novaCoord, setoresVisitados, virusAchado);
 
         /* (x-1, y) */
-        nova_coord.setX(nova_coord.getX() -2);
-        if(nova_coord != coordAntiga){
-            /* Abrir portas de nova_coord para a coordAntiga */
-            abrirPorta(nova_coord, coord);
-            acharVirus(nova_coord, coord, virusAchado);
-        }
+        novaCoord.setX(novaCoord.getX() -2);
+        if(!setorFoiVisitado(novaCoord, setoresVisitados))
+            acharVirus(novaCoord, setoresVisitados, virusAchado);
 
-        nova_coord.setX(nova_coord.getX() + 1);
+        novaCoord.setX(novaCoord.getX() + 1);
 
         /* (x, y+1) */
-        nova_coord.setY(nova_coord.getY() + 1);
-        if(nova_coord != coordAntiga){
-            /* Abrir portas de nova_coord para a coordAntiga */
-            abrirPorta(nova_coord, coord);
-            acharVirus(nova_coord, coord, virusAchado);
-        }
+        novaCoord.setY(novaCoord.getY() + 1);
+        if(!setorFoiVisitado(novaCoord, setoresVisitados))
+            acharVirus(novaCoord, setoresVisitados, virusAchado);
 
         /* (x, y-1) */
-        nova_coord.setY(nova_coord.getY() - 2);
-        if(nova_coord != coordAntiga){
-            /* Abrir portas de nova_coord para a coordAntiga */
-            abrirPorta(nova_coord, coord);
-            acharVirus(nova_coord, coord, virusAchado);
-        }
+        novaCoord.setY(novaCoord.getY() - 2);
+        if(!setorFoiVisitado(novaCoord, setoresVisitados))
+            acharVirus(novaCoord, setoresVisitados, virusAchado);
 
         return;
+    }
+
+    private ArrayList<Coordenada> coordenadasAleatorias(Coordenada coord){
+        ArrayList<Coordenada> coordAleatorias = new ArrayList<Coordenada>();
+        Random rand = new Random();
+
+        coordAleatorias.add(new Coordenada(coord.getX() + 1, coord.getY()));
+        coordAleatorias.add(new Coordenada(coord.getX() - 1, coord.getY()));
+        coordAleatorias.add(new Coordenada(coord.getX(), coord.getY() + 1));
+        coordAleatorias.add(new Coordenada(coord.getX(), coord.getY() - 1));
+
+        for(int i = 0; i < coordAleatorias.size(); i++){
+            int randIndex = rand.nextInt(3);
+
+            Coordenada auxAtual = coordAleatorias.get(i);
+            Coordenada auxRand = coordAleatorias.get(randIndex);
+
+            coordAleatorias.set(i, auxRand);
+            coordAleatorias.set(randIndex, auxAtual);
+        }
+
+        return coordAleatorias;
+    }
+
+    private boolean setorFoiVisitado(Coordenada coord, ArrayList<Coordenada> setoresVisitados){
+        for(int i = 0; i < setoresVisitados.size(); i++){
+            Coordenada aux = setoresVisitados.get(i);
+            if((aux.getX() == coord.getX()) && ( aux.getY() == coord.getY())) 
+                return true;
+        }
+            //if(setoresVisitados.get(i).equals(coord))
+        return false;
     }
 
     private boolean coordenadaEhValida(Coordenada coord){
@@ -92,24 +121,10 @@ public class Tabuleiro {
         return true;
     }
 
-    private void abrirPorta(Coordenada nova_coord, Coordenada antiga_coord){
-        /* 
-         * Index das portas
-         * 0 = Cima
-         * 1 = Direita
-         * 2 = Baixo
-         * 3 = Esquerda
-         */
+    private void abrirPorta(Coordenada setoresVisitados){
+        for(int i = 0; i < setoresVisitados.size(); i++){
 
-        /* Abri porta a cima */
-        if((nova_coord.getX() - antiga_coord.getX()) == -1)
-            setores[antiga_coord.getX()][antiga_coord.getY()].setPorta(3, true);
-        else if((nova_coord.getX() - antiga_coord.getX()) == 1)
-            setores[antiga_coord.getX()][antiga_coord.getY()].setPorta(1, true);
-        else if((nova_coord.getY() - antiga_coord.getY()) == -1)
-            setores[antiga_coord.getX()][antiga_coord.getY()].setPorta(0, true);
-        else if((nova_coord.getY() - antiga_coord.getY()) == 1)
-            setores[antiga_coord.getX()][antiga_coord.getY()].setPorta(2, true);
+        }
     }
 
     public Setor buscaSetor(int x, int y) {
