@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.zip.ZipError;
 
 public class Tabuleiro {
     private Setor[][] setores;
@@ -36,29 +35,33 @@ public class Tabuleiro {
     private void gerarPortas() {
         ArrayList<Coordenada> setoresVisitados = new ArrayList<Coordenada>();
         acharVirus(new Coordenada(linhas/2, colunas/2), setoresVisitados, false);
-        System.out.printf("Aaaa");
-        //abrirPortas(setoresVisitados);
+        abrirCaminho(setoresVisitados);
+        System.out.println();
     }
 
     /* Acha um possivel caminha para o virus */
+    /* Assume que a coordenada inicial eh valida */
     private boolean acharVirus(Coordenada coord, ArrayList<Coordenada> setoresVisitados, boolean virusAchado){
         if(virusAchado == true)
-            return false;
-        if(!coordenadaEhValida(coord))
-            return false;
+            return virusAchado;
         if(setores[coord.getX()][coord.getY()].isFonte()){
-            setoresVisitados.add(coord);
-            return true;
+            setoresVisitados.add(coord); return true;
         }
 
         setoresVisitados.add(coord);
 
-        ArrayList<Coordenada> coordAleatorias = coordenadasAleatorias(coord);
+        ArrayList<Coordenada> coordAleatorias = coordenadasAleatoriasValidas(coord, setoresVisitados);
 
-        /* Chama o backtracking paras os 4 movimentos possiveis */
-        for(int i = 0; i < coordAleatorias.size() && !virusAchado; i++){
-            if(!setorFoiVisitado(coordAleatorias.get(i), setoresVisitados))
-                 virusAchado = acharVirus(coordAleatorias.get(i), setoresVisitados, virusAchado);
+        /* Se coordAleatorias esta vazio, eh porque nenhum caminho valido foi encontrado */
+        if(!coordAleatorias.isEmpty()){
+            /* Chama o backtracking paras os movimentos possiveis */
+            for(int i = 0; i < coordAleatorias.size() && !virusAchado; i++){
+                    virusAchado = acharVirus(coordAleatorias.get(i), setoresVisitados, virusAchado);
+
+                    /* Empilha a volta somente quando o virus nao foi achado */
+                    if(!virusAchado)
+                        setoresVisitados.add(coord);
+            }
         }
 
         return virusAchado;
@@ -66,24 +69,31 @@ public class Tabuleiro {
 
     /* Retorna uma lista de 4 possiveis novas coordenadas a partir da coordenada recebida */
     /* Nao verifica se as coordenadas sao validas */
-    private ArrayList<Coordenada> coordenadasAleatorias(Coordenada coord){
+    private ArrayList<Coordenada> coordenadasAleatoriasValidas(Coordenada coord, ArrayList<Coordenada> setoresVisitados){
         ArrayList<Coordenada> coordAleatorias = new ArrayList<Coordenada>();
         Random rand = new Random();
 
-        coordAleatorias.add(new Coordenada(coord.getX() + 1, coord.getY()));
-        coordAleatorias.add(new Coordenada(coord.getX() - 1, coord.getY()));
-        coordAleatorias.add(new Coordenada(coord.getX(), coord.getY() + 1));
-        coordAleatorias.add(new Coordenada(coord.getX(), coord.getY() - 1));
+        Coordenada coord1 = new Coordenada(coord.getX() + 1, coord.getY());
+        Coordenada coord2 = new Coordenada(coord.getX() - 1, coord.getY());
+        Coordenada coord3 = new Coordenada(coord.getX(), coord.getY() + 1);
+        Coordenada coord4 = new Coordenada(coord.getX(), coord.getY() - 1);
+
+        if(coordenadaEhValida(coord1) && !setorFoiVisitado(coord1, setoresVisitados)) coordAleatorias.add(coord1);
+        if(coordenadaEhValida(coord2) && !setorFoiVisitado(coord2, setoresVisitados)) coordAleatorias.add(coord2);
+        if(coordenadaEhValida(coord3) && !setorFoiVisitado(coord3, setoresVisitados)) coordAleatorias.add(coord3);
+        if(coordenadaEhValida(coord4) && !setorFoiVisitado(coord4, setoresVisitados)) coordAleatorias.add(coord4);
 
         /* Embaralha as coordenadas */
-        for(int i = 0; i < coordAleatorias.size(); i++){
-            int randIndex = rand.nextInt(3);
+        if(coordAleatorias.size() > 1){
+            for(int i = 0; i < coordAleatorias.size(); i++){
+                int randIndex = rand.nextInt(coordAleatorias.size() - 1);
 
-            Coordenada auxAtual = coordAleatorias.get(i);
-            Coordenada auxRand = coordAleatorias.get(randIndex);
+                Coordenada auxAtual = coordAleatorias.get(i);
+                Coordenada auxRand = coordAleatorias.get(randIndex);
 
-            coordAleatorias.set(i, auxRand);
-            coordAleatorias.set(randIndex, auxAtual);
+                coordAleatorias.set(i, auxRand);
+                coordAleatorias.set(randIndex, auxAtual);
+            }
         }
 
         return coordAleatorias;
@@ -107,10 +117,51 @@ public class Tabuleiro {
         return true;
     }
 
-    private void abrirPorta(Coordenada setoresVisitados){
-        for(int i = 0; i < setoresVisitados.size(); i++){
+    /* Abre o caminho em setores[][] baseando-se na lista de coordenadas recebida */
+    private void abrirCaminho(ArrayList<Coordenada> setoresVisitados){
+        for(int i = 0; i < setoresVisitados.size() - 1; i++){
+            Coordenada coordSetorAtual = setoresVisitados.get(i);
+            Coordenada coordSetorSeguinte = setoresVisitados.get(i + 1);
 
+            Direcao dir = calcularDirecao(coordSetorAtual, coordSetorSeguinte);
+
+            if(dir == null)
+                throw new NullPointerException("Nenhuma direcao valida encontrada!");
+
+            switch(calcularDirecao(coordSetorAtual, coordSetorSeguinte)){
+                case CIMA:
+                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.CIMA.ordinal());
+                    break;
+                case DIREITA:
+                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.DIREITA.ordinal());
+                    break;
+                case BAIXO:
+                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.BAIXO.ordinal());
+                    break;
+                case ESQUERDA:
+                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.ESQUERDA.ordinal());
+                    break;
+            }
         }
+    }
+
+    private void abrirPorta(Setor setor, int portaIndex){
+        setor.setPorta(portaIndex, true);
+    }
+
+    /* Retorna a direcao da origem para o destino */
+    /* Caso nenhuma direcao valida for encontrada, retorna null */
+    private Direcao calcularDirecao(Coordenada origem, Coordenada destino){
+        if((destino.getX() - origem.getX()) == 1)
+            return Direcao.DIREITA;
+        else if((destino.getX() - origem.getX()) == -1)
+            return Direcao.ESQUERDA;
+        else if((destino.getY() - origem.getY()) == 1)
+            return Direcao.BAIXO;
+        else if((destino.getY() - origem.getY()) == -1)
+            return Direcao.CIMA;
+
+        return null;
     }
 
     public Setor buscaSetor(int x, int y) {
@@ -119,49 +170,12 @@ public class Tabuleiro {
 
     public void printaTabuleiro(){
         System.out.printf("\n");
-        for(int i = 0; i < linhas; i++){
-            System.out.printf("\n");
-            System.out.printf("\n");
-            /* Cima */
-            for(int j = 0; j < colunas; j++){
-                for(int k = 0; k < 5; k++)
-                    System.out.printf(" ");
-                if(setores[i][j].isAberta(0))
-                    System.out.print("*");
-                else 
-                    System.out.print("#");
-            }
-
-            System.out.printf("\n");
-
-            /* Lados */
-            for(int j = 0; j < colunas; j++){
-                for(int k = 0; k < 2; k++)
-                    System.out.printf(" ");
-
-                if(setores[i][j].isAberta(3))
-                    System.out.print("*");
-                else 
-                    System.out.print("#");
-                
-                for(int k = 0; k < 2; k++)
-                    System.out.printf(" ");
-
-                if(setores[i][j].isAberta(1))
-                    System.out.print("*");
-                else 
-                    System.out.print("#");
-            }
-            System.out.printf("\n");
-            /* Baixo */
-            for(int j = 0; j < colunas; j++){
-                for(int k = 0; k < 5; k++)
-                    System.out.printf(" ");
-                if(setores[i][j].isAberta(2))
-                    System.out.print("*");
-                else 
-                    System.out.print("#");
-            }
+        for (int y = 0; y < linhas; y++) {
+            System.out.printf("\n \n");
+            for (int x = 0; x < colunas; x++) {
+                System.out.printf("   ");
+                System.out.printf("c: %b d: %b b: %b e:%b", setores[x][y].portas[0],setores[x][y].portas[1],setores[x][y].portas[2],setores[x][y].portas[3]);
+           } 
         }
         System.out.printf("\n");
     }
