@@ -67,8 +67,7 @@ public class Tabuleiro {
         return virusAchado;
     }
 
-    /* Retorna uma lista de 4 possiveis novas coordenadas a partir da coordenada recebida */
-    /* Nao verifica se as coordenadas sao validas */
+    /* Retorna uma lista possiveis novas coordenadas validas a partir da coordenada recebida */
     private ArrayList<Coordenada> coordenadasAleatoriasValidas(Coordenada coord, ArrayList<Coordenada> setoresVisitados){
         ArrayList<Coordenada> coordAleatorias = new ArrayList<Coordenada>();
         Random rand = new Random();
@@ -168,15 +167,4 @@ public class Tabuleiro {
         return null;
     }
 
-    public void printaTabuleiro(){
-        System.out.printf("\n");
-        for (int y = 0; y < linhas; y++) {
-            System.out.printf("\n \n");
-            for (int x = 0; x < colunas; x++) {
-                System.out.printf("   ");
-                System.out.printf("c: %b d: %b b: %b e:%b", setores[x][y].portas[0],setores[x][y].portas[1],setores[x][y].portas[2],setores[x][y].portas[3]);
-           } 
-        }
-        System.out.printf("\n");
-    }
 }
