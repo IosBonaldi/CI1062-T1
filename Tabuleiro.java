@@ -40,46 +40,32 @@ public class Tabuleiro {
         //abrirPortas(setoresVisitados);
     }
 
-    private void acharVirus(Coordenada coord, ArrayList<Coordenada> setoresVisitados, boolean virusAchado){
+    /* Acha um possivel caminha para o virus */
+    private boolean acharVirus(Coordenada coord, ArrayList<Coordenada> setoresVisitados, boolean virusAchado){
         if(virusAchado == true)
-            return;
+            return false;
         if(!coordenadaEhValida(coord))
-            return;
+            return false;
         if(setores[coord.getX()][coord.getY()].isFonte()){
-            virusAchado = true;
             setoresVisitados.add(coord);
-            return;
+            return true;
         }
+
         setoresVisitados.add(coord);
 
-        Coordenada novaCoord = new Coordenada(coord.getX(), coord.getY());
-        ArrayList<Coordenada> coordenadasAleatorias = coordenadasAleatorias(coord);
+        ArrayList<Coordenada> coordAleatorias = coordenadasAleatorias(coord);
 
-        /* (x+1, y) */
-        novaCoord.setX(novaCoord.getX() + 1);
-        if(!setorFoiVisitado(novaCoord, setoresVisitados))
-            acharVirus(novaCoord, setoresVisitados, virusAchado);
+        /* Chama o backtracking paras os 4 movimentos possiveis */
+        for(int i = 0; i < coordAleatorias.size() && !virusAchado; i++){
+            if(!setorFoiVisitado(coordAleatorias.get(i), setoresVisitados))
+                 virusAchado = acharVirus(coordAleatorias.get(i), setoresVisitados, virusAchado);
+        }
 
-        /* (x-1, y) */
-        novaCoord.setX(novaCoord.getX() -2);
-        if(!setorFoiVisitado(novaCoord, setoresVisitados))
-            acharVirus(novaCoord, setoresVisitados, virusAchado);
-
-        novaCoord.setX(novaCoord.getX() + 1);
-
-        /* (x, y+1) */
-        novaCoord.setY(novaCoord.getY() + 1);
-        if(!setorFoiVisitado(novaCoord, setoresVisitados))
-            acharVirus(novaCoord, setoresVisitados, virusAchado);
-
-        /* (x, y-1) */
-        novaCoord.setY(novaCoord.getY() - 2);
-        if(!setorFoiVisitado(novaCoord, setoresVisitados))
-            acharVirus(novaCoord, setoresVisitados, virusAchado);
-
-        return;
+        return virusAchado;
     }
 
+    /* Retorna uma lista de 4 possiveis novas coordenadas a partir da coordenada recebida */
+    /* Nao verifica se as coordenadas sao validas */
     private ArrayList<Coordenada> coordenadasAleatorias(Coordenada coord){
         ArrayList<Coordenada> coordAleatorias = new ArrayList<Coordenada>();
         Random rand = new Random();
@@ -89,6 +75,7 @@ public class Tabuleiro {
         coordAleatorias.add(new Coordenada(coord.getX(), coord.getY() + 1));
         coordAleatorias.add(new Coordenada(coord.getX(), coord.getY() - 1));
 
+        /* Embaralha as coordenadas */
         for(int i = 0; i < coordAleatorias.size(); i++){
             int randIndex = rand.nextInt(3);
 
@@ -108,7 +95,6 @@ public class Tabuleiro {
             if((aux.getX() == coord.getX()) && ( aux.getY() == coord.getY())) 
                 return true;
         }
-            //if(setoresVisitados.get(i).equals(coord))
         return false;
     }
 
