@@ -2,6 +2,9 @@ public class Jogador extends Personagem {
     protected int pontuacao;
     protected Setor setor;
 
+    public Jogador(boolean vivo) {
+        super(0, 0, vivo);
+    }
     public Jogador(int aTK, int dEF, boolean vivo, int pontuacao, Setor setor) {
         super(aTK, dEF, vivo);
         this.pontuacao = pontuacao;
@@ -32,7 +35,7 @@ public class Jogador extends Personagem {
 
     }
 
-    public void movimentar() {
-
+    public void movimentar(Tabuleiro T, Direcao D) {
+        
     }
 }
