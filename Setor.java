@@ -8,9 +8,9 @@ public class Setor {
     private boolean fonte;
     private boolean visitado;
 
-    public Setor() {
+    public Setor(Coordenada coordenada) {
         this.tipo = gerarTipoSetor();
-        this.coordenada = new Coordenada(-1, -1);
+        this.coordenada = coordenada;
         this.construcoes = gerarConstrucoesIniciais();
         this.inimigos = new ArrayList<>();
         this.fonte = false;
