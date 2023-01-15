@@ -4,8 +4,8 @@ public class Jogador extends Personagem {
     protected int pontuacao;
     protected Setor setor;
 
-    public Jogador(int aTK, int dEF, boolean vivo, int pontuacao, Setor setor) {
-        super(aTK, dEF, vivo);
+    public Jogador(int atk, int def, boolean vivo, int pontuacao, Setor setor) {
+        super(atk, def, vivo);
         this.pontuacao = pontuacao;
         this.setor = setor;
     }
@@ -38,7 +38,7 @@ public class Jogador extends Personagem {
         // Ataca se o setor não for oculto ou se a constante gerada for 1 (50/100 de
         // chance de ataque)
         if (this.setor.getTipo() != SetorTipos.OCULTO || acao == 1) {
-            alvo.DEF -= this.ATK;
+            alvo.def -= this.atk;
         }
     }
 
@@ -55,16 +55,16 @@ public class Jogador extends Personagem {
             // Executa recuperação ou decréscimo de DEFs conforme constante gerada
             switch (achado) {
                 case 4:
-                    this.DEF += 1;
+                    this.def += 1;
                     break;
 
                 case 5:
-                    this.DEF += 2;
+                    this.def += 2;
                     break;
 
                 case 6:
                     for (Inimigo i : this.setor.getInimigos()) {
-                        i.DEF--;
+                        i.def--;
                     }
                     break;
 
