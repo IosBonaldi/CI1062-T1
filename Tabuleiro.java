@@ -1,7 +1,8 @@
 public class Tabuleiro {
     private Setor[][] setores;
-    
-    // Ao inves de receber uma matriz como parametro, receber o numero de linhas e colunas da matriz
+
+    // Ao inves de receber uma matriz como parametro, receber o numero de linhas e
+    // colunas da matriz
     public Tabuleiro(Setor[][] setores) {
         this.setores = setores;
     }
@@ -16,9 +17,5 @@ public class Tabuleiro {
 
     private void gerarPortas() {
 
-    }
-
-    public Setor buscaSetor(int x, int y) {
-        return null;
     }
 }

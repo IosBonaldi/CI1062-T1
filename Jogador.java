@@ -88,27 +88,27 @@ public class Jogador extends Personagem {
             // eventuais colisões com as bordas
             switch (d) {
                 case CIMA:
-                    if (this.setor.getCoordenada().getY() > 1) {
-                        this.setor = t.buscaSetor(this.setor.getCoordenada().getX(),
-                                this.setor.getCoordenada().getY() - 1);
+                    if (this.setor.getCoordenada().getY() > 0) {
+                        this.setor = t.getSetores()[this.setor.getCoordenada().getX()][this.setor.getCoordenada().getY()
+                                - 1];
                     }
                     break;
                 case DIREITA:
-                    if (this.setor.getCoordenada().getX() < 5) {
-                        this.setor = t.buscaSetor(this.setor.getCoordenada().getX() + 1,
-                                this.setor.getCoordenada().getY());
+                    if (this.setor.getCoordenada().getX() < 4) {
+                        this.setor = t.getSetores()[this.setor.getCoordenada().getX() + 1][this.setor.getCoordenada()
+                                .getY()];
                     }
                     break;
                 case BAIXO:
-                    if (this.setor.getCoordenada().getY() < 5) {
-                        this.setor = t.buscaSetor(this.setor.getCoordenada().getX(),
-                                this.setor.getCoordenada().getY() + 1);
+                    if (this.setor.getCoordenada().getY() < 4) {
+                        this.setor = t.getSetores()[this.setor.getCoordenada().getX()][this.setor.getCoordenada().getY()
+                                + 1];
                     }
                     break;
                 case ESQUERDA:
-                    if (this.setor.getCoordenada().getX() > 1) {
-                        this.setor = t.buscaSetor(this.setor.getCoordenada().getX() - 1,
-                                this.setor.getCoordenada().getY());
+                    if (this.setor.getCoordenada().getX() > 0) {
+                        this.setor = t.getSetores()[this.setor.getCoordenada().getX() - 1][this.setor.getCoordenada()
+                                .getY()];
                     }
                     break;
             }
