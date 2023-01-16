@@ -21,10 +21,6 @@ public class Tabuleiro {
 
     }
 
-    public Setor buscaSetor(int x, int y) {
-        return null;
-    }
-
     /**
      * Retorna o texto correspondente ao interior de um setor específico.
      *
