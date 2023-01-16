@@ -39,6 +39,13 @@ public class Jogador extends Personagem {
         // chance de ataque)
         if (this.setor.getTipo() != SetorTipos.OCULTO || acao == 1) {
             alvo.def -= this.atk;
+
+            // Se eliminar o alvo haverá atualização do atributo vivo do alvo e 
+            // incremento da pontuação do jogador que matou o vírus;
+            if(alvo.def <= 0){
+                alvo.vivo = false;
+                this.pontuacao += alvo.atk * 10;
+            }
         }
     }
 
@@ -64,7 +71,16 @@ public class Jogador extends Personagem {
 
                 case 6:
                     for (Inimigo i : this.setor.getInimigos()) {
-                        i.def--;
+                        // Verifica se inimigo está vivo, caso estiver diminui sua vida e
+                        // analisa novamente se ele está vivo ou não, caso morrer atualiza
+                        // a pontuação do jogador que realizou a ação de procura;
+                        if(i.vivo){
+                            i.def--;
+                            if(i.def <= 0){
+                                i.vivo = false;
+                                this.pontuacao += i.atk * 10;
+                            }
+                        }
                     }
                     break;
 
