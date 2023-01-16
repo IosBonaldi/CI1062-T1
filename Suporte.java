@@ -1,7 +1,7 @@
 public class Suporte extends Jogador {
 
-    public Suporte(int aTK, int dEF, boolean vivo, int pontuacao, Setor setor) {
-        super(aTK, dEF, vivo, pontuacao, setor);
+    public Suporte(int atk, int def, boolean vivo, int pontuacao, Setor setor) {
+        super(atk, def, vivo, pontuacao, setor);
     }
 
     /**
@@ -13,7 +13,7 @@ public class Suporte extends Jogador {
         // Garante que a recuperação só ocorra se o alvo estiver no mesmo setor do
         // suporte (ou seja o próprio)
         if (this.setor == alvo.setor) {
-            alvo.DEF += 2;
+            alvo.def += 2;
         }
     }
 }

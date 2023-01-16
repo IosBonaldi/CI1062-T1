@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Inimigo extends Personagem {
-    public Inimigo(int aTK, int dEF, boolean vivo) {
-        super(aTK, dEF, vivo);
+    public Inimigo(int atk, int def, boolean vivo) {
+        super(atk, def, vivo);
     }
 
     /**
@@ -17,7 +17,7 @@ public class Inimigo extends Personagem {
         int acao = r.nextInt(6) + 1;
         // Ataca se a constante gerada for par
         if (acao % 2 == 0) {
-            alvo.DEF -= this.ATK;
+            alvo.def -= this.atk;
         }
     }
 
@@ -34,7 +34,7 @@ public class Inimigo extends Personagem {
             int acao = r.nextInt(6) + 1;
             // Ataca se a constante gerada for par
             if (acao % 2 == 0) {
-                j.DEF -= this.ATK;
+                j.def -= this.atk;
             }
         }
     }

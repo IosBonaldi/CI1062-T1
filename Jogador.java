@@ -4,8 +4,8 @@ public class Jogador extends Personagem {
     protected int pontuacao;
     protected Setor setor;
 
-    public Jogador(int aTK, int dEF, boolean vivo, int pontuacao, Setor setor) {
-        super(aTK, dEF, vivo);
+    public Jogador(int atk, int def, boolean vivo, int pontuacao, Setor setor) {
+        super(atk, def, vivo);
         this.pontuacao = pontuacao;
         this.setor = setor;
     }
@@ -38,13 +38,13 @@ public class Jogador extends Personagem {
         // Ataca se o setor não for oculto ou se a constante gerada for 1 (50/100 de
         // chance de ataque)
         if (this.setor.getTipo() != SetorTipos.OCULTO || acao == 1) {
-            alvo.DEF -= this.ATK;
+            alvo.def -= this.atk;
 
             // Se eliminar o alvo haverá atualização do atributo vivo do alvo e 
             // incremento da pontuação do jogador que matou o vírus;
-            if(alvo.DEF <= 0){
+            if(alvo.def <= 0){
                 alvo.vivo = false;
-                this.pontuacao += alvo.ATK * 10;
+                this.pontuacao += alvo.atk * 10;
             }
         }
     }
@@ -62,11 +62,11 @@ public class Jogador extends Personagem {
             // Executa recuperação ou decréscimo de DEFs conforme constante gerada
             switch (achado) {
                 case 4:
-                    this.DEF += 1;
+                    this.def += 1;
                     break;
 
                 case 5:
-                    this.DEF += 2;
+                    this.def += 2;
                     break;
 
                 case 6:
@@ -75,10 +75,10 @@ public class Jogador extends Personagem {
                         // analisa novamente se ele está vivo ou não, caso morrer atualiza
                         // a pontuação do jogador que realizou a ação de procura;
                         if(i.vivo){
-                            i.DEF--;
-                            if(i.DEF <= 0){
+                            i.def--;
+                            if(i.def <= 0){
                                 i.vivo = false;
-                                this.pontuacao += i.ATK * 10;
+                                this.pontuacao += i.atk * 10;
                             }
                         }
                     }
