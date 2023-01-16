@@ -1,28 +1,28 @@
 public abstract class Personagem {
-    protected int ATK;
-    protected int DEF;
+    protected int atk;
+    protected int def;
     protected boolean vivo;
 
-    public Personagem(int aTK, int dEF, boolean vivo) {
-        ATK = aTK;
-        DEF = dEF;
+    public Personagem(int atk, int def, boolean vivo) {
+        this.atk = atk;
+        this.def = def;
         this.vivo = vivo;
     }
 
-    public int getATK() {
-        return ATK;
+    public int getAtk() {
+        return atk;
     }
 
-    public void setATK(int aTK) {
-        ATK = aTK;
+    public void setAtk(int atk) {
+        this.atk = atk;
     }
 
-    public int getDEF() {
-        return DEF;
+    public int getDef() {
+        return def;
     }
 
-    public void setDEF(int dEF) {
-        DEF = dEF;
+    public void setDef(int def) {
+        this.def = def;
     }
 
     public boolean isVivo() {
