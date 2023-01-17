@@ -2,11 +2,26 @@ import java.util.ArrayList;
 
 public class Tabuleiro {
     private Setor[][] setores;
+    final private int altura;
+    final private int largura;
 
-    // Ao inves de receber uma matriz como parametro, receber o numero de linhas e
-    // colunas da matriz
-    public Tabuleiro(Setor[][] setores) {
-        this.setores = setores;
+    /**
+     * 
+     * @param altura Altura do tabuleiro 
+     * @param largura Largura do tabuleiro 
+     */
+    public Tabuleiro(int altura, int largura) {
+        this.altura = altura;
+        this.largura = largura;
+        this.setores = new Setor[largura][altura];
+
+        /* Aloca os setores */
+        for(int y = 0; y < altura; y++)
+            for(int x = 0; x < largura; x++)
+                setores[x][y] = new Setor(new Coordenada(x, y));
+
+        gerarFonte();
+        gerarPortas();
     }
 
     public Setor[][] getSetores() {
@@ -15,6 +30,10 @@ public class Tabuleiro {
 
     public void setSetores(Setor[][] setores) {
         this.setores = setores;
+    }
+
+    private void gerarFonte(){
+
     }
 
     private void gerarPortas() {
