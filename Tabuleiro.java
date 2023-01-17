@@ -7,21 +7,6 @@ public class Tabuleiro {
     int colunas;
 
     public Tabuleiro(int linhas, int colunas){
-        this.linhas = linhas;
-        this.colunas = colunas;
-
-        this.setores = new Setor[linhas][colunas];
-
-        Random ran = new Random();
-
-        for(int i = 0; i < linhas; i++)
-            for(int j = 0; j < colunas; j++)
-                setores[i][j] = new Setor(SetorTipos.NORMAL, false);
-
-        setores[4][4].setFonte(true);
-        //setores[ran.ints(0, 5).findFirst().getAsInt()][ran.ints(0, 5).findFirst().getAsInt()].setFonte(true);
-
-        gerarPortas();
     }
 
     public Setor[][] getSetores() {
