@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class PartidaVirus {
@@ -67,19 +68,30 @@ public class PartidaVirus {
 
     }
 
-    public void chamarTurno(Personagem personagem) {
-        Scanner input = new Scanner(System.in);
+    public void chamarTurno(Personagem personagem, Scanner input) {
         char entrada;
 
         if((personagem instanceof Jogador) && !(personagem instanceof Suporte)) {
             Jogador p1 = (Jogador)personagem;
+            Boolean podeMovimentar = true;
 
-            // Lidar com a questão de ter inimigos no setor ou não pra saber se ele pode movimentar ou não
-            // Movimenta
-            System.out.printf("Where to go PLAYER 1 (P1)?\n");
-            opcoesDeMovimento();
-            entrada = input.nextLine().charAt(0);
-            movimentacao(p1, entrada);
+            // Lida com a questão de ter inimigos no setor ou não pra saber se ele pode movimentar ou não
+            // Não foi testada, alguém vê necessidade disso virar um método/função?
+            for(Inimigo i: p1.getSetor().getInimigos()) {
+                if(i.isVivo())
+                    podeMovimentar = false;
+            }
+
+            // Movimentação
+            if(podeMovimentar) {
+                entrada = 'X';
+                while(validaEntrada(entrada) == 0) {
+                    System.out.printf("Where to go PLAYER 1 (P1)?\n");
+                    opcoesDeMovimento();
+                    entrada = input.nextLine().charAt(0);
+                }
+                movimentacao(p1, entrada);
+            }
             
             // Ações (verificar entrada)
             for(int i = 0; i < 2; i++) {
@@ -97,12 +109,25 @@ public class PartidaVirus {
 
         if(personagem instanceof Suporte) {
             Suporte p2 = (Suporte)personagem;
-            // Lidar com a questão de ter inimigos no setor ou não pra saber se ele pode movimentar ou não
-            // Movimenta
-            System.out.printf("Where to go PLAYER 2 (P2)?\n");
-            opcoesDeMovimento();
-            entrada = input.nextLine().charAt(0);
-            movimentacao(p2, entrada);
+            Boolean podeMovimentar = true;
+
+            // Lida com a questão de ter inimigos no setor ou não pra saber se ele pode movimentar ou não
+            // Não foi testada, alguém vê necessidade disso virar um método/função?
+            for(Inimigo i: p2.getSetor().getInimigos()) {
+                if(i.isVivo())
+                    podeMovimentar = false;
+            }
+
+            // Movimentação
+            if(podeMovimentar) {
+                entrada = 'X';
+                while(validaEntrada(entrada) == 0) {
+                    System.out.printf("Where to go PLAYER 2 (P2)?\n");
+                    opcoesDeMovimento();
+                    entrada = input.nextLine().charAt(0);
+                }
+                movimentacao(p2, entrada);
+            }
             
             // Ações (verificar entrada)
             for(int i = 0; i < 2; i++) {
@@ -129,8 +154,25 @@ public class PartidaVirus {
                 }
             }
         }
+    }
 
-        input.close();
+    // Sobrecarga de métodos porque os parâmetros pra inimigos eh diferente...
+    public void chamarTurno(Personagem personagem, Personagem alvoInimigo) {
+        if(personagem instanceof Inimigo) { // Talvez não seja mais necessário fazer essa verificação! Me parece uma boa prática..
+            Inimigo enemy = (Inimigo)personagem;
+            Random random = new Random();
+            int num;
+            
+            if(enemy.isVivo()) {
+                num = random.nextInt(6) + 1;
+                System.out.println(num);
+                // Caso o número aleatório seja par
+                if((num % 2) == 0) {
+                    enemy.atacar(alvoInimigo);
+                    System.out.println(num + ": atacou;"); // Teste
+                }
+            }
+        }
     }
 
     public void opcoesDeMovimento() {
@@ -161,11 +203,13 @@ public class PartidaVirus {
         } 
     }
 
-    public void iniciarTurno() {}
-
-    public void imprimirTabuleiro() {
-
+    public int validaEntrada(char entrada) {
+        if(entrada == 'U' || entrada == 'D' || entrada == 'L' || entrada == 'R')
+            return 1;
+        return 0;
     }
+
+    public void imprimirTabuleiro() {}
 
     public void incrementaCiclo() {
         this.ciclos++;
