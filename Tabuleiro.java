@@ -37,7 +37,8 @@ public class Tabuleiro {
         if(virusAchado == true)
             return virusAchado;
         if(setores[coord.getX()][coord.getY()].isFonte()){
-            setoresVisitados.add(coord); return true;
+            setoresVisitados.add(coord); 
+            return true;
         }
 
         setoresVisitados.add(coord);
@@ -63,7 +64,7 @@ public class Tabuleiro {
      * Retorna uma lista de todas as possiveis validas novas coordenadas a partir da coordenada recebida
      * setores que ja foram visitado nao sao considerados validos
      * 
-     * @param coord Coordenada em que atul
+     * @param coord Coordenada atual
      * @param setoresVisitados 
      * @return Lista com possiveis novas coordenadas validas
      */
@@ -141,7 +142,7 @@ public class Tabuleiro {
             if(dir == null)
                 throw new NullPointerException("Nenhuma direcao valida encontrada!");
 
-            switch(calcularDirecao(coordSetorAtual, coordSetorSeguinte)){
+            switch(dir){
                 case CIMA:
                     abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.CIMA.ordinal());
                     break;
