@@ -1,16 +1,15 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Tabuleiro {
     private Setor[][] setores;
     final private int altura;
     final private int largura;
 
-    /**
-     * 
-     * @param altura Altura do tabuleiro 
-     * @param largura Largura do tabuleiro 
-     */
     public Tabuleiro(int altura, int largura) {
+        if(altura <= 0 || largura <= 0)
+            throw new IllegalArgumentException("Altura e/ou largura invalidas!");
+
         this.altura = altura;
         this.largura = largura;
         this.setores = new Setor[largura][altura];
@@ -33,7 +32,16 @@ public class Tabuleiro {
     }
 
     private void gerarFonte(){
+        Random rand = new Random();
+        Coordenada coordVirus = new Coordenada(rand.nextInt(largura), rand.nextInt(altura));
 
+        /* Gera novas coordenadas enquanto a coordenada sorteada coincidir com o meio do tabuleiro */
+        while(coordVirus.getX() == largura/2 && coordVirus.getY() == altura/2){
+            coordVirus.setX(rand.nextInt(largura));
+            coordVirus.setY(rand.nextInt(altura));
+        }
+
+        setores[coordVirus.getX()][coordVirus.getY()].setFonte(true);
     }
 
     private void gerarPortas() {
