@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Setor {
     private SetorTipos tipo;
     private Coordenada coordenada;
-    private Paredes[] paredes;
     private boolean[] portas;
     private ArrayList<Inimigo> inimigos;
     private boolean fonte;
