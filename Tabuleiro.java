@@ -21,11 +21,15 @@ public class Tabuleiro {
         ArrayList<Coordenada> setoresVisitados = new ArrayList<Coordenada>();
         acharVirus(new Coordenada(linhas/2, colunas/2), setoresVisitados, false);
         abrirCaminho(setoresVisitados);
-        System.out.println();
     }
 
-    /* Acha um possivel caminha para o virus */
-    /* Assume que a coordenada inicial eh valida */
+    /**
+     * 
+     * @param coord Coordenada inicial do jogador
+     * @param setoresVisitados Lista de setores ja visitados
+     * @param virusAchado Boolean para saber se o virus da foi achado
+     * @return
+    */
     private boolean acharVirus(Coordenada coord, ArrayList<Coordenada> setoresVisitados, boolean virusAchado){
         if(virusAchado == true)
             return virusAchado;
@@ -52,7 +56,14 @@ public class Tabuleiro {
         return virusAchado;
     }
 
-    /* Retorna uma lista possiveis novas coordenadas validas a partir da coordenada recebida */
+    /**
+     * Retorna uma lista de todas as possiveis validas novas coordenadas a partir da coordenada recebida
+     * setores que ja foram visitado nao sao considerados validos
+     * 
+     * @param coord Coordenada em que atul
+     * @param setoresVisitados 
+     * @return Lista com possiveis novas coordenadas validas
+     */
     private ArrayList<Coordenada> coordenadasAleatoriasValidas(Coordenada coord, ArrayList<Coordenada> setoresVisitados){
         ArrayList<Coordenada> coordAleatorias = new ArrayList<Coordenada>();
         Random rand = new Random();
@@ -83,6 +94,12 @@ public class Tabuleiro {
         return coordAleatorias;
     }
 
+    /**
+     * Retora TRUE se a coordenada ja foi visitado e FALSE do contrario 
+     * @param coord
+     * @param setoresVisitados
+     * @return
+     */
     private boolean setorFoiVisitado(Coordenada coord, ArrayList<Coordenada> setoresVisitados){
         for(int i = 0; i < setoresVisitados.size(); i++){
             Coordenada aux = setoresVisitados.get(i);
@@ -92,6 +109,12 @@ public class Tabuleiro {
         return false;
     }
 
+    /**
+     * Retorna TRUE se a coordenada eh valida baseando se nos limites do Tabuleiro
+     * do contrario retorna FALSE 
+     * @param coord
+     * @return
+     */
     private boolean coordenadaEhValida(Coordenada coord){
         if(coord.getX() >= linhas || coord.getX() < 0)
             return false;
@@ -101,7 +124,10 @@ public class Tabuleiro {
         return true;
     }
 
-    /* Abre o caminho em setores[][] baseando-se na lista de coordenadas recebida */
+    /**
+     * Abre o caminho em setores[][] baseando-se na lista de coordenadas recebida
+     * @param setoresVisitados
+     */
     private void abrirCaminho(ArrayList<Coordenada> setoresVisitados){
         for(int i = 0; i < setoresVisitados.size() - 1; i++){
             Coordenada coordSetorAtual = setoresVisitados.get(i);
@@ -129,12 +155,23 @@ public class Tabuleiro {
         }
     }
 
+    /**
+     * Abra a porta na posicao portaIndex do setor recebido  
+     * 
+     * @param setor Setor em qual a porta vai ser aberta
+     * @param portaIndex Index da porta
+     */
     private void abrirPorta(Setor setor, int portaIndex){
         setor.setPorta(portaIndex, true);
     }
 
-    /* Retorna a direcao da origem para o destino */
-    /* Caso nenhuma direcao valida for encontrada, retorna null */
+    /**
+     * Retorna a direcao da origem para o destino
+     * 
+     * @param origem
+     * @param destino
+     * @return
+     */
     private Direcao calcularDirecao(Coordenada origem, Coordenada destino){
         if((destino.getX() - origem.getX()) == 1)
             return Direcao.DIREITA;
