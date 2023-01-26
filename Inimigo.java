@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Inimigo extends Personagem {
-    public Inimigo(int atk, int def, boolean vivo) {
-        super(atk, def, vivo);
+    public Inimigo(int atk, int def) {
+        super(atk, def);
     }
 
     /**
