@@ -62,7 +62,7 @@ public class Setor {
     }
 
     public Inimigo getInimigo(int i) {
-        return inimigos.get(i);
+        return ((i<inimigos.size())?inimigos.get(i):null);
     }
     
     public SetorTipos gerarTipoSetor(){
