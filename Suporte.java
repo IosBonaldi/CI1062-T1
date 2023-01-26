@@ -12,8 +12,8 @@ public class Suporte extends Jogador {
     public void curar(Jogador alvo) {
         // Garante que a recuperação só ocorra se o alvo estiver no mesmo setor do
         // suporte (ou seja o próprio)
-        if (this.setor == alvo.setor) {
-            alvo.def += 2;
+        if (this.getSetor() == alvo.getSetor() && alvo.isVivo()) {
+            alvo.setDef(alvo.getDef() + 2);
         }
     }
 }
