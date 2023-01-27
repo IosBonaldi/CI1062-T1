@@ -2,10 +2,23 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Inimigo extends Personagem {
-    public Inimigo(int atk, int def, boolean vivo) {
+    private Integer posicao;
+
+    public Inimigo(int atk, int def, boolean vivo, Integer posicao) {
         super(atk, def, vivo);
+        this.posicao = posicao;
     }
 
+    public Integer getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(Integer posicao) {
+        if(posicao >= 1 && posicao <= 3){
+            this.posicao = posicao;
+        }
+    }
+    
     /**
      * Realiza o ataque de um inimigo à um único jogador.
      *
