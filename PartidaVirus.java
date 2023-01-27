@@ -86,13 +86,13 @@ public class PartidaVirus {
 
             // Movimentação
             if (podeMovimentar) {
-                entrada = 'X';
-                while (validaEntrada(entrada) == 0) {
+                Direcao dEntrada = null;
+                while (dEntrada == null) {
                     System.out.printf("Where to go PLAYER 1 (P1)?\n");
                     opcoesDeMovimento();
-                    entrada = input.nextLine().charAt(0);
+                    dEntrada = validaEntrada(input.nextLine().charAt(0));
                 }
-                movimentacao(p1, entrada);
+                p1.movimentar(this.getTabuleiro(), dEntrada);
             }
 
             // Ações (verificar entrada)
@@ -123,13 +123,13 @@ public class PartidaVirus {
 
             // Movimentação
             if (podeMovimentar) {
-                entrada = 'X';
-                while (validaEntrada(entrada) == 0) {
+                Direcao dEntrada = null;
+                while (dEntrada == null) {
                     System.out.printf("Where to go PLAYER 2 (P2)?\n");
                     opcoesDeMovimento();
-                    entrada = input.nextLine().charAt(0);
+                    dEntrada = validaEntrada(input.nextLine().charAt(0));
                 }
-                movimentacao(p2, entrada);
+                p2.movimentar(this.getTabuleiro(), dEntrada);
             }
 
             // Ações (verificar entrada)
@@ -194,25 +194,25 @@ public class PartidaVirus {
             System.out.printf("    c- heal\n");
     }
 
-    public void movimentacao(Personagem personagem, char entrada) {
-        Jogador jogador = (Jogador) personagem;
-        if (entrada == 'U') {
-            jogador.movimentar(tabuleiro, Direcao.CIMA);
-        } else if (entrada == 'D') {
-            jogador.movimentar(tabuleiro, Direcao.BAIXO);
-        } else if (entrada == 'L') {
-            jogador.movimentar(tabuleiro, Direcao.ESQUERDA);
-        } else if (entrada == 'R') {
-            jogador.movimentar(tabuleiro, Direcao.DIREITA);
+    public Direcao validaEntrada(char entrada) {
+        switch (entrada) {
+            case 'U':
+                return Direcao.CIMA;
+
+            case 'D':
+                return Direcao.BAIXO;
+
+            case 'L':
+                return Direcao.ESQUERDA;
+
+            case 'R':
+                return Direcao.DIREITA;
+
+            default:
+                return null;
         }
     }
-
-    public int validaEntrada(char entrada) {
-        if (entrada == 'U' || entrada == 'D' || entrada == 'L' || entrada == 'R')
-            return 1;
-        return 0;
-    }
-
+    
     public void imprimirTabuleiro() {
     }
 
