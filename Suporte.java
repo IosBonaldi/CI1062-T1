@@ -1,7 +1,7 @@
 public class Suporte extends Jogador {
 
-    public Suporte(int aTK, int dEF, boolean vivo, int pontuacao, Setor setor) {
-        super(aTK, dEF, vivo, pontuacao, setor);
+    public Suporte(int atk, int def, int pontuacao, Setor setor) {
+        super(atk, def, pontuacao, setor);
     }
 
     /**
@@ -12,8 +12,8 @@ public class Suporte extends Jogador {
     public void curar(Jogador alvo) {
         // Garante que a recuperação só ocorra se o alvo estiver no mesmo setor do
         // suporte (ou seja o próprio)
-        if (this.setor == alvo.setor) {
-            alvo.DEF += 2;
+        if (this.getSetor() == alvo.getSetor() && alvo.isVivo()) {
+            alvo.setDef(alvo.getDef() + 2);
         }
     }
 }
