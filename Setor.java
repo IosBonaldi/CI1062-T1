@@ -37,6 +37,14 @@ public class Setor {
         return construcoes;
     }
 
+    public void setPorta(Direcao direcao){
+        construcoes.set(direcao.ordinal(), Construcao.PORTA);
+    }
+
+    public void setInimigos(ArrayList<Inimigo> inimigos) {
+        this.inimigos = inimigos;
+    }
+    
     public void setConstrucoes(ArrayList<Construcao> construcoes) {
         this.construcoes = construcoes;
     }
