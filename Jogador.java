@@ -45,7 +45,7 @@ public class Jogador extends Personagem {
             // Se eliminar o alvo haverá atualização do atributo vivo do alvo e
             // incremento da pontuação do jogador que matou o vírus;
             if (!alvo.isVivo()) {
-                this.setPontuacao(alvo.getAtk() * 10);
+                this.setPontuacao(this.getPontuacao() + alvo.getAtk() * 10);
             }
         }
     }
@@ -78,7 +78,7 @@ public class Jogador extends Personagem {
                         if (i.isVivo()) {
                             i.setDef(i.getDef() - 1);
                             if (!i.isVivo()) {
-                                this.setPontuacao(i.getAtk() * 10);
+                                this.setPontuacao(this.getPontuacao() + i.getAtk() * 10);
                             }
                         }
                     }
