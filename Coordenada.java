@@ -3,8 +3,8 @@ public class Coordenada {
     private int y;
 
     public Coordenada(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.setX(x);
+        this.setY(y);
     }
 
     public int getX() {

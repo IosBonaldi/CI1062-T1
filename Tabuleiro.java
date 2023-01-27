@@ -9,11 +9,15 @@ public class Tabuleiro {
     // Ao inves de receber uma matriz como parametro, receber o numero de linhas e
     // colunas da matriz
     public Tabuleiro(Setor[][] setores) {
-        this.setores = setores;
+        this.setSetores(setores);
     }
 
     public Setor[][] getSetores() {
         return setores;
+    }
+
+    public Setor getSetor(int x, int y) {
+        return this.getSetores()[x][y];
     }
 
     public void setSetores(Setor[][] setores) {
@@ -202,11 +206,11 @@ public class Tabuleiro {
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
 
-        if (p1.setor == s && p2.setor == s) {
+        if (p1.getSetor() == s && p2.getSetor() == s) {
             return "P12";
-        } else if (p1.setor == s) {
+        } else if (p1.getSetor() == s) {
             return "P1 ";
-        } else if (p2.setor == s) {
+        } else if (p2.getSetor() == s) {
             return "P2 ";
         } else if (s.isFonte()) {
             return " X ";
@@ -296,11 +300,11 @@ public class Tabuleiro {
         String r = new String();
 
         // Texto correspondente aos Inimigos, inserido Inimigo a Inimigo
-        for (int i = 0; i < 2; i++) {
+        for (int i = 1; i < 3; i++) {
             r += s.getInimigo(i) == null ? "   " : s.getInimigo(i).getAtk() + "/" + s.getInimigo(i).getDef();
             r += " ";
         }
-        r += s.getInimigo(2) == null ? "   " : s.getInimigo(2).getAtk() + "/" + s.getInimigo(2).getDef();
+        r += s.getInimigo(3) == null ? "   " : s.getInimigo(3).getAtk() + "/" + s.getInimigo(3).getDef();
 
         return r;
     }
@@ -316,13 +320,13 @@ public class Tabuleiro {
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
-        if(p1.getSetor()==p2.getSetor()){
+        if (p1.getSetor() == p2.getSetor()) {
             return "P1    P2";
-        }else{
-            if(i==1){
-            return "P1      ";
-            }else if(i==2){
-            return "P2      ";
+        } else {
+            if (i == 1) {
+                return "P1      ";
+            } else if (i == 2) {
+                return "P2      ";
             }
         }
         return "";
@@ -339,13 +343,13 @@ public class Tabuleiro {
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
-        if(p1.getSetor()==p2.getSetor()){
-            return p1.getATK() + "/" + p1.getDEF()+"   "+p2.getATK() + "/" + p2.getDEF();
-        }else{
-            if(i==1){
-                return p1.getATK() + "/" + p1.getDEF()+"      ";
-            }else if(i==2){
-                return p2.getATK() + "/" + p2.getDEF()+"      ";
+        if (p1.getSetor() == p2.getSetor()) {
+            return p1.getAtk() + "/" + p1.getDef() + "   " + p2.getAtk() + "/" + p2.getDef();
+        } else {
+            if (i == 1) {
+                return p1.getAtk() + "/" + p1.getDef() + "      ";
+            } else if (i == 2) {
+                return p2.getAtk() + "/" + p2.getDef() + "      ";
             }
         }
         return "";
@@ -386,8 +390,10 @@ public class Tabuleiro {
                 + strInimigos(p2.getSetor()) + " |\n";
         r += "    " + strLinhaSetores(p, setores[2]) + "     |             |   |             |\n";
         r += "    " + strBaseSetores(setores[2]) + "     *             |   *             |\n";
-        r += "    " + strLinhaSetores(p, setores[3]) + "     |  "+strJogadores(p, 1)+"   |   |  "+strJogadores(p, 2)+"   |\n";
-        r += "    " + strBaseSetores(setores[3]) + "     |  " + strATKDEF(p, 1) + "  |   |  " + strATKDEF(p, 2)+"  |\n";
+        r += "    " + strLinhaSetores(p, setores[3]) + "     |  " + strJogadores(p, 1) + "   |   |  "
+                + strJogadores(p, 2) + "   |\n";
+        r += "    " + strBaseSetores(setores[3]) + "     |  " + strATKDEF(p, 1) + "  |   |  " + strATKDEF(p, 2)
+                + "  |\n";
         r += "    " + strLinhaSetores(p, setores[4]) + "     |------*------|   |------*------|\n";
         r += "    |---|---|---|---|---|\n";
 

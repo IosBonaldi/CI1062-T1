@@ -9,12 +9,12 @@ public class Setor {
     private boolean visitado;
 
     public Setor(Coordenada coordenada) {
-        this.tipo = gerarTipoSetor();
-        this.coordenada = coordenada;
-        this.construcoes = gerarConstrucoesIniciais();
-        this.inimigos = new ArrayList<>();
-        this.fonte = false;
-        this.visitado = false;
+        this.setTipo(gerarTipoSetor());
+        this.setCoordenada(coordenada);
+        this.setConstrucoes(gerarConstrucoesIniciais());
+        this.setInimigos(new ArrayList<Inimigo>());
+        this.setFonte(false);
+        this.setVisitado(false);
     }
 
     public SetorTipos getTipo() {
@@ -69,9 +69,13 @@ public class Setor {
         return inimigos;
     }
 
+    public void setInimigos(ArrayList<Inimigo> inimigos) {
+        this.inimigos = inimigos;
+    }
+
     public Inimigo getInimigo(Integer posicao) {
-        for (Inimigo inimigo : inimigos) {
-            if(inimigo.getPosicao() == posicao){
+        for (Inimigo inimigo : this.getInimigos()) {
+            if (inimigo.getPosicao() == posicao) {
                 return inimigo;
             }
         }
@@ -91,7 +95,7 @@ public class Setor {
 
     public ArrayList<Construcao> gerarConstrucoesIniciais() {
         int qntParedes = 4;
-        ArrayList<Construcao> construcoes = new ArrayList<>();
+        ArrayList<Construcao> construcoes = new ArrayList<Construcao>();
         for (int i = 0; i < qntParedes; i++) {
             construcoes.add(Construcao.PAREDE);
         }
@@ -99,12 +103,12 @@ public class Setor {
     }
 
     public void gerarInimigos() {
-        for(int posicao = 0; posicao < 3; posicao++){
+        for (int posicao = 0; posicao < 3; posicao++) {
             int inimigoNaPosicao = randomNumber(100, 0);
-            if(inimigoNaPosicao <= 70){
-                int atkDef = randomNumber(3,1);
+            if (inimigoNaPosicao <= 70) {
+                int atkDef = randomNumber(3, 1);
                 Inimigo inimigo = new Inimigo(atkDef, atkDef, posicao);
-                this.inimigos.add(inimigo);
+                this.getInimigos().add(inimigo);
             }
         }
     }

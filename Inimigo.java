@@ -6,7 +6,7 @@ public class Inimigo extends Personagem {
 
     public Inimigo(int atk, int def, Integer posicao) {
         super(atk, def);
-        this.posicao = posicao;
+        this.setPosicao(posicao);
     }
 
     public Integer getPosicao() {
@@ -14,11 +14,11 @@ public class Inimigo extends Personagem {
     }
 
     public void setPosicao(Integer posicao) {
-        if(posicao >= 1 && posicao <= 3){
+        if (1 <= posicao && posicao <= 3) {
             this.posicao = posicao;
         }
     }
-    
+
     /**
      * Realiza o ataque de um inimigo à um único jogador.
      *
@@ -30,7 +30,7 @@ public class Inimigo extends Personagem {
         int acao = r.nextInt(6) + 1;
         // Ataca se a constante gerada for par
         if (acao % 2 == 0 && alvo.isVivo()) {
-            alvo.setDef((alvo.getDef() > this.getAtk()) ? alvo.getDef() - this.getAtk() : 0);
+            alvo.setDef((alvo.getDef() > this.getAtk()) ? (alvo.getDef() - this.getAtk()) : 0);
         }
     }
 
@@ -47,7 +47,7 @@ public class Inimigo extends Personagem {
             int acao = r.nextInt(6) + 1;
             // Ataca se a constante gerada for par
             if (acao % 2 == 0 && j.isVivo()) {
-                j.setDef((j.getDef() > this.getAtk()) ? j.getDef() - this.getAtk() : 0);
+                j.setDef((j.getDef() > this.getAtk()) ? (j.getDef() - this.getAtk()) : 0);
             }
         }
     }
