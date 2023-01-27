@@ -69,11 +69,11 @@ public class PartidaVirus {
 
     }
 
-    public void chamarTurno(Personagem personagem, Scanner input) {
+    public void chamarTurno(Jogador jogador, Scanner input) {
         char entrada;
 
-        if (!(personagem instanceof Suporte)) {
-            Jogador p1 = (Jogador) personagem;
+        if (!(jogador instanceof Suporte)) {
+            Jogador p1 = (Jogador) jogador;
             Boolean podeMovimentar = true;
 
             // Lida com a questão de ter inimigos no setor ou não pra saber se ele pode
@@ -108,7 +108,7 @@ public class PartidaVirus {
                 }
             }
         } else {
-            Suporte p2 = (Suporte) personagem;
+            Suporte p2 = (Suporte) jogador;
             Boolean podeMovimentar = true;
 
             // Lida com a questão de ter inimigos no setor ou não pra saber se ele pode
@@ -158,21 +158,17 @@ public class PartidaVirus {
     }
 
     // Sobrecarga de métodos porque os parâmetros pra inimigos eh diferente...
-    public void chamarTurno(Personagem personagem, Personagem alvoInimigo) {
-        if (personagem instanceof Inimigo) { // Talvez não seja mais necessário fazer essa verificação! Me parece uma
-                                             // boa prática..
-            Inimigo enemy = (Inimigo) personagem;
-            Random random = new Random();
-            int num;
+    public void chamarTurno(Inimigo inimigo, Jogador alvoInimigo) {
+        Random random = new Random();
+        int num;
 
-            if (enemy.isVivo()) {
-                num = random.nextInt(6) + 1;
-                System.out.println(num);
-                // Caso o número aleatório seja par
-                if ((num % 2) == 0) {
-                    enemy.atacar(alvoInimigo);
-                    System.out.println(num + ": atacou;"); // Teste
-                }
+        if (inimigo.isVivo()) {
+            num = random.nextInt(6) + 1;
+            System.out.println(num);
+            // Caso o número aleatório seja par
+            if ((num % 2) == 0) {
+                inimigo.atacar(alvoInimigo);
+                System.out.println(num + ": atacou;"); // Teste
             }
         }
     }
