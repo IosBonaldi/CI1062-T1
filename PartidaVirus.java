@@ -14,21 +14,21 @@ public class PartidaVirus {
     };
 
     public PartidaVirus(ArrayList<Jogador> jogadores) {
-        this.jogadores = jogadores;
+        this.setJogadores(jogadores);
     }
 
     public PartidaVirus(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, boolean ativo) {
-        this.jogadores = jogadores;
-        this.tabuleiro = tabuleiro;
-        this.ciclos = 0;
-        this.ativo = ativo;
+        this.setJogadores(jogadores);
+        this.setTabuleiro(tabuleiro);
+        this.setCiclos(0);
+        this.setAtivo(ativo);
     }
 
     public PartidaVirus(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, int ciclos, boolean ativo) {
-        this.jogadores = jogadores;
-        this.tabuleiro = tabuleiro;
-        this.ciclos = ciclos;
-        this.ativo = ativo;
+        this.setJogadores(jogadores);
+        this.setTabuleiro(tabuleiro);
+        this.setCiclos(ciclos);
+        this.setAtivo(ativo);
     }
 
     // Métodos get/set
@@ -212,12 +212,12 @@ public class PartidaVirus {
                 return null;
         }
     }
-
+    
     public void imprimirTabuleiro() {
     }
 
     public void incrementaCiclo() {
-        this.ciclos++;
+        this.setCiclos(this.getCiclos() + 1);
     }
 }
 

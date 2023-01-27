@@ -3,8 +3,8 @@ public abstract class Personagem {
     protected int def;
 
     public Personagem(int atk, int def) {
-        this.atk = atk;
-        this.def = def;
+        this.setAtk(atk);
+        this.setDef(def);
     }
 
     public int getAtk() {
