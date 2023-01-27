@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Setor {
     private SetorTipos tipo;
     private Coordenada coordenada;
-    private boolean[] portas;
     private ArrayList<Construcao> construcoes;
     private ArrayList<Inimigo> inimigos;
     private boolean fonte;
@@ -38,12 +37,8 @@ public class Setor {
         return construcoes;
     }
 
-    public void setPorta(int indexPorta, boolean aberta){
-        this.portas[indexPorta] = aberta;
-    }
-
-    public boolean isAberta(int indexPorta){
-        return this.portas[indexPorta];
+    public void setPorta(Direcao direcao){
+        construcoes.set(direcao.ordinal(), Construcao.PORTA);
     }
 
     public void setInimigos(ArrayList<Inimigo> inimigos) {

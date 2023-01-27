@@ -144,29 +144,32 @@ public class Tabuleiro {
 
             switch(dir){
                 case CIMA:
-                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.CIMA.ordinal());
+                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorSeguinte.getX()][coordSetorSeguinte.getY()], Direcao.BAIXO);
                     break;
                 case DIREITA:
-                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.DIREITA.ordinal());
+                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorSeguinte.getX()][coordSetorSeguinte.getY()], Direcao.ESQUERDA);
                     break;
                 case BAIXO:
-                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.BAIXO.ordinal());
+                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorSeguinte.getX()][coordSetorSeguinte.getY()], Direcao.CIMA);
                     break;
                 case ESQUERDA:
-                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.ESQUERDA.ordinal());
+                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorSeguinte.getX()][coordSetorSeguinte.getY()], Direcao.DIREITA);
                     break;
             }
         }
     }
 
     /**
-     * Abra a porta na posicao portaIndex do setor recebido  
      * 
-     * @param setor Setor em qual a porta vai ser aberta
-     * @param portaIndex Index da porta
+     * @param setor 
+     * @param direcao 
      */
-    private void abrirPorta(Setor setor, int portaIndex){
-        setor.setPorta(portaIndex, true);
+    private void abrirPorta(Setor setor, Direcao direcao){
+        setor.setPorta(direcao);
     }
 
     /**
