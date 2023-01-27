@@ -1,12 +1,10 @@
 public abstract class Personagem {
     protected int atk;
     protected int def;
-    protected boolean vivo;
 
-    public Personagem(int atk, int def, boolean vivo) {
+    public Personagem(int atk, int def) {
         this.atk = atk;
         this.def = def;
-        this.vivo = vivo;
     }
 
     public int getAtk() {
@@ -26,11 +24,7 @@ public abstract class Personagem {
     }
 
     public boolean isVivo() {
-        return vivo;
-    }
-
-    public void setVivo(boolean vivo) {
-        this.vivo = vivo;
+        return (this.getDef() > 0);
     }
 
     public abstract void atacar(Personagem alvo);

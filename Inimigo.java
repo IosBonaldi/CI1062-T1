@@ -4,8 +4,8 @@ import java.util.Random;
 public class Inimigo extends Personagem {
     private Integer posicao;
 
-    public Inimigo(int atk, int def, boolean vivo, Integer posicao) {
-        super(atk, def, vivo);
+    public Inimigo(int atk, int def, Integer posicao) {
+        super(atk, def);
         this.posicao = posicao;
     }
 
