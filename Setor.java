@@ -61,8 +61,13 @@ public class Setor {
         return inimigos;
     }
 
-    public Inimigo getInimigo(int i) {
-        return inimigos.get(i);
+    public Inimigo getInimigo(Integer posicao) {
+        for (Inimigo inimigo : inimigos) {
+            if(inimigo.getPosicao() == posicao){
+                return inimigo;
+            }
+        }
+        return null;
     }
 
     public SetorTipos gerarTipoSetor() {
@@ -86,11 +91,13 @@ public class Setor {
     }
 
     public void gerarInimigos() {
-        int quantidadeInimigos = randomNumber(3, 1);
-        for (int i = 0; i < quantidadeInimigos; i++) {
-            int atkDef = randomNumber(3, 1);
-            Inimigo inimigo = new Inimigo(atkDef, atkDef);
-            this.inimigos.add(inimigo);
+        for(int posicao = 0; posicao < 3; posicao++){
+            int inimigoNaPosicao = randomNumber(100, 0);
+            if(inimigoNaPosicao <= 70){
+                int atkDef = randomNumber(3,1);
+                Inimigo inimigo = new Inimigo(atkDef, atkDef, posicao);
+                this.inimigos.add(inimigo);
+            }
         }
     }
 
