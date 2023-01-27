@@ -4,8 +4,8 @@ public class Jogador extends Personagem {
     protected int pontuacao;
     protected Setor setor;
 
-    public Jogador(int atk, int def, boolean vivo, int pontuacao, Setor setor) {
-        super(atk, def, vivo);
+    public Jogador(int atk, int def, int pontuacao, Setor setor) {
+        super(atk, def);
         this.pontuacao = pontuacao;
         this.setor = setor;
     }

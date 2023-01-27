@@ -48,53 +48,60 @@ public class Setor {
     public void setFonte(boolean fonte) {
         this.fonte = fonte;
     }
-    
+
     public boolean isVisitado() {
         return visitado;
     }
-    
+
     public void setVisitado(boolean visitado) {
         this.visitado = visitado;
     }
-    
+
     public ArrayList<Inimigo> getInimigos() {
         return inimigos;
     }
 
-    public Inimigo getInimigo(int i) {
-        return inimigos.get(i);
+    public Inimigo getInimigo(Integer posicao) {
+        for (Inimigo inimigo : inimigos) {
+            if(inimigo.getPosicao() == posicao){
+                return inimigo;
+            }
+        }
+        return null;
     }
-    
-    public SetorTipos gerarTipoSetor(){
+
+    public SetorTipos gerarTipoSetor() {
         int randomNumber = randomNumber(100, 0);
-        if(randomNumber >= 40){
+        if (randomNumber >= 40) {
             return SetorTipos.NORMAL;
-        }else if(randomNumber >= 10 && randomNumber < 40){
+        } else if (randomNumber >= 10 && randomNumber < 40) {
             return SetorTipos.OCULTO;
-        }else{
+        } else {
             return SetorTipos.PRIVADO;
         }
     }
 
-    public ArrayList<Construcao> gerarConstrucoesIniciais(){
+    public ArrayList<Construcao> gerarConstrucoesIniciais() {
         int qntParedes = 4;
         ArrayList<Construcao> construcoes = new ArrayList<>();
-        for(int i = 0; i < qntParedes; i++){
+        for (int i = 0; i < qntParedes; i++) {
             construcoes.add(Construcao.PAREDE);
         }
         return construcoes;
     }
 
     public void gerarInimigos() {
-        int quantidadeInimigos = randomNumber(3, 1);
-        for(int i = 0; i < quantidadeInimigos; i++){
-            int atkDef = randomNumber(3,1);
-            Inimigo inimigo = new Inimigo(atkDef, atkDef, true);
-            this.inimigos.add(inimigo);
+        for(int posicao = 0; posicao < 3; posicao++){
+            int inimigoNaPosicao = randomNumber(100, 0);
+            if(inimigoNaPosicao <= 70){
+                int atkDef = randomNumber(3,1);
+                Inimigo inimigo = new Inimigo(atkDef, atkDef, posicao);
+                this.inimigos.add(inimigo);
+            }
         }
     }
 
-    public int randomNumber(int max, int min){
-        return (int) (Math.random() * (max-min+1) + min);
+    public int randomNumber(int max, int min) {
+        return (int) (Math.random() * (max - min + 1) + min);
     }
 }

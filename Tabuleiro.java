@@ -126,10 +126,10 @@ public class Tabuleiro {
 
         // Texto correspondente aos Inimigos, inserido Inimigo a Inimigo
         for (int i = 0; i < 2; i++) {
-            r += s.getInimigo(i) == null ? "   " : s.getInimigo(i).getATK() + "/" + s.getInimigo(i).getDEF();
+            r += s.getInimigo(i) == null ? "   " : s.getInimigo(i).getAtk() + "/" + s.getInimigo(i).getDef();
             r += " ";
         }
-        r += s.getInimigo(2) == null ? "   " : s.getInimigo(2).getATK() + "/" + s.getInimigo(2).getDEF();
+        r += s.getInimigo(2) == null ? "   " : s.getInimigo(2).getAtk() + "/" + s.getInimigo(2).getDef();
 
         return r;
     }
@@ -141,7 +141,7 @@ public class Tabuleiro {
      * @param p o Jogador cujos atributos desejam-se visualizar.
      */
     public String strATKDEF(Jogador p) {
-        return p.getATK() + "/" + p.getDEF();
+        return p.getAtk() + "/" + p.getDef();
     }
 
     /**
