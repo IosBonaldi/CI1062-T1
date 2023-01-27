@@ -1,78 +1,50 @@
-import java.util.ArrayList;
+import java.util.*;
 
-public class Jogo {
-    private ArrayList<Jogador> jogadores;
-    private Tabuleiro tabuleiro;
-    private int turnos;
-    private boolean ativo;
-    private LogHandler log;
+public class Jogo{
+    public static void main(String args[]) {
+        Scanner input = new Scanner(System.in);
+        ArrayList<Jogador> jogadoresTeste = new ArrayList<Jogador>(2);
+        ArrayList<ArrayList<Inimigo>> inimigos = new ArrayList<>(2);
+        PartidaVirus partida = new PartidaVirus(jogadoresTeste);
+        Jogador p1 = new Jogador(true);
+        Jogador p2 = new Suporte(true);
+        int cont = 0;
 
-    public Jogo(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, int turnos, boolean ativo) {
-        this.jogadores = jogadores;
-        this.tabuleiro = tabuleiro;
-        this.turnos = turnos;
-        this.ativo = ativo;
-        this.log = new LogHandler("./log.txt");
-    }
+        jogadoresTeste.add(p1);
+        jogadoresTeste.add(p2);
 
-    public ArrayList<Jogador> getJogadores() {
-        return jogadores;
-    }
-
-    public void setJogadores(ArrayList<Jogador> jogadores) {
-        this.jogadores = jogadores;
-    }
-
-    public Tabuleiro getTabuleiro() {
-        return tabuleiro;
-    }
-
-    public void setTabuleiro(Tabuleiro tabuleiro) {
-        this.tabuleiro = tabuleiro;
-    }
-
-    public int getTurnos() {
-        return turnos;
-    }
-
-    public void setTurnos(int turnos) {
-        this.turnos = turnos;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-    
-    public LogHandler getLog() {
-        return log;
-    }
-
-    public void iniciarJogo() {
-        // Início do jogo (verifica existência do log para criar ou não);
-        log.createLogFile();
-    }
-
-    public void chamarTurno(Personagem p) {
-        // Quando chegar no fim do jogo (atualiza arquivo de log);
-        log.logFileManipulation(this.pontuacaoFinal());
-    }
-
-    public void imprimirTabuleiro() {
-
-    }
-
-    // Quando finalizar o jogo, chama-se este método para
-    // calcular a pontuação final (pontos principal + pontos suporte);
-    public Integer pontuacaoFinal(){
-        Integer pontuacaoFinal = 0;
-        for (Jogador jogador : jogadores) {
-            pontuacaoFinal += jogador.pontuacao;
+        while((jogadoresTeste.get(0).isVivo()) && (partida.getCiclos() < 2)) {
+            switch(cont) {
+                case 0:
+                    partida.chamarTurno(jogadoresTeste.get(0));
+                    cont++;
+                    break;
+                case 1:
+                    partida.chamarTurno(jogadoresTeste.get(1));
+                    cont++;
+                    break;
+                case 2:
+                    for(Inimigo inimigo: inimigos.get(0)) {
+                        partida.chamarTurno(inimigo);
+                    }
+                    cont++;
+                    break;
+                case 3:
+                    for(Inimigo inimigo: inimigos.get(1)) {
+                        partida.chamarTurno(inimigo);
+                    }
+                    cont = 0;
+                    partida.incrementaCiclo();
+                    break;
+                default:
+                    break;
+            }
         }
-        return pontuacaoFinal;
-    }
 
+        System.out.printf("#################################\n");
+        System.out.printf("### You have won the game!!! ###\n");
+        System.out.printf("#################################\n");
+
+        input.close();
+    }
 }
