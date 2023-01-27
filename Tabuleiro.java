@@ -138,10 +138,46 @@ public class Tabuleiro {
      * Retorna o texto correspondente aos atributos ATK/DEF de um Jogador
      * específico.
      *
-     * @param p o Jogador cujos atributos desejam-se visualizar.
+     * @param p lista de Jogadores cujos atributos desejam-se visualizar.
+     * @param i número do mini-setor a ser impresso.
      */
-    public String strATKDEF(Jogador p) {
-        return p.getAtk() + "/" + p.getDef();
+    public String strJogadores(ArrayList<Jogador> p, int i) {
+        // Variáveis auxiliares para legibilidade
+        Jogador p1 = p.get(0);
+        Jogador p2 = p.get(1);
+        if(p1.getSetor()==p2.getSetor()){
+            return "P1    P2";
+        }else{
+            if(i==1){
+            return "P1      ";
+            }else if(i==2){
+            return "P2      ";
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Retorna o texto correspondente aos atributos ATK/DEF de um Jogador
+     * específico.
+     *
+     * @param p lista de Jogadores cujos atributos desejam-se visualizar.
+     * @param i número do mini-setor a ser impresso.
+     */
+    public String strATKDEF(ArrayList<Jogador> p, int i) {
+        // Variáveis auxiliares para legibilidade
+        Jogador p1 = p.get(0);
+        Jogador p2 = p.get(1);
+        if(p1.getSetor()==p2.getSetor()){
+            return p1.getATK() + "/" + p1.getDEF()+"   "+p2.getATK() + "/" + p2.getDEF();
+        }else{
+            if(i==1){
+                return p1.getATK() + "/" + p1.getDEF()+"      ";
+            }else if(i==2){
+                return p2.getATK() + "/" + p2.getDEF()+"      ";
+            }
+        }
+        return "";
     }
 
     /**
@@ -179,9 +215,8 @@ public class Tabuleiro {
                 + strInimigos(p2.getSetor()) + " |\n";
         r += "    " + strLinhaSetores(p, setores[2]) + "     |             |   |             |\n";
         r += "    " + strBaseSetores(setores[2]) + "     *             |   *             |\n";
-        r += "    " + strLinhaSetores(p, setores[3]) + "     |   P1        |   |   P2        |\n";
-        r += "    " + strBaseSetores(setores[3]) + "     |   " + strATKDEF(p1) + "       |   |   " + strATKDEF(p2)
-                + "       |\n";
+        r += "    " + strLinhaSetores(p, setores[3]) + "     |  "+strJogadores(p, 1)+"   |   |  "+strJogadores(p, 2)+"   |\n";
+        r += "    " + strBaseSetores(setores[3]) + "     |  " + strATKDEF(p, 1) + "  |   |  " + strATKDEF(p, 2)+"  |\n";
         r += "    " + strLinhaSetores(p, setores[4]) + "     |------*------|   |------*------|\n";
         r += "    |---|---|---|---|---|\n";
 
