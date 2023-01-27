@@ -6,8 +6,8 @@ public class Jogador extends Personagem {
 
     public Jogador(int atk, int def, int pontuacao, Setor setor) {
         super(atk, def);
-        this.pontuacao = pontuacao;
-        this.setor = setor;
+        this.setPontuacao(pontuacao);
+        this.setSetor(setor);
     }
 
     public int getPontuacao() {
@@ -39,7 +39,7 @@ public class Jogador extends Personagem {
         // chance de ataque)
         if (this.getSetor().getTipo() != SetorTipos.OCULTO || acao == 1) {
             if (alvo.isVivo()) {
-                alvo.setDef((alvo.getDef() > this.getAtk()) ? alvo.getDef() - this.getAtk() : 0);
+                alvo.setDef((alvo.getDef() > this.getAtk()) ? (alvo.getDef() - this.getAtk()) : 0);
             }
 
             // Se eliminar o alvo haverá atualização do atributo vivo do alvo e
@@ -99,32 +99,32 @@ public class Jogador extends Personagem {
      */
     public void movimentar(Tabuleiro t, Direcao d) {
         // Impede movimentação em setores que ainda possuam inimigos
-        if (this.setor.getInimigos().isEmpty()) {
+        if (this.getSetor().getInimigos().isEmpty()) {
             // Atualiza o atributo setor de acordo com a direção recebida, checando
             // eventuais colisões com as bordas
             switch (d) {
                 case CIMA:
-                    if (this.setor.getCoordenada().getY() > 0) {
-                        this.setor = t.getSetores()[this.setor.getCoordenada().getX()][this.setor.getCoordenada().getY()
-                                - 1];
+                    if (this.getSetor().getCoordenada().getY() > 0) {
+                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX(),
+                                this.getSetor().getCoordenada().getY() - 1));
                     }
                     break;
                 case DIREITA:
-                    if (this.setor.getCoordenada().getX() < 4) {
-                        this.setor = t.getSetores()[this.setor.getCoordenada().getX() + 1][this.setor.getCoordenada()
-                                .getY()];
+                    if (this.getSetor().getCoordenada().getX() < 4) {
+                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX() + 1,
+                                this.getSetor().getCoordenada().getY()));
                     }
                     break;
                 case BAIXO:
-                    if (this.setor.getCoordenada().getY() < 4) {
-                        this.setor = t.getSetores()[this.setor.getCoordenada().getX()][this.setor.getCoordenada().getY()
-                                + 1];
+                    if (this.getSetor().getCoordenada().getY() < 4) {
+                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX(),
+                                this.getSetor().getCoordenada().getY() + 1));
                     }
                     break;
                 case ESQUERDA:
-                    if (this.setor.getCoordenada().getX() > 0) {
-                        this.setor = t.getSetores()[this.setor.getCoordenada().getX() - 1][this.setor.getCoordenada()
-                                .getY()];
+                    if (this.getSetor().getCoordenada().getX() > 0) {
+                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX() - 1,
+                                this.getSetor().getCoordenada().getY()));
                     }
                     break;
             }

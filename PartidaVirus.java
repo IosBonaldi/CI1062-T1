@@ -14,21 +14,21 @@ public class PartidaVirus {
     };
 
     public PartidaVirus(ArrayList<Jogador> jogadores) {
-        this.jogadores = jogadores;
+        this.setJogadores(jogadores);
     }
 
     public PartidaVirus(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, boolean ativo) {
-        this.jogadores = jogadores;
-        this.tabuleiro = tabuleiro;
-        this.ciclos = 0;
-        this.ativo = ativo;
+        this.setJogadores(jogadores);
+        this.setTabuleiro(tabuleiro);
+        this.setCiclos(0);
+        this.setAtivo(ativo);
     }
 
     public PartidaVirus(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, int ciclos, boolean ativo) {
-        this.jogadores = jogadores;
-        this.tabuleiro = tabuleiro;
-        this.ciclos = ciclos;
-        this.ativo = ativo;
+        this.setJogadores(jogadores);
+        this.setTabuleiro(tabuleiro);
+        this.setCiclos(ciclos);
+        this.setAtivo(ativo);
     }
 
     // Métodos get/set
@@ -86,13 +86,13 @@ public class PartidaVirus {
 
             // Movimentação
             if (podeMovimentar) {
-                entrada = 'X';
-                while (validaEntrada(entrada) == 0) {
+                Direcao dEntrada = null;
+                while (dEntrada == null) {
                     System.out.printf("Where to go PLAYER 1 (P1)?\n");
                     opcoesDeMovimento();
-                    entrada = input.nextLine().charAt(0);
+                    dEntrada = validaEntrada(input.nextLine().charAt(0));
                 }
-                movimentacao(p1, entrada);
+                p1.movimentar(this.getTabuleiro(), dEntrada);
             }
 
             // Ações (verificar entrada)
@@ -109,6 +109,7 @@ public class PartidaVirus {
             }
         } else {
             Suporte p2 = (Suporte) jogador;
+
             Boolean podeMovimentar = true;
 
             // Lida com a questão de ter inimigos no setor ou não pra saber se ele pode
@@ -121,13 +122,13 @@ public class PartidaVirus {
 
             // Movimentação
             if (podeMovimentar) {
-                entrada = 'X';
-                while (validaEntrada(entrada) == 0) {
+                Direcao dEntrada = null;
+                while (dEntrada == null) {
                     System.out.printf("Where to go PLAYER 2 (P2)?\n");
                     opcoesDeMovimento();
-                    entrada = input.nextLine().charAt(0);
+                    dEntrada = validaEntrada(input.nextLine().charAt(0));
                 }
-                movimentacao(p2, entrada);
+                p2.movimentar(this.getTabuleiro(), dEntrada);
             }
 
             // Ações (verificar entrada)
@@ -188,30 +189,30 @@ public class PartidaVirus {
             System.out.printf("    c- heal\n");
     }
 
-    public void movimentacao(Personagem personagem, char entrada) {
-        Jogador jogador = (Jogador) personagem;
-        if (entrada == 'U') {
-            jogador.movimentar(tabuleiro, Direcao.CIMA);
-        } else if (entrada == 'D') {
-            jogador.movimentar(tabuleiro, Direcao.BAIXO);
-        } else if (entrada == 'L') {
-            jogador.movimentar(tabuleiro, Direcao.ESQUERDA);
-        } else if (entrada == 'R') {
-            jogador.movimentar(tabuleiro, Direcao.DIREITA);
+    public Direcao validaEntrada(char entrada) {
+        switch (entrada) {
+            case 'U':
+                return Direcao.CIMA;
+
+            case 'D':
+                return Direcao.BAIXO;
+
+            case 'L':
+                return Direcao.ESQUERDA;
+
+            case 'R':
+                return Direcao.DIREITA;
+
+            default:
+                return null;
         }
     }
-
-    public int validaEntrada(char entrada) {
-        if (entrada == 'U' || entrada == 'D' || entrada == 'L' || entrada == 'R')
-            return 1;
-        return 0;
-    }
-
+    
     public void imprimirTabuleiro() {
     }
 
     public void incrementaCiclo() {
-        this.ciclos++;
+        this.setCiclos(this.getCiclos() + 1);
     }
 }
 
