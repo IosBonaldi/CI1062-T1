@@ -217,7 +217,7 @@ public class PartidaVirus {
     }
 
     public void incrementaCiclo() {
-        this.ciclos++;
+        this.setCiclos(this.getCiclos() + 1);
     }
 }
 

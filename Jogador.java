@@ -99,7 +99,7 @@ public class Jogador extends Personagem {
      */
     public void movimentar(Tabuleiro t, Direcao d) {
         // Impede movimentação em setores que ainda possuam inimigos
-        if (this.setor.getInimigos().isEmpty()) {
+        if (this.getSetor().getInimigos().isEmpty()) {
             // Atualiza o atributo setor de acordo com a direção recebida, checando
             // eventuais colisões com as bordas
             switch (d) {
