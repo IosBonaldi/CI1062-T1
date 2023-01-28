@@ -80,7 +80,7 @@ public class LogHandler {
   /**
    * Recupera os dez maiores scores do arquivo de log.
    */
-  public void recoverTopTenScores() {
+  private void recoverTopTenScores() {
     try (BufferedReader br = new BufferedReader(new FileReader(this.getFilePath()))) {
       String line;
       Integer score = null;
