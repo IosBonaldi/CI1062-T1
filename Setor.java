@@ -37,14 +37,14 @@ public class Setor {
         return construcoes;
     }
 
-    public void setPorta(Direcao direcao){
+    public void setPorta(Direcao direcao) {
         construcoes.set(direcao.ordinal(), Construcao.PORTA);
     }
 
     public void setInimigos(ArrayList<Inimigo> inimigos) {
         this.inimigos = inimigos;
     }
-    
+
     public void setConstrucoes(ArrayList<Construcao> construcoes) {
         this.construcoes = construcoes;
     }
@@ -69,10 +69,11 @@ public class Setor {
         return inimigos;
     }
 
-    public void setInimigos(ArrayList<Inimigo> inimigos) {
-        this.inimigos = inimigos;
-    }
-
+    /**
+     * 
+     * @param posicao
+     * @return Inimigo ou null(caso não haja inimigo na posição).
+     */
     public Inimigo getInimigo(Integer posicao) {
         for (Inimigo inimigo : this.getInimigos()) {
             if (inimigo.getPosicao() == posicao) {
@@ -82,6 +83,11 @@ public class Setor {
         return null;
     }
 
+    /**
+     * Gera setores com determinadas probabilidades.
+     * 
+     * @return Tipo do setor gerado.
+     */
     public SetorTipos gerarTipoSetor() {
         int randomNumber = randomNumber(100, 0);
         if (randomNumber >= 40) {
@@ -93,6 +99,11 @@ public class Setor {
         }
     }
 
+    /**
+     * Atualização inicial do ArrayList de Construcao.
+     * 
+     * @return
+     */
     public ArrayList<Construcao> gerarConstrucoesIniciais() {
         int qntParedes = 4;
         ArrayList<Construcao> construcoes = new ArrayList<Construcao>();
@@ -102,6 +113,9 @@ public class Setor {
         return construcoes;
     }
 
+    /**
+     * Para cada posição é gerado ou não um novo inimigo.
+     */
     public void gerarInimigos() {
         for (int posicao = 0; posicao < 3; posicao++) {
             int inimigoNaPosicao = randomNumber(100, 0);
@@ -113,6 +127,9 @@ public class Setor {
         }
     }
 
+    /**
+     * Método auxiliar para gerar números inteiros aleatórios.
+     */
     public int randomNumber(int max, int min) {
         return (int) (Math.random() * (max - min + 1) + min);
     }
