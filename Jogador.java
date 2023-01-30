@@ -104,27 +104,27 @@ public class Jogador extends Personagem {
             // eventuais colisões com as bordas
             switch (d) {
                 case CIMA:
-                    if (this.getSetor().getCoordenada().getY() > 0) {
-                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX(),
-                                this.getSetor().getCoordenada().getY() - 1));
+                    if (this.getSetor().getCoordenada().getLinha() > 0) {
+                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getLinha()-1,
+                                this.getSetor().getCoordenada().getColuna()));
                     }
                     break;
                 case DIREITA:
-                    if (this.getSetor().getCoordenada().getX() < 4) {
-                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX() + 1,
-                                this.getSetor().getCoordenada().getY()));
+                    if (this.getSetor().getCoordenada().getColuna() < 4) {
+                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getLinha(),
+                                this.getSetor().getCoordenada().getColuna()+1));
                     }
                     break;
                 case BAIXO:
-                    if (this.getSetor().getCoordenada().getY() < 4) {
-                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX(),
-                                this.getSetor().getCoordenada().getY() + 1));
+                    if (this.getSetor().getCoordenada().getLinha() < 4) {
+                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getLinha()+1,
+                                this.getSetor().getCoordenada().getColuna()));
                     }
                     break;
                 case ESQUERDA:
-                    if (this.getSetor().getCoordenada().getX() > 0) {
-                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX() - 1,
-                                this.getSetor().getCoordenada().getY()));
+                    if (this.getSetor().getCoordenada().getColuna() > 0) {
+                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getLinha(),
+                                this.getSetor().getCoordenada().getColuna()-1));
                     }
                     break;
             }
