@@ -10,6 +10,7 @@ public class Jogo{
         Jogador p2 = new Suporte(1,7,0,null);
         p1.setSetor(partida.getTabuleiro().getSetor(2, 2));
         p2.setSetor(partida.getTabuleiro().getSetor(2, 2));
+        p1.getSetor().setVisitado(true);
         int cont = 0;
 
         jogadoresTeste.add(p1);

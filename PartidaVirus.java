@@ -92,7 +92,7 @@ public class PartidaVirus {
                     opcoesDeMovimento();
                     dEntrada = validaEntrada(input.nextLine().charAt(0));
                 }
-                p1.movimentar(this.getTabuleiro(), dEntrada);
+                this.getTabuleiro().movimentar(p1, dEntrada);
             }
 
             // Ações (verificar entrada)
@@ -128,7 +128,7 @@ public class PartidaVirus {
                     opcoesDeMovimento();
                     dEntrada = validaEntrada(input.nextLine().charAt(0));
                 }
-                p2.movimentar(this.getTabuleiro(), dEntrada);
+                this.getTabuleiro().movimentar(p2, dEntrada);
             }
 
             // Ações (verificar entrada)

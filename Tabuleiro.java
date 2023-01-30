@@ -172,20 +172,20 @@ public class Tabuleiro {
 
             switch(dir){
                 case CIMA:
-                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.CIMA);
-                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.BAIXO);
                     break;
                 case DIREITA:
-                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.DIREITA);
-                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.ESQUERDA);
                     break;
                 case BAIXO:
-                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.BAIXO);
-                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.CIMA);
                     break;
                 case ESQUERDA:
-                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.ESQUERDA);
-                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.DIREITA);
                     break;
             }
         }
@@ -244,6 +244,49 @@ public class Tabuleiro {
     }
 
     /**
+     * Movimenta o jogador através dos setores do tabuleiro atualizando seu atributo
+     * setor.
+     *
+     * @param t o tabuleiro no qual o jogador está inserido.
+     * @param d a direção para a qual deseja-se mover o jogador.
+     */
+    public void movimentar(Jogador j, Direcao d) {
+        // Impede movimentação em setores que ainda possuam inimigos
+        if (j.getSetor().getInimigos().isEmpty()) {
+            // Atualiza o atributo setor de acordo com a direção recebida, checando
+            // eventuais colisões com as bordas
+            switch (d) {
+                case CIMA:
+                    if (j.getSetor().getCoordenada().getLinha() > 0) {
+                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha()-1,
+                                j.getSetor().getCoordenada().getColuna()));
+                    }
+                    break;
+                case DIREITA:
+                    if (j.getSetor().getCoordenada().getColuna() < 4) {
+                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha(),
+                                j.getSetor().getCoordenada().getColuna()+1));
+                    }
+                    break;
+                case BAIXO:
+                    if (j.getSetor().getCoordenada().getLinha() < 4) {
+                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha()+1,
+                                j.getSetor().getCoordenada().getColuna()));
+                    }
+                    break;
+                case ESQUERDA:
+                    if (j.getSetor().getCoordenada().getColuna() > 0) {
+                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha(),
+                                j.getSetor().getCoordenada().getColuna()-1));
+                    }
+                    break;
+            }
+
+            j.getSetor().setVisitado(true);
+        }
+    }
+
+    /**
      * Retorna o texto correspondente à uma construção específica de um setor
      * específico
      *
@@ -253,16 +296,16 @@ public class Tabuleiro {
     public String strConstrucao(Setor s, Direcao d) {
         switch (d) {
             case CIMA:
-                return ((s.getConstrucoes().get(0) == Construcao.PORTA && s.isVisitado()) ? "*" : "-");
+                return ((s.getConstrucoes().get(0) == Construcao.PORTA /*&& s.isVisitado()*/) ? "*" : "-");
 
             case DIREITA:
-                return ((s.getConstrucoes().get(1) == Construcao.PORTA && s.isVisitado()) ? "*" : "|");
+                return ((s.getConstrucoes().get(1) == Construcao.PORTA /*&& s.isVisitado()*/) ? "*" : "|");
 
             case BAIXO:
-                return ((s.getConstrucoes().get(2) == Construcao.PORTA && s.isVisitado()) ? "*" : "-");
+                return ((s.getConstrucoes().get(2) == Construcao.PORTA /*&& s.isVisitado()*/) ? "*" : "-");
 
             case ESQUERDA:
-                return ((s.getConstrucoes().get(3) == Construcao.PORTA && s.isVisitado()) ? "*" : "|");
+                return ((s.getConstrucoes().get(3) == Construcao.PORTA /*&& s.isVisitado()*/) ? "*" : "|");
 
             default:
                 return "\\";
