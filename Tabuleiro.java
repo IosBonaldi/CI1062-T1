@@ -50,8 +50,20 @@ public class Tabuleiro {
 
     private void gerarPortas() {
         ArrayList<Coordenada> setoresVisitados = new ArrayList<Coordenada>();
-        acharVirus(new Coordenada(altura/2, largura/2), setoresVisitados, false);
-        abrirCaminho(setoresVisitados);
+
+        int quantidadePortasAbertas = 0;
+        int caminhosEncontrados = 0;
+
+        /* A quantidade de portas aberta "2*altura*largura" foi definido testando diferentes possibilidades
+         * e esse valor foi suficiente para construir um mapa com varias possibilidades de caminhos
+         */
+        while(quantidadePortasAbertas < 2*altura*largura || caminhosEncontrados < 3){
+            acharVirus(new Coordenada(altura/2, largura/2), setoresVisitados, false);
+            abrirCaminho(setoresVisitados);
+            quantidadePortasAbertas += setoresVisitados.size() - 1; // A ultima coordenada nao conta, porque e a fonte, por isso o -1
+            caminhosEncontrados += 1;
+            setoresVisitados.clear();
+        }
     }
 
     /**
