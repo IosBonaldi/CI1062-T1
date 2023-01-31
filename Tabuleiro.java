@@ -265,33 +265,33 @@ public class Tabuleiro {
      * @param d a direção para a qual deseja-se mover o jogador.
      */
     public void movimentar(Jogador j, Direcao d) {
+        int linhaAtual = j.getSetor().getCoordenada().getLinha();
+        int colunaAtual = j.getSetor().getCoordenada().getColuna();
+        ArrayList<Construcao> construcoes = j.getSetor().getConstrucoes();
+
         // Impede movimentação em setores que ainda possuam inimigos
         if (j.getSetor().getInimigos().isEmpty()) {
             // Atualiza o atributo setor de acordo com a direção recebida, checando
             // eventuais colisões com as bordas
             switch (d) {
                 case CIMA:
-                    if (j.getSetor().getCoordenada().getLinha() > 0) {
-                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha() - 1,
-                                j.getSetor().getCoordenada().getColuna()));
+                    if (linhaAtual > 0 && construcoes.get(0) == Construcao.PORTA) {
+                        j.setSetor(this.getSetor(linhaAtual - 1, colunaAtual));
                     }
                     break;
                 case DIREITA:
-                    if (j.getSetor().getCoordenada().getColuna() < 4) {
-                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha(),
-                                j.getSetor().getCoordenada().getColuna() + 1));
+                    if (colunaAtual < 4 && construcoes.get(1) == Construcao.PORTA) {
+                        j.setSetor(this.getSetor(linhaAtual, colunaAtual + 1));
                     }
                     break;
                 case BAIXO:
-                    if (j.getSetor().getCoordenada().getLinha() < 4) {
-                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha() + 1,
-                                j.getSetor().getCoordenada().getColuna()));
+                    if (linhaAtual < 4 && construcoes.get(2) == Construcao.PORTA) {
+                        j.setSetor(this.getSetor(linhaAtual + 1, colunaAtual));
                     }
                     break;
                 case ESQUERDA:
-                    if (j.getSetor().getCoordenada().getColuna() > 0) {
-                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha(),
-                                j.getSetor().getCoordenada().getColuna() - 1));
+                    if (colunaAtual > 0 && construcoes.get(3) == Construcao.PORTA) {
+                        j.setSetor(this.getSetor(linhaAtual, colunaAtual - 1));
                     }
                     break;
             }
