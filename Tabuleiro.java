@@ -307,19 +307,23 @@ public class Tabuleiro {
      * @param s o Setor ao qual a Construção que deseja-se visualizar pertence.
      * @param d a Direção correspondente ao Setor desejado dentro de seu setor.
      */
-    public String strConstrucao(Setor s, Direcao d) {
+    public String strCt(Setor s, Direcao d) {
         switch (d) {
             case CIMA:
-                return ((s.getConstrucoes().get(0) == Construcao.PORTA /* && s.isVisitado() */) ? "*" : "-");
+                return ((s.getConstrucoes().get(0) == Construcao.PORTA && s.isVisitado()
+                        && s.getCoordenada().getLinha() > 0) ? "*" : "-");
 
             case DIREITA:
-                return ((s.getConstrucoes().get(1) == Construcao.PORTA /* && s.isVisitado() */) ? "*" : "|");
+                return ((s.getConstrucoes().get(1) == Construcao.PORTA && s.isVisitado()
+                        && s.getCoordenada().getColuna() < 4) ? "*" : "|");
 
             case BAIXO:
-                return ((s.getConstrucoes().get(2) == Construcao.PORTA /* && s.isVisitado() */) ? "*" : "-");
+                return ((s.getConstrucoes().get(2) == Construcao.PORTA && s.isVisitado()
+                        && s.getCoordenada().getLinha() < 4) ? "*" : "-");
 
             case ESQUERDA:
-                return ((s.getConstrucoes().get(3) == Construcao.PORTA /* && s.isVisitado() */) ? "*" : "|");
+                return ((s.getConstrucoes().get(3) == Construcao.PORTA && s.isVisitado()
+                        && s.getCoordenada().getColuna() > 0) ? "*" : "|");
 
             default:
                 return "\\";
@@ -340,7 +344,7 @@ public class Tabuleiro {
         String l = new String();
 
         for (int i = 0; i < 4; i++) {
-            l += strCorpoSetor(p, s[i]) + strConstrucao(s[i], Direcao.DIREITA);
+            l += strCorpoSetor(p, s[i]) + strCt(s[i], Direcao.DIREITA);
         }
         l += strCorpoSetor(p, s[4]);
 
@@ -363,7 +367,7 @@ public class Tabuleiro {
 
         // Texto correspondente aos Setores, inserido Setor por Setor
         for (int i = 0; i < 5; i++) {
-            l += "|-" + strConstrucao(s[i], Direcao.BAIXO) + "-";
+            l += "|-" + strCt(s[i], Direcao.BAIXO) + "-";
         }
         l += "|";
 
@@ -377,7 +381,7 @@ public class Tabuleiro {
      * @param s um Setor cujas construções horizontais deseja-se visualizar.
      */
     public String strZHC(Setor s, Direcao d) {
-        return "|------" + strConstrucao(s, d) + "------|";
+        return "|------" + strCt(s, d) + "------|";
     }
 
     /**
@@ -387,7 +391,7 @@ public class Tabuleiro {
      * @param s um Setor cujas construções verticais deseja-se visualizar.
      */
     public String strZVC(Setor s) {
-        return strConstrucao(s, Direcao.ESQUERDA) + "             " + strConstrucao(s, Direcao.DIREITA);
+        return strCt(s, Direcao.ESQUERDA) + "             " + strCt(s, Direcao.DIREITA);
     }
 
     /**
