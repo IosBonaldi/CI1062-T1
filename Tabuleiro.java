@@ -172,20 +172,20 @@ public class Tabuleiro {
 
             switch(dir){
                 case CIMA:
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.CIMA);
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.BAIXO);
                     break;
                 case DIREITA:
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.DIREITA);
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.ESQUERDA);
                     break;
                 case BAIXO:
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.BAIXO);
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.CIMA);
                     break;
                 case ESQUERDA:
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.ESQUERDA);
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.DIREITA);
                     break;
             }
         }
@@ -208,13 +208,13 @@ public class Tabuleiro {
      * @return
      */
     private Direcao calcularDirecao(Coordenada origem, Coordenada destino){
-        if((destino.getLinha() - origem.getLinha()) == 1)
+        if((destino.getColuna() - origem.getColuna()) == 1)
             return Direcao.DIREITA;
-        else if((destino.getLinha() - origem.getLinha()) == -1)
-            return Direcao.ESQUERDA;
-        else if((destino.getColuna() - origem.getColuna()) == 1)
-            return Direcao.BAIXO;
         else if((destino.getColuna() - origem.getColuna()) == -1)
+            return Direcao.ESQUERDA;
+        else if((destino.getLinha() - origem.getLinha()) == 1)
+            return Direcao.BAIXO;
+        else if((destino.getLinha() - origem.getLinha()) == -1)
             return Direcao.CIMA;
 
         return null;
