@@ -307,7 +307,7 @@ public class Tabuleiro {
      * @param s o Setor ao qual a Construção que deseja-se visualizar pertence.
      * @param d a Direção correspondente ao Setor desejado dentro de seu setor.
      */
-    public String strCt(Setor s, Direcao d) {
+    public String strConstruction(Setor s, Direcao d) {
         switch (d) {
             case CIMA:
                 return ((s.getConstrucoes().get(0) == Construcao.PORTA && s.isVisitado()
@@ -340,13 +340,14 @@ public class Tabuleiro {
      *      prevalecerá a Construção DIREITA do Setor ESQUERDO em detrimento da
      *      Construção ESQUERDA do Setor DIREITO.
      */
-    public String strBVC(ArrayList<Jogador> p, Setor[] s) {
+    public String strBoardVConstructions(ArrayList<Jogador> p, Setor[] s) {
         String l = new String();
 
+        l += "|";
         for (int i = 0; i < 4; i++) {
-            l += strCorpoSetor(p, s[i]) + strCt(s[i], Direcao.DIREITA);
+            l += strCorpoSetor(p, s[i]) + strConstruction(s[i], Direcao.DIREITA);
         }
-        l += strCorpoSetor(p, s[4]);
+        l += strCorpoSetor(p, s[4]) + "|";
 
         return l;
     }
@@ -361,13 +362,13 @@ public class Tabuleiro {
      *      prevalecerá a Construção INFERIOR do Setor SUPERIOR em detrimento da
      *      Construção SUPERIOR do Setor INFERIOR.
      */
-    public String strBHC(Setor[] s) {
+    public String strBoardHConstructions(Setor[] s) {
         // String que armazenará o retorno
         String l = new String();
 
         // Texto correspondente aos Setores, inserido Setor por Setor
         for (int i = 0; i < 5; i++) {
-            l += "|-" + strCt(s[i], Direcao.BAIXO) + "-";
+            l += "|-" + strConstruction(s[i], Direcao.BAIXO) + "-";
         }
         l += "|";
 
@@ -380,8 +381,8 @@ public class Tabuleiro {
      *
      * @param s um Setor cujas construções horizontais deseja-se visualizar.
      */
-    public String strZHC(Setor s, Direcao d) {
-        return "|------" + strCt(s, d) + "------|";
+    public String strZoomHConstruction(Setor s, Direcao d) {
+        return "|------" + strConstruction(s, d) + "------|";
     }
 
     /**
@@ -390,8 +391,8 @@ public class Tabuleiro {
      *
      * @param s um Setor cujas construções verticais deseja-se visualizar.
      */
-    public String strZVC(Setor s) {
-        return strCt(s, Direcao.ESQUERDA) + "             " + strCt(s, Direcao.DIREITA);
+    public String strZoomVConstructions(Setor s) {
+        return strConstruction(s, Direcao.ESQUERDA) + "             " + strConstruction(s, Direcao.DIREITA);
     }
 
     /**
@@ -400,7 +401,7 @@ public class Tabuleiro {
      *
      * @param s o Setor cujos Inimigos desejam-se visualizar.
      */
-    public String strEn(Setor s) {
+    public String strEnemiesAttrs(Setor s) {
         // String que armazenará o retorno
         String r = new String();
 
@@ -423,7 +424,7 @@ public class Tabuleiro {
      * @param p lista de Jogadores cujos atributos desejam-se visualizar.
      * @param i número do mini-setor a ser impresso.
      */
-    public String strPl(ArrayList<Jogador> p, int i) {
+    public String strPlayersName(ArrayList<Jogador> p, int i) {
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
@@ -446,7 +447,7 @@ public class Tabuleiro {
      * @param p lista de Jogadores cujos atributos desejam-se visualizar.
      * @param i número do mini-setor a ser impresso.
      */
-    public String strAD(ArrayList<Jogador> p, int i) {
+    public String strZoomPlayersAttrs(ArrayList<Jogador> p, int i) {
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
@@ -467,7 +468,7 @@ public class Tabuleiro {
      *
      * @param p o Jogador cujas Coordenadas desejam-se visualizar.
      */
-    public String strCd(Jogador p) {
+    public String strPlayerCoordinates(Jogador p) {
         return "Setor [" + p.getSetor().getCoordenada().getLinha() + "," + p.getSetor().getCoordenada().getColuna()
                 + "]";
     }
@@ -483,8 +484,22 @@ public class Tabuleiro {
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
-        Setor s1 = p1.getSetor();
-        Setor s2 = p2.getSetor();
+        Setor sp1 = p1.getSetor();
+        Setor sp2 = p2.getSetor();
+        // Coordenadas dos players no zoom
+        String zoomPC = strPlayerCoordinates(p1) + "       " + strPlayerCoordinates(p2);
+        // Construções horizontais superiores no zoom
+        String zoomHCT = strZoomHConstruction(sp1, Direcao.CIMA) + "   " + strZoomHConstruction(sp2, Direcao.CIMA);
+        // Construções horizontais inferiores no zoom
+        String zoomHCB = strZoomHConstruction(sp1, Direcao.BAIXO) + "   " + strZoomHConstruction(sp2, Direcao.BAIXO);
+        // Construções verticais superiores no zoom
+        String zoomVC = strZoomVConstructions(sp1) + "   " + strZoomVConstructions(sp2);
+        // Inimigos no zoom
+        String zoomEA = strEnemiesAttrs(sp1) + "   " + strEnemiesAttrs(sp2);
+        // Atributos ATK/DEF dos players no zoom
+        String zoomPA = strZoomPlayersAttrs(p, 1) + "   " + strZoomPlayersAttrs(p, 2);
+        // Nome dos players no zoom
+        String zoomPN = strPlayersName(p, 1) + "   " + strPlayersName(p, 2);
 
         // Texto correspondente ao tabuleiro, inserido linha a linha
         r += "-----------------------------\n";
@@ -492,18 +507,16 @@ public class Tabuleiro {
         r += "-----------------------------\n";
         r += "      1   2   3   4   5\n";
         r += "    |---|---|---|---|---|\n";
-        r += "1   |" + strBVC(p, setores[0]) + "|       " + strCd(p1) + "       [" + strCd(p2) + "\n";
-        r += "    " + strBHC(setores[0]) + "\n";
-        r += "2   |" + strBVC(p, setores[1]) + "|     " + strZHC(s1, Direcao.CIMA) + "   " + strZHC(s2, Direcao.CIMA)
-                + "\n";
-        r += "    " + strBHC(setores[1]) + "     " + strEn(s1) + "   " + strEn(s2) + "\n";
-        r += "3   |" + strBVC(p, setores[2]) + "|     |             |   |             |\n";
-        r += "    " + strBHC(setores[2]) + "     " + strZVC(s1) + "   " + strZVC(s2) + "\n";
-        r += "4   |" + strBVC(p, setores[3]) + "|     " + strPl(p, 1) + "   " + strPl(p, 2) + "\n";
-        r += "    " + strBHC(setores[3]) + "     " + strAD(p, 1) + "   " + strAD(p, 2) + "\n";
-        r += "5   |" + strBVC(p, setores[4]) + "|     " + strZHC(s1, Direcao.BAIXO) + "   " + strZHC(s2, Direcao.BAIXO)
-                + "\n";
-        r += "    |---|---|---|---|---|\n";
+        r += "1   " + strBoardVConstructions(p, setores[0]) + "       " + zoomPC + "\n";
+        r += "    " + strBoardHConstructions(setores[0]) + "\n";
+        r += "2   " + strBoardVConstructions(p, setores[1]) + "     " + zoomHCT + "\n";
+        r += "    " + strBoardHConstructions(setores[1]) + "     " + zoomEA + "\n";
+        r += "3   " + strBoardVConstructions(p, setores[2]) + "     |             |   |             |\n";
+        r += "    " + strBoardHConstructions(setores[2]) + "     " + zoomVC + "\n";
+        r += "4   " + strBoardVConstructions(p, setores[3]) + "     " + zoomPN + "\n";
+        r += "    " + strBoardHConstructions(setores[3]) + "     " + zoomPA + "\n";
+        r += "5   " + strBoardVConstructions(p, setores[4]) + "     " + zoomHCB + "\n";
+        r += "    " + strBoardHConstructions(setores[4]) + "\n";
 
         return r;
     }
