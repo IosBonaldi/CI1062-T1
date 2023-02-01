@@ -8,7 +8,7 @@ public class Tabuleiro {
 
     public Tabuleiro(int altura, int largura) {
         if(altura <= 0 || largura <= 0)
-            throw new IllegalArgumentException("Altura e/ou largura invalidas!");
+            throw new IllegalArgumentException("Height and/or width invalid!");
 
         this.altura = altura;
         this.largura = largura;
@@ -40,8 +40,10 @@ public class Tabuleiro {
         setores[coordVirus.getLinha()][coordVirus.getColuna()].setFonte(true);
     }
 
-    public Setor getSetor(int x, int y) {
-        return this.getSetores()[x][y];
+    public Setor getSetor(int coluna, int linha) {
+        if(coluna < 0 || linha < 0)
+            return null;
+        return this.getSetores()[coluna][linha];
     }
 
     public void setSetores(Setor[][] setores) {
@@ -180,7 +182,7 @@ public class Tabuleiro {
             Direcao dir = calcularDirecao(coordSetorAtual, coordSetorSeguinte);
 
             if(dir == null)
-                throw new NullPointerException("Nenhuma direcao valida encontrada!");
+                throw new NullPointerException("Couldn't find a valid direction!");
 
             switch(dir){
                 case CIMA:
@@ -389,13 +391,16 @@ public class Tabuleiro {
     }
 
     /**
-     * Retorna o texto correspondente aos atributos ATK/DEF de um Jogador
+     * Retorna o texto correspondente aos atributos NOME de um Jogador
      * específico.
      *
      * @param p lista de Jogadores cujos atributos desejam-se visualizar.
      * @param i número do mini-setor a ser impresso.
      */
     public String strJogadores(ArrayList<Jogador> p, int i) {
+        if(i != 1 || i != 2)
+            throw new IllegalArgumentException();
+
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
@@ -419,6 +424,8 @@ public class Tabuleiro {
      * @param i número do mini-setor a ser impresso.
      */
     public String strATKDEF(ArrayList<Jogador> p, int i) {
+        if(i != 1 || i != 2)
+            throw new IllegalArgumentException();
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
