@@ -457,9 +457,9 @@ public class Tabuleiro {
             return "|   P1    P2  |";
         } else {
             if (i == 1) {
-                return "|   P1         |";
+                return "|   P1        |";
             } else if (i == 2) {
-                return "|   P2         |";
+                return "|   P2        |";
             }
         }
         return "";
