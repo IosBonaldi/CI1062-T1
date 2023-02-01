@@ -89,45 +89,4 @@ public class Jogador extends Personagem {
             }
         }
     }
-
-    /**
-     * Movimenta o jogador através dos setores do tabuleiro atualizando seu atributo
-     * setor.
-     *
-     * @param t o tabuleiro no qual o jogador está inserido.
-     * @param d a direção para a qual deseja-se mover o jogador.
-     */
-    public void movimentar(Tabuleiro t, Direcao d) {
-        // Impede movimentação em setores que ainda possuam inimigos
-        if (this.getSetor().getInimigos().isEmpty()) {
-            // Atualiza o atributo setor de acordo com a direção recebida, checando
-            // eventuais colisões com as bordas
-            switch (d) {
-                case CIMA:
-                    if (this.getSetor().getCoordenada().getY() > 0) {
-                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX(),
-                                this.getSetor().getCoordenada().getY() - 1));
-                    }
-                    break;
-                case DIREITA:
-                    if (this.getSetor().getCoordenada().getX() < 4) {
-                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX() + 1,
-                                this.getSetor().getCoordenada().getY()));
-                    }
-                    break;
-                case BAIXO:
-                    if (this.getSetor().getCoordenada().getY() < 4) {
-                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX(),
-                                this.getSetor().getCoordenada().getY() + 1));
-                    }
-                    break;
-                case ESQUERDA:
-                    if (this.getSetor().getCoordenada().getX() > 0) {
-                        this.setSetor(t.getSetor(this.getSetor().getCoordenada().getX() - 1,
-                                this.getSetor().getCoordenada().getY()));
-                    }
-                    break;
-            }
-        }
-    }
 }

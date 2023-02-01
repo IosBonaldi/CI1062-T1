@@ -3,17 +3,41 @@ import java.util.Random;
 
 public class Tabuleiro {
     private Setor[][] setores;
-    int linhas;
-    int colunas;
+    final private int altura;
+    final private int largura;
 
-    // Ao inves de receber uma matriz como parametro, receber o numero de linhas e
-    // colunas da matriz
-    public Tabuleiro(Setor[][] setores) {
-        this.setSetores(setores);
+    public Tabuleiro(int altura, int largura) {
+        if(altura <= 0 || largura <= 0)
+            throw new IllegalArgumentException("Altura e/ou largura invalidas!");
+
+        this.altura = altura;
+        this.largura = largura;
+        this.setores = new Setor[largura][altura];
+
+        /* Aloca os setores */
+        for(int y = 0; y < altura; y++)
+            for(int x = 0; x < largura; x++)
+                setores[x][y] = new Setor(new Coordenada(x, y));
+
+        gerarFonte();
+        gerarPortas();
     }
 
     public Setor[][] getSetores() {
         return setores;
+    }
+    
+    private void gerarFonte(){
+        Random rand = new Random();
+        Coordenada coordVirus = new Coordenada(rand.nextInt(largura), rand.nextInt(altura));
+
+        /* Gera novas coordenadas enquanto a coordenada sorteada coincidir com o meio do tabuleiro */
+        while(coordVirus.getLinha() == largura/2 && coordVirus.getColuna() == altura/2){
+            coordVirus.setLinha(rand.nextInt(largura));
+            coordVirus.setColuna(rand.nextInt(altura));
+        }
+
+        setores[coordVirus.getLinha()][coordVirus.getColuna()].setFonte(true);
     }
 
     public Setor getSetor(int x, int y) {
@@ -26,8 +50,20 @@ public class Tabuleiro {
 
     private void gerarPortas() {
         ArrayList<Coordenada> setoresVisitados = new ArrayList<Coordenada>();
-        acharVirus(new Coordenada(linhas/2, colunas/2), setoresVisitados, false);
-        abrirCaminho(setoresVisitados);
+
+        int quantidadePortasAbertas = 0;
+        int caminhosEncontrados = 0;
+
+        /* A quantidade de portas aberta "2*altura*largura" foi definido testando diferentes possibilidades
+         * e esse valor foi suficiente para construir um mapa com varias possibilidades de caminhos
+         */
+        while(quantidadePortasAbertas < 2*altura*largura || caminhosEncontrados < 3){
+            acharVirus(new Coordenada(altura/2, largura/2), setoresVisitados, false);
+            abrirCaminho(setoresVisitados);
+            quantidadePortasAbertas += setoresVisitados.size() - 1; // A ultima coordenada nao conta, porque e a fonte, por isso o -1
+            caminhosEncontrados += 1;
+            setoresVisitados.clear();
+        }
     }
 
     /**
@@ -40,7 +76,7 @@ public class Tabuleiro {
     private boolean acharVirus(Coordenada coord, ArrayList<Coordenada> setoresVisitados, boolean virusAchado){
         if(virusAchado == true)
             return virusAchado;
-        if(setores[coord.getX()][coord.getY()].isFonte()){
+        if(setores[coord.getLinha()][coord.getColuna()].isFonte()){
             setoresVisitados.add(coord); 
             return true;
         }
@@ -76,10 +112,10 @@ public class Tabuleiro {
         ArrayList<Coordenada> coordAleatorias = new ArrayList<Coordenada>();
         Random rand = new Random();
 
-        Coordenada coord1 = new Coordenada(coord.getX() + 1, coord.getY());
-        Coordenada coord2 = new Coordenada(coord.getX() - 1, coord.getY());
-        Coordenada coord3 = new Coordenada(coord.getX(), coord.getY() + 1);
-        Coordenada coord4 = new Coordenada(coord.getX(), coord.getY() - 1);
+        Coordenada coord1 = new Coordenada(coord.getLinha() + 1, coord.getColuna());
+        Coordenada coord2 = new Coordenada(coord.getLinha() - 1, coord.getColuna());
+        Coordenada coord3 = new Coordenada(coord.getLinha(), coord.getColuna() + 1);
+        Coordenada coord4 = new Coordenada(coord.getLinha(), coord.getColuna() - 1);
 
         if(coordenadaEhValida(coord1) && !setorFoiVisitado(coord1, setoresVisitados)) coordAleatorias.add(coord1);
         if(coordenadaEhValida(coord2) && !setorFoiVisitado(coord2, setoresVisitados)) coordAleatorias.add(coord2);
@@ -111,7 +147,7 @@ public class Tabuleiro {
     private boolean setorFoiVisitado(Coordenada coord, ArrayList<Coordenada> setoresVisitados){
         for(int i = 0; i < setoresVisitados.size(); i++){
             Coordenada aux = setoresVisitados.get(i);
-            if((aux.getX() == coord.getX()) && ( aux.getY() == coord.getY())) 
+            if((aux.getLinha() == coord.getLinha()) && ( aux.getColuna() == coord.getColuna())) 
                 return true;
         }
         return false;
@@ -124,9 +160,9 @@ public class Tabuleiro {
      * @return
      */
     private boolean coordenadaEhValida(Coordenada coord){
-        if(coord.getX() >= linhas || coord.getX() < 0)
+        if(coord.getLinha() >= altura || coord.getLinha() < 0)
             return false;
-        if(coord.getY() >= colunas || coord.getY() < 0)
+        if(coord.getColuna() >= largura || coord.getColuna() < 0)
             return false;
 
         return true;
@@ -148,20 +184,20 @@ public class Tabuleiro {
 
             switch(dir){
                 case CIMA:
-                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.CIMA);
-                    abrirPorta(setores[coordSetorSeguinte.getX()][coordSetorSeguinte.getY()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.BAIXO);
                     break;
                 case DIREITA:
-                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.DIREITA);
-                    abrirPorta(setores[coordSetorSeguinte.getX()][coordSetorSeguinte.getY()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.ESQUERDA);
                     break;
                 case BAIXO:
-                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.BAIXO);
-                    abrirPorta(setores[coordSetorSeguinte.getX()][coordSetorSeguinte.getY()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.CIMA);
                     break;
                 case ESQUERDA:
-                    abrirPorta(setores[coordSetorAtual.getX()][coordSetorAtual.getY()], Direcao.ESQUERDA);
-                    abrirPorta(setores[coordSetorSeguinte.getX()][coordSetorSeguinte.getY()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.DIREITA);
                     break;
             }
         }
@@ -184,13 +220,13 @@ public class Tabuleiro {
      * @return
      */
     private Direcao calcularDirecao(Coordenada origem, Coordenada destino){
-        if((destino.getX() - origem.getX()) == 1)
+        if((destino.getColuna() - origem.getColuna()) == 1)
             return Direcao.DIREITA;
-        else if((destino.getX() - origem.getX()) == -1)
+        else if((destino.getColuna() - origem.getColuna()) == -1)
             return Direcao.ESQUERDA;
-        else if((destino.getY() - origem.getY()) == 1)
+        else if((destino.getLinha() - origem.getLinha()) == 1)
             return Direcao.BAIXO;
-        else if((destino.getY() - origem.getY()) == -1)
+        else if((destino.getLinha() - origem.getLinha()) == -1)
             return Direcao.CIMA;
 
         return null;
@@ -220,6 +256,49 @@ public class Tabuleiro {
     }
 
     /**
+     * Movimenta o jogador através dos setores do tabuleiro atualizando seu atributo
+     * setor.
+     *
+     * @param t o tabuleiro no qual o jogador está inserido.
+     * @param d a direção para a qual deseja-se mover o jogador.
+     */
+    public void movimentar(Jogador j, Direcao d) {
+        // Impede movimentação em setores que ainda possuam inimigos
+        if (j.getSetor().getInimigos().isEmpty()) {
+            // Atualiza o atributo setor de acordo com a direção recebida, checando
+            // eventuais colisões com as bordas
+            switch (d) {
+                case CIMA:
+                    if (j.getSetor().getCoordenada().getLinha() > 0) {
+                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha()-1,
+                                j.getSetor().getCoordenada().getColuna()));
+                    }
+                    break;
+                case DIREITA:
+                    if (j.getSetor().getCoordenada().getColuna() < 4) {
+                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha(),
+                                j.getSetor().getCoordenada().getColuna()+1));
+                    }
+                    break;
+                case BAIXO:
+                    if (j.getSetor().getCoordenada().getLinha() < 4) {
+                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha()+1,
+                                j.getSetor().getCoordenada().getColuna()));
+                    }
+                    break;
+                case ESQUERDA:
+                    if (j.getSetor().getCoordenada().getColuna() > 0) {
+                        j.setSetor(this.getSetor(j.getSetor().getCoordenada().getLinha(),
+                                j.getSetor().getCoordenada().getColuna()-1));
+                    }
+                    break;
+            }
+
+            j.getSetor().setVisitado(true);
+        }
+    }
+
+    /**
      * Retorna o texto correspondente à uma construção específica de um setor
      * específico
      *
@@ -229,16 +308,16 @@ public class Tabuleiro {
     public String strConstrucao(Setor s, Direcao d) {
         switch (d) {
             case CIMA:
-                return ((s.getConstrucoes().get(0) == Construcao.PORTA && s.isVisitado()) ? "*" : "-");
+                return ((s.getConstrucoes().get(0) == Construcao.PORTA /*&& s.isVisitado()*/) ? "*" : "-");
 
             case DIREITA:
-                return ((s.getConstrucoes().get(1) == Construcao.PORTA && s.isVisitado()) ? "*" : "|");
+                return ((s.getConstrucoes().get(1) == Construcao.PORTA /*&& s.isVisitado()*/) ? "*" : "|");
 
             case BAIXO:
-                return ((s.getConstrucoes().get(2) == Construcao.PORTA && s.isVisitado()) ? "*" : "-");
+                return ((s.getConstrucoes().get(2) == Construcao.PORTA /*&& s.isVisitado()*/) ? "*" : "-");
 
             case ESQUERDA:
-                return ((s.getConstrucoes().get(3) == Construcao.PORTA && s.isVisitado()) ? "*" : "|");
+                return ((s.getConstrucoes().get(3) == Construcao.PORTA /*&& s.isVisitado()*/) ? "*" : "|");
 
             default:
                 return "\\";
@@ -361,7 +440,7 @@ public class Tabuleiro {
      * @param p o Jogador cujas Coordenadas desejam-se visualizar.
      */
     public String strCoordenada(Jogador p) {
-        return p.getSetor().getCoordenada().getX() + "," + p.getSetor().getCoordenada().getY();
+        return p.getSetor().getCoordenada().getLinha() + "," + p.getSetor().getCoordenada().getColuna();
     }
 
     /**

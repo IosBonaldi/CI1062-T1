@@ -15,6 +15,7 @@ public class Setor {
         this.setInimigos(new ArrayList<Inimigo>());
         this.setFonte(false);
         this.setVisitado(false);
+        gerarInimigos();
     }
 
     public SetorTipos getTipo() {
