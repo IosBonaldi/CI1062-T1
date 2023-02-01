@@ -7,7 +7,7 @@ public class Tabuleiro {
     final private int largura;
 
     public Tabuleiro(int altura, int largura) {
-        if (altura <= 0 || largura <= 0)
+        if (5 > altura || altura > 20 || 5 > altura || altura > 20)
             throw new IllegalArgumentException("Altura e/ou largura invalidas!");
 
         this.altura = altura;
@@ -21,6 +21,14 @@ public class Tabuleiro {
 
         gerarFonte();
         gerarPortas();
+    }
+
+    public int getAltura() {
+        return altura;
+    }
+
+    public int getLargura() {
+        return largura;
     }
 
     public Setor[][] getSetores() {
@@ -57,13 +65,17 @@ public class Tabuleiro {
         int quantidadePortasAbertas = 0;
         int caminhosEncontrados = 0;
 
-        /* A quantidade de portas aberta "2*altura*largura" foi definido testando diferentes possibilidades
-         * e esse valor foi suficiente para construir um mapa com varias possibilidades de caminhos
+        /*
+         * A quantidade de portas aberta "2*altura*largura" foi definido testando
+         * diferentes possibilidades
+         * e esse valor foi suficiente para construir um mapa com varias possibilidades
+         * de caminhos
          */
-        while(quantidadePortasAbertas < 2*altura*largura || caminhosEncontrados < 3){
-            acharVirus(new Coordenada(altura/2, largura/2), setoresVisitados, false);
+        while (quantidadePortasAbertas < 2 * altura * largura || caminhosEncontrados < 3) {
+            acharVirus(new Coordenada(altura / 2, largura / 2), setoresVisitados, false);
             abrirCaminho(setoresVisitados);
-            quantidadePortasAbertas += setoresVisitados.size() - 1; // A ultima coordenada nao conta, porque e a fonte, por isso o -1
+            quantidadePortasAbertas += setoresVisitados.size() - 1; // A ultima coordenada nao conta, porque e a fonte,
+                                                                    // por isso o -1
             caminhosEncontrados += 1;
             setoresVisitados.clear();
         }
@@ -203,7 +215,8 @@ public class Tabuleiro {
                     break;
                 case DIREITA:
                     abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.DIREITA);
-                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()],
+                            Direcao.ESQUERDA);
                     break;
                 case BAIXO:
                     abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.BAIXO);
@@ -233,14 +246,14 @@ public class Tabuleiro {
      * @param destino
      * @return
      */
-    private Direcao calcularDirecao(Coordenada origem, Coordenada destino){
-        if((destino.getColuna() - origem.getColuna()) == 1)
+    private Direcao calcularDirecao(Coordenada origem, Coordenada destino) {
+        if ((destino.getColuna() - origem.getColuna()) == 1)
             return Direcao.DIREITA;
-        else if((destino.getColuna() - origem.getColuna()) == -1)
+        else if ((destino.getColuna() - origem.getColuna()) == -1)
             return Direcao.ESQUERDA;
-        else if((destino.getLinha() - origem.getLinha()) == 1)
+        else if ((destino.getLinha() - origem.getLinha()) == 1)
             return Direcao.BAIXO;
-        else if((destino.getLinha() - origem.getLinha()) == -1)
+        else if ((destino.getLinha() - origem.getLinha()) == -1)
             return Direcao.CIMA;
 
         return null;
@@ -292,12 +305,12 @@ public class Tabuleiro {
                     }
                     break;
                 case DIREITA:
-                    if (colunaAtual < 4 && construcoes.get(1) == Construcao.PORTA) {
+                    if (colunaAtual < this.getLargura() - 1 && construcoes.get(1) == Construcao.PORTA) {
                         j.setSetor(this.getSetor(linhaAtual, colunaAtual + 1));
                     }
                     break;
                 case BAIXO:
-                    if (linhaAtual < 4 && construcoes.get(2) == Construcao.PORTA) {
+                    if (linhaAtual < this.getAltura() - 1 && construcoes.get(2) == Construcao.PORTA) {
                         j.setSetor(this.getSetor(linhaAtual + 1, colunaAtual));
                     }
                     break;
@@ -327,11 +340,11 @@ public class Tabuleiro {
 
             case DIREITA:
                 return ((s.getConstrucoes().get(1) == Construcao.PORTA && s.isVisitado()
-                        && s.getCoordenada().getColuna() < 4) ? "*" : "|");
+                        && s.getCoordenada().getColuna() < this.getLargura() - 1) ? "*" : "|");
 
             case BAIXO:
                 return ((s.getConstrucoes().get(2) == Construcao.PORTA && s.isVisitado()
-                        && s.getCoordenada().getLinha() < 4) ? "*" : "-");
+                        && s.getCoordenada().getLinha() < this.getAltura() - 1) ? "*" : "-");
 
             case ESQUERDA:
                 return ((s.getConstrucoes().get(3) == Construcao.PORTA && s.isVisitado()
@@ -356,10 +369,10 @@ public class Tabuleiro {
         String l = new String();
 
         l += "|";
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < this.getLargura() - 1; i++) {
             l += strCorpoSetor(p, s[i]) + strConstruction(s[i], Direcao.DIREITA);
         }
-        l += strCorpoSetor(p, s[4]) + "|";
+        l += strCorpoSetor(p, s[this.getLargura() - 1]) + "|";
 
         return l;
     }
@@ -379,7 +392,7 @@ public class Tabuleiro {
         String l = new String();
 
         // Texto correspondente aos Setores, inserido Setor por Setor
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < this.getLargura(); i++) {
             l += "|-" + strConstruction(s[i], Direcao.BAIXO) + "-";
         }
         l += "|";
@@ -475,6 +488,25 @@ public class Tabuleiro {
         return "";
     }
 
+    public String strBoardHeader() {
+        String r = new String();
+        r += "   ";
+        for (int i = 1; i <= this.getLargura(); i++) {
+            if (i <= 10) {
+                r += "   " + i;
+            } else {
+                r += "  " + i;
+            }
+        }
+        r += "\n";
+        r += "    |";
+        for (int i = 1; i <= this.getLargura(); i++) {
+            r += "---|";
+        }
+        r += "\n";
+        return r;
+    }
+
     /**
      * Retorna o texto correspondente às Coordenadas de um Jogador específico.
      *
@@ -517,8 +549,7 @@ public class Tabuleiro {
         r += "-----------------------------\n";
         r += "|   Antivírus por um dia    |\n";
         r += "-----------------------------\n";
-        r += "      1   2   3   4   5\n";
-        r += "    |---|---|---|---|---|\n";
+        r += strBoardHeader();
         r += "1   " + strBoardVConstructions(p, setores[0]) + "       " + zoomPC + "\n";
         r += "    " + strBoardHConstructions(setores[0]) + "\n";
         r += "2   " + strBoardVConstructions(p, setores[1]) + "     " + zoomHCT + "\n";
@@ -529,6 +560,14 @@ public class Tabuleiro {
         r += "    " + strBoardHConstructions(setores[3]) + "     " + zoomPA + "\n";
         r += "5   " + strBoardVConstructions(p, setores[4]) + "     " + zoomHCB + "\n";
         r += "    " + strBoardHConstructions(setores[4]) + "\n";
+        for (int i = 5; i < this.getAltura(); i++) {
+            if (i < 9) {
+                r += (i + 1) + "   " + strBoardVConstructions(p, setores[i]) + "\n";
+            } else {
+                r += (i + 1) + "  " + strBoardVConstructions(p, setores[i]) + "\n";
+            }
+            r += "    " + strBoardHConstructions(setores[i]) + "\n";
+        }
 
         return r;
     }
