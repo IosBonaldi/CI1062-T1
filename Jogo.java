@@ -4,7 +4,6 @@ public class Jogo{
     public static void main(String args[]) {
         Scanner input = new Scanner(System.in);
         ArrayList<Jogador> jogadoresTeste = new ArrayList<Jogador>(2);
-        ArrayList<ArrayList<Inimigo>> inimigos = new ArrayList<>(2);
         PartidaVirus partida = new PartidaVirus(jogadoresTeste, new Tabuleiro(5,5), true);
         Jogador p1 = new Jogador(2,6,0,null);
         Jogador p2 = new Suporte(1,7,0,null);

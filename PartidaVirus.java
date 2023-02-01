@@ -10,8 +10,7 @@ public class PartidaVirus {
     private boolean ativo;
 
     // Construtores
-    public PartidaVirus() {
-    };
+    public PartidaVirus() {};
 
     public PartidaVirus(ArrayList<Jogador> jogadores) {
         this.setJogadores(jogadores);
@@ -71,21 +70,15 @@ public class PartidaVirus {
 
     public void chamarTurno(Jogador jogador, Scanner input) {
         char entrada;
-
+        
+        // Ações do Player 1
         if (!(jogador instanceof Suporte)) {
             Jogador p1 = (Jogador) jogador;
-            Boolean podeMovimentar = true;
 
-            // Lida com a questão de ter inimigos no setor ou não pra saber se ele pode
-            // movimentar ou não
-            // Não foi testada, alguém vê necessidade disso virar um método/função?
-            for (Inimigo i : p1.getSetor().getInimigos()) {
-                if (i.isVivo())
-                    podeMovimentar = false;
-            }
-
-            // Movimentação
-            if (podeMovimentar) {
+            /* Movimentação
+             * Se não tem inimigo vivo deixa movimentar
+             * Se ele movimentar, mostra o novo Setor e depois pede as ações */ 
+            if (!(p1.getSetor().isThereEnemyAlife())) {
                 Direcao dEntrada = null;
                 while (dEntrada == null) {
                     System.out.printf("Where to go PLAYER 1 (P1)?\n");
@@ -93,14 +86,47 @@ public class PartidaVirus {
                     dEntrada = validaEntrada(input.nextLine().charAt(0));
                 }
                 this.getTabuleiro().movimentar(p1, dEntrada);
+                System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
             }
 
             // Ações (verificar entrada)
             for (int i = 0; i < 2; i++) {
                 opcoesDeAcao(p1);
                 entrada = input.nextLine().charAt(0);
+                if(p1.getSetor().isThereEnemyAlife()) {
+                    while((entrada != 'a') && (entrada != 'b')) {
+                        entrada = input.nextLine().charAt(0);
+                    }
+                } else {
+                    while((entrada != 'b')) {
+                        entrada = input.nextLine().charAt(0);
+                    }
+                }
+                
                 if (entrada == 'a') {
-                    // p1.atacar(p1.getSetor().getInimigo(0));
+                    if(p1.getSetor().getInimigos().size() == 1) {
+                        p1.atacar(p1.getSetor().getInimigo(0));
+                    } else {
+                        whoToAttack(p1.getSetor().getInimigos().size());
+                        entrada = input.nextLine().charAt(0);
+                        if(p1.getSetor().getInimigos().size() == 3) {
+                            while((entrada != 'a') && (entrada != 'b') && (entrada != 'c')) {
+                                entrada = input.nextLine().charAt(0);
+                            } 
+                        } else if(p1.getSetor().getInimigos().size() == 2) {
+                            while((entrada != 'a') && (entrada != 'b')) {
+                                entrada = input.nextLine().charAt(0);
+                            }
+                        }
+                        
+                        if(entrada == 'a') {
+                            p1.atacar(p1.getSetor().getInimigo(0));
+                        } else if(entrada == 'b') {
+                            p1.atacar(p1.getSetor().getInimigo(1));
+                        } else {
+                            p1.atacar(p1.getSetor().getInimigo(2));
+                        }
+                    }
                     System.out.println("Escolheu atacar");
                 } else {
                     p1.procurar();
@@ -110,18 +136,10 @@ public class PartidaVirus {
         } else {
             Suporte p2 = (Suporte) jogador;
 
-            Boolean podeMovimentar = true;
-
-            // Lida com a questão de ter inimigos no setor ou não pra saber se ele pode
-            // movimentar ou não
-            // Não foi testada, alguém vê necessidade disso virar um método/função?
-            for (Inimigo i : p2.getSetor().getInimigos()) {
-                if (i.isVivo())
-                    podeMovimentar = false;
-            }
-
-            // Movimentação
-            if (podeMovimentar) {
+            /* Movimentação
+             * Se não tem inimigo vivo deixa movimentar
+             * Se ele movimentar, mostra o novo Setor e depois pede as ações */
+            if (!(p2.getSetor().isThereEnemyAlife())) {
                 Direcao dEntrada = null;
                 while (dEntrada == null) {
                     System.out.printf("Where to go PLAYER 2 (P2)?\n");
@@ -129,14 +147,47 @@ public class PartidaVirus {
                     dEntrada = validaEntrada(input.nextLine().charAt(0));
                 }
                 this.getTabuleiro().movimentar(p2, dEntrada);
+                System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
             }
 
             // Ações (verificar entrada)
             for (int i = 0; i < 2; i++) {
                 opcoesDeAcao(p2);
                 entrada = input.nextLine().charAt(0);
+                if(p2.getSetor().isThereEnemyAlife()) {
+                    while((entrada != 'a') && (entrada != 'b') && (entrada != 'c')) {
+                        entrada = input.nextLine().charAt(0);
+                    }
+                } else {
+                    while((entrada != 'b') && (entrada != 'c')) {
+                        entrada = input.nextLine().charAt(0);
+                    }
+                }
+                
                 if (entrada == 'a') {
-                    // p2.atacar(p2.getSetor().getInimigo(0));
+                    if(p2.getSetor().getInimigos().size() == 1) {
+                        p2.atacar(p2.getSetor().getInimigo(0));
+                    } else {
+                        whoToAttack(p2.getSetor().getInimigos().size());
+                        entrada = input.nextLine().charAt(0);
+                        if(p2.getSetor().getInimigos().size() == 3) {
+                            while((entrada != 'a') && (entrada != 'b') && (entrada != 'c')) {
+                                entrada = input.nextLine().charAt(0);
+                            } 
+                        } else if(p2.getSetor().getInimigos().size() == 2) {
+                            while((entrada != 'a') && (entrada != 'b')) {
+                                entrada = input.nextLine().charAt(0);
+                            }
+                        }
+                        
+                        if(entrada == 'a') {
+                            p2.atacar(p2.getSetor().getInimigo(0));
+                        } else if(entrada == 'b') {
+                            p2.atacar(p2.getSetor().getInimigo(1));
+                        } else {
+                            p2.atacar(p2.getSetor().getInimigo(2));
+                        }
+                    }
                     System.out.println("Escolheu atacar");
                 } else if (entrada == 'b') {
                     p2.procurar();
@@ -146,6 +197,9 @@ public class PartidaVirus {
                     System.out.printf("    a- P1\n");
                     System.out.printf("    b- P2\n");
                     entrada = input.nextLine().charAt(0);
+                    while((entrada != 'a') || (entrada != 'b')) {
+                        entrada = input.nextLine().charAt(0);
+                    }
                     if (entrada == 'a') {
                         p2.curar(jogadores.get(0));
                         System.out.println("Escolheu curar p1");
@@ -181,10 +235,14 @@ public class PartidaVirus {
         System.out.printf("    R- Right\n");
     }
 
-    public void opcoesDeAcao(Personagem personagem) {
+    public void opcoesDeAcao(Jogador personagem) {
         System.out.printf("What do u wanna do?\n");
-        System.out.printf("    a- attack\n");
-        System.out.printf("    b- search\n");
+        if(!(personagem.getSetor().isThereEnemyAlife())) {
+            System.out.printf("    b- search\n");
+        } else {
+            System.out.printf("    a- attack\n");
+            System.out.printf("    b- search\n");
+        }    
         if (personagem instanceof Suporte)
             System.out.printf("    c- heal\n");
     }
@@ -213,6 +271,25 @@ public class PartidaVirus {
 
     public void incrementaCiclo() {
         this.setCiclos(this.getCiclos() + 1);
+    }
+
+    public void whoToAttack(int enemiesQuantity) {
+        switch(enemiesQuantity) {
+            case 2:
+                System.out.printf("Who do u wanna attack:\n");
+                System.out.printf("    a- first enemy\n");
+                System.out.printf("    b- second enemy\n");
+                break;
+
+            case 3:
+                System.out.printf("Who do u wanna attack:\n");
+                System.out.printf("    a- first enemy\n");
+                System.out.printf("    b- second enemy\n");
+                System.out.printf("    c- third enemy\n");
+
+            default:
+                break;
+        }
     }
 }
 
