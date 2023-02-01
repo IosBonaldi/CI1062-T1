@@ -419,11 +419,11 @@ public class Tabuleiro {
 
         // Texto correspondente aos Inimigos, inserido Inimigo a Inimigo
         r += "| ";
-        for (int i = 1; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             r += s.getInimigo(i) == null ? "   " : s.getInimigo(i).getAtk() + "/" + s.getInimigo(i).getDef();
             r += " ";
         }
-        r += s.getInimigo(3) == null ? "   " : s.getInimigo(3).getAtk() + "/" + s.getInimigo(3).getDef();
+        r += s.getInimigo(2) == null ? "   " : s.getInimigo(2).getAtk() + "/" + s.getInimigo(2).getDef();
         r += " |";
 
         return r;

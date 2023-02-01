@@ -2,18 +2,18 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Inimigo extends Personagem {
-    private Integer posicao;
+    private int posicao;
 
-    public Inimigo(int atk, int def, Integer posicao) {
+    public Inimigo(int atk, int def, int posicao) {
         super(atk, def);
         this.setPosicao(posicao);
     }
 
-    public Integer getPosicao() {
+    public int getPosicao() {
         return posicao;
     }
 
-    public void setPosicao(Integer posicao) {
+    public void setPosicao(int posicao) {
         if (1 <= posicao && posicao <= 3) {
             this.posicao = posicao;
         }
