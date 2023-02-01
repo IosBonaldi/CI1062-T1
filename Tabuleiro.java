@@ -53,8 +53,20 @@ public class Tabuleiro {
 
     private void gerarPortas() {
         ArrayList<Coordenada> setoresVisitados = new ArrayList<Coordenada>();
-        acharVirus(new Coordenada(altura / 2, largura / 2), setoresVisitados, false);
-        abrirCaminho(setoresVisitados);
+
+        int quantidadePortasAbertas = 0;
+        int caminhosEncontrados = 0;
+
+        /* A quantidade de portas aberta "2*altura*largura" foi definido testando diferentes possibilidades
+         * e esse valor foi suficiente para construir um mapa com varias possibilidades de caminhos
+         */
+        while(quantidadePortasAbertas < 2*altura*largura || caminhosEncontrados < 3){
+            acharVirus(new Coordenada(altura/2, largura/2), setoresVisitados, false);
+            abrirCaminho(setoresVisitados);
+            quantidadePortasAbertas += setoresVisitados.size() - 1; // A ultima coordenada nao conta, porque e a fonte, por isso o -1
+            caminhosEncontrados += 1;
+            setoresVisitados.clear();
+        }
     }
 
     /**
@@ -186,20 +198,20 @@ public class Tabuleiro {
 
             switch (dir) {
                 case CIMA:
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.CIMA);
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.BAIXO);
                     break;
                 case DIREITA:
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.DIREITA);
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.ESQUERDA);
                     break;
                 case BAIXO:
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.BAIXO);
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.CIMA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.BAIXO);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.CIMA);
                     break;
                 case ESQUERDA:
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.ESQUERDA);
-                    abrirPorta(setores[coordSetorAtual.getColuna()][coordSetorAtual.getLinha()], Direcao.DIREITA);
+                    abrirPorta(setores[coordSetorAtual.getLinha()][coordSetorAtual.getColuna()], Direcao.ESQUERDA);
+                    abrirPorta(setores[coordSetorSeguinte.getLinha()][coordSetorSeguinte.getColuna()], Direcao.DIREITA);
                     break;
             }
         }
@@ -221,14 +233,14 @@ public class Tabuleiro {
      * @param destino
      * @return
      */
-    private Direcao calcularDirecao(Coordenada origem, Coordenada destino) {
-        if ((destino.getLinha() - origem.getLinha()) == 1)
+    private Direcao calcularDirecao(Coordenada origem, Coordenada destino){
+        if((destino.getColuna() - origem.getColuna()) == 1)
             return Direcao.DIREITA;
-        else if ((destino.getLinha() - origem.getLinha()) == -1)
+        else if((destino.getColuna() - origem.getColuna()) == -1)
             return Direcao.ESQUERDA;
-        else if ((destino.getColuna() - origem.getColuna()) == 1)
+        else if((destino.getLinha() - origem.getLinha()) == 1)
             return Direcao.BAIXO;
-        else if ((destino.getColuna() - origem.getColuna()) == -1)
+        else if((destino.getLinha() - origem.getLinha()) == -1)
             return Direcao.CIMA;
 
         return null;
