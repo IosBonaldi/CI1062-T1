@@ -3,13 +3,13 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class PartidaVirus {
-    // Atributos
+    /* Atributos */ 
     private ArrayList<Jogador> jogadores;
     private Tabuleiro tabuleiro;
     private int ciclos;
     private boolean ativo;
 
-    // Construtores
+    /* Construtores */ 
     public PartidaVirus() {};
 
     public PartidaVirus(ArrayList<Jogador> jogadores) {
@@ -30,7 +30,7 @@ public class PartidaVirus {
         this.setAtivo(ativo);
     }
 
-    // Métodos get/set
+    /* Métodos get/set */ 
     public ArrayList<Jogador> getJogadores() {
         return jogadores;
     }
@@ -63,113 +63,41 @@ public class PartidaVirus {
         this.ativo = ativo;
     }
 
-    // Outros métodos
+    /* Outros métodos */
     public void iniciarJogo() {
 
     }
 
-    public void chamarTurno(Jogador jogador, Scanner input) {
-        char entrada;
+    /* Chama o turno dos jogadores e mostra as respectivas opções de movimentação/ação */ 
+    public void displayShift(Jogador player, Scanner input) {
         
-        // Ações do Player 1
-        if (!(jogador instanceof Suporte)) {
-            Jogador p1 = (Jogador) jogador;
+        /* Turno do Player 1 */ 
+        if (!(player instanceof Suporte)) {
 
             /* Movimentação
              * Se não tem inimigo vivo deixa movimentar
-             * Se ele movimentar, mostra o novo Setor e depois pede as ações */ 
-            if (!(p1.getSetor().isThereEnemyAlife())) {
-                Direcao dEntrada = null;
-                while (dEntrada == null) {
-                    System.out.printf("Where to go PLAYER 1 (P1)?\n");
-                    showMovementOptions();
-                    dEntrada = validadeEntry(input.nextLine().charAt(0));
-                }
-                this.getTabuleiro().movimentar(p1, dEntrada);
-                System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
-            }
+             * Se ele movimentar, mostra o novo Setor e depois parte para as ações */ 
+            performMovement(player, input);
 
-            // Ações
-            for (int i = 0; i < 2; i++) {
-                actionOptions(p1);
-                entrada = input.nextLine().charAt(0);
-                while(!checkInput(p1, entrada, true)) {
-                    entrada = input.nextLine().charAt(0);
-                }
-                
-                if (entrada == 'a') {
-                    entrada = 'x';
-                    if(whoToAttack(p1)) {
-                        entrada = input.nextLine().charAt(0);
-                        while(!checkInput(p1, entrada, false)) {
-                            entrada = input.nextLine().charAt(0);
-                        }
-                    }
-                     
-                    performAttack(p1, entrada);
-                } else {
-                    p1.procurar();
-                }
-            }
+            /* Ações */ 
+            performAction(player, input);
+
         } else {
-            Suporte p2 = (Suporte) jogador;
+            /* Turno do Player 2 */
+            Suporte p2 = (Suporte) player;
 
             /* Movimentação
              * Se não tem inimigo vivo deixa movimentar
              * Se ele movimentar, mostra o novo Setor e depois pede as ações */
-            if (!(p2.getSetor().isThereEnemyAlife())) {
-                Direcao dEntrada = null;
-                while (dEntrada == null) {
-                    System.out.printf("Where to go PLAYER 2 (P2)?\n");
-                    showMovementOptions();
-                    dEntrada = validadeEntry(input.nextLine().charAt(0));
-                }
-                this.getTabuleiro().movimentar(p2, dEntrada);
-                System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
-            }
+            performMovement(p2, input);
 
-            // Ações
-            for (int i = 0; i < 2; i++) {
-                actionOptions(p2);
-                entrada = input.nextLine().charAt(0);
-                while(!checkInput(p2, entrada, true)) {
-                    entrada = input.nextLine().charAt(0);
-                }
-                
-                if (entrada == 'a') {
-                    entrada = 'x';
-                    if(whoToAttack(p2)) {
-                        entrada = input.nextLine().charAt(0);
-                        while(!checkInput(p2, entrada, false)) {
-                            entrada = input.nextLine().charAt(0);
-                        }
-                    }
-                    System.out.println(entrada);
-                    performAttack(p2, entrada);
-                } else if (entrada == 'b') {
-                    p2.procurar();
-                } else {
-                    System.out.printf("Who do u wanna heal?\n");
-                    System.out.printf("    a- P1\n");
-                    System.out.printf("    b- P2\n");
-                    entrada = input.nextLine().charAt(0);
-                    while((entrada != 'a') || (entrada != 'b')) {
-                        entrada = input.nextLine().charAt(0);
-                    }
-                    if (entrada == 'a') {
-                        p2.curar(jogadores.get(0));
-                        System.out.println("Escolheu curar p1");
-                    } else {
-                        p2.curar(p2);
-                        System.out.println("Escolheu curar p2");
-                    }
-                }
-            }
+            /* Ações */ 
+            performAction(p2, input);
         }
     }
 
-    // Sobrecarga de métodos porque os parâmetros pra inimigos eh diferente...
-    public void chamarTurno(Inimigo inimigo, Jogador alvoInimigo) {
+    /* Sobrecarga de métodos porque os parâmetros pra inimigos eh diferente */ 
+    public void displayShift(Inimigo inimigo, Jogador alvoInimigo) {
         Random random = new Random();
         int num;
 
@@ -184,26 +112,33 @@ public class PartidaVirus {
         }
     }
 
-    public void showMovementOptions() {
+    /* Exibe as opções de movimento */
+    public void displayMovementOptions() {
         System.out.printf("    U- Up\n");
         System.out.printf("    D- Down\n");
         System.out.printf("    L- Left\n");
         System.out.printf("    R- Right\n");
     }
 
-    public void actionOptions(Jogador personagem) {
-        System.out.printf("What do u wanna do?\n");
-        if(!(personagem.getSetor().isThereEnemyAlife())) {
+    /* Exibe as opções de ação */
+    public void displayActionOptions(Jogador player) {
+        if(!(player instanceof Suporte)) {
+            System.out.printf("What do you want to do P1:\n");
+        } else {
+            System.out.printf("What do you want to do P2:\n");
+        }
+        if(!(player.getSetor().areEnemiesAlive())) {
             System.out.printf("    b- search\n");
         } else {
             System.out.printf("    a- attack\n");
             System.out.printf("    b- search\n");
         }    
-        if (personagem instanceof Suporte)
+        if (player instanceof Suporte)
             System.out.printf("    c- heal\n");
     }
 
-    public Direcao validadeEntry(char entrada) {
+    /* Valida a entrada de direção */
+    public Direcao validateDirectionInput(char entrada) {
         switch (entrada) {
             case 'U':
                 return Direcao.CIMA;
@@ -221,105 +156,164 @@ public class PartidaVirus {
                 return null;
         }
     }
+
+    /* Retorna true se tem quem atacar, se não retorna false */
+    public void displayEnemiesToAttack(Jogador player) {
+        ArrayList<Inimigo> aliveEnemies = new ArrayList<>();
+
+        for (Inimigo enemy: player.getSetor().getInimigos()) {
+            if (enemy.isVivo()) {
+                aliveEnemies.add(enemy);
+            }
+        }
     
+        String[][] enemiesTexts = {{"a", "First"}, {"b", "Second"}, {"c", "Third"}};
+        System.out.println("Who do you want to attack:");
+        for (int i = 0; i < aliveEnemies.size(); i++) {
+            System.out.printf("    %s - %s enemy\n", enemiesTexts[(aliveEnemies.get(i).getPosicao())][0], enemiesTexts[(aliveEnemies.get(i).getPosicao())][1]);
+        }
+    }
+
+    /* Retorna true se a entrada eh válida, se não retorna false */
+    public boolean checkInput(Jogador player, char input, boolean action) {
+        ArrayList<Inimigo> aliveEnemies = new ArrayList<>();
+
+        if(action) {
+            if(player.getSetor().areEnemiesAlive()) {
+                if(!(player instanceof Suporte)) {
+                    if((input == 'a') || (input == 'b'))
+                        return true;
+                } else {
+                    if((input == 'a') || (input == 'b') || (input == 'c'))
+                        return true;
+                }
+            } else {
+                if(!(player instanceof Suporte)) {
+                    if(input == 'b')
+                        return true;
+                } else {
+                    if((input == 'b') || (input == 'c'))
+                        return true;
+                }
+            }
+        } else {
+            for (Inimigo inimigo: player.getSetor().getInimigos()) {
+                if (inimigo.isVivo()) {
+                    aliveEnemies.add(inimigo);
+                }
+            }
+
+            if (aliveEnemies.isEmpty()) {
+                return false;
+            }
+
+            char[] inputChars = {'a', 'b', 'c'};
+            for (int i = 0; i <= aliveEnemies.size(); i++) {
+                if((input == inputChars[(aliveEnemies.get(i).getPosicao())]))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    /* Realiza as duas ações do player */
+    public void performAction(Jogador player, Scanner input) {
+        char localInput;
+        
+        for (int i = 0; i < 2; i++) {
+            displayActionOptions(player);
+            localInput = input.nextLine().charAt(0);
+            while(!checkInput(player, localInput, true)) {
+                displayActionOptions(player);
+                localInput = input.nextLine().charAt(0);
+            }
+            
+            if (localInput == 'a') {
+                if(contEnemiesAlive(player) > 1) {
+                    displayEnemiesToAttack(player);
+                    localInput = input.nextLine().charAt(0);
+                    while(!checkInput(player, localInput, false)) {
+                        displayEnemiesToAttack(player);
+                        localInput = input.nextLine().charAt(0);
+                    }
+                }
+                 
+                performAttack(player, localInput);
+            } else if (localInput == 'b') {
+                player.procurar();
+            } else if (localInput == 'c') {
+                Suporte sup = (Suporte) player;
+
+                System.out.printf("Who do u wanna heal?\n");
+                System.out.printf("    a- P1\n");
+                System.out.printf("    b- P2\n");
+                localInput = input.nextLine().charAt(0);
+                while((localInput != 'a') || (localInput != 'b')) {
+                    localInput = input.nextLine().charAt(0);
+                }
+                if (localInput == 'a') {
+                    sup.curar(jogadores.get(0));
+                } else {
+                    sup.curar(sup);
+                }
+            }
+            if(i == 0)
+                System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
+        }
+    }
+
+    /* Verifica se o jogador pode movimentar, se sim, movimenta */
+    public void performMovement(Jogador player, Scanner input) {
+        if (!(player.getSetor().areEnemiesAlive())) {
+            Direcao dInput = null;
+            while (dInput == null) {
+                if(!(player instanceof Suporte)) {
+                    System.out.printf("Where to go PLAYER 1 (P1):\n");
+                } else {
+                    System.out.printf("Where to go PLAYER 2 (P2):\n");
+                }
+                displayMovementOptions();
+                dInput = validateDirectionInput(input.nextLine().charAt(0));
+            }
+            this.getTabuleiro().movimentar(player, dInput);
+            System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
+        }
+    }
+
+    /* Realiza o ataque do player */
+    public void performAttack(Jogador player, char input) {
+
+        if(input == 'a' && contEnemiesAlive(player) > 1) {
+            player.atacar(player.getSetor().getInimigo(0));
+        } else if(input == 'b') {
+            player.atacar(player.getSetor().getInimigo(1));
+        } else if(input == 'c') {
+            player.atacar(player.getSetor().getInimigo(2));
+        } else {
+            for(Inimigo enemy: player.getSetor().getInimigos()) {
+                if(enemy.isVivo())
+                    player.atacar(player.getSetor().getInimigo(enemy.getPosicao()));
+            }
+        }
+    }
+
+    /* Retorna a quantidade de inimigos vivos dentro do setor do player */
+    public int contEnemiesAlive(Jogador player) {
+        int contEnemies = 0;
+        for(Inimigo enemy: player.getSetor().getInimigos()) {
+            if(enemy.isVivo())
+                contEnemies++;
+        }
+
+        return contEnemies;
+    }
+
     public void imprimirTabuleiro() {
     }
 
     public void incrementaCiclo() {
         this.setCiclos(this.getCiclos() + 1);
-    }
-
-    /* Retorna true se tem quem atacar, se não retorna false */
-    public boolean whoToAttack(Jogador jogador) {
-        if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(2) != null
-        && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(1).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {
-                System.out.printf("Who do u wanna attack:\n");
-                System.out.printf("    a- first enemy\n");
-                System.out.printf("    b- second enemy\n");
-                System.out.printf("    c- third enemy\n");
-                return true;
-        } else if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(1) != null
-        && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(1).isVivo()) {
-                System.out.printf("Who do u wanna attack:\n");
-                System.out.printf("    a- first enemy\n");
-                System.out.printf("    b- second enemy\n");
-                return true;
-        } else if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(2) != null
-        && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {
-                System.out.printf("Who do u wanna attack:\n");
-                System.out.printf("    a- first enemy\n");
-                System.out.printf("    c- third enemy\n");
-                return true;
-        } else if(jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(2) != null
-        && jogador.getSetor().getInimigo(1).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {
-                System.out.printf("Who do u wanna attack:\n");
-                System.out.printf("    b- second enemy\n");
-                System.out.printf("    c- third enemy\n");
-                return true;      
-        }
-
-        return false;
-    }
-
-    /* Retorna true se a entrada eh válida, se não retorna false */
-    public boolean checkInput(Jogador jogador, char entrada, boolean action) {
-        if(action && !(jogador instanceof Suporte)) {
-            if(jogador.getSetor().isThereEnemyAlife()) {
-                if((entrada == 'a') || (entrada == 'b'))
-                    return true;
-            } else {
-                if(entrada == 'b')
-                    return true;
-            }
-        } else if(action && (jogador instanceof Suporte)) {
-            if(jogador.getSetor().isThereEnemyAlife()) {
-                if((entrada == 'a') || (entrada == 'b') || (entrada == 'c'))
-                    return true;
-            } else {
-                if((entrada == 'b') || (entrada == 'c'))
-                    return true;
-            }
-        } else if(!action) {
-            if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(2) != null
-            && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(1).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {
-                    if((entrada == 'a') || (entrada == 'b') || (entrada == 'c'))
-                        return true;
-            } else if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(1) != null
-            && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(1).isVivo()) {
-                    if((entrada == 'a') || (entrada == 'b'))
-                        return true;
-            } else if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(2) != null 
-            && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {   
-                    if((entrada == 'a') || (entrada == 'c'))
-                        return true; 
-            } else if(jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(2) != null
-            && jogador.getSetor().getInimigo(1).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {  
-                    if((entrada == 'b') || (entrada == 'c'))
-                        return true;
-            }
-        }
-
-        return false;
-    }
-
-    /* Realiza o ataque do jogador */
-    public void performAttack(Jogador jogador, char entrada) {
-        if(entrada == 'a') {
-            jogador.atacar(jogador.getSetor().getInimigo(0));
-        } else if(entrada == 'b') {
-            jogador.atacar(jogador.getSetor().getInimigo(1));
-        } else if(entrada == 'c') {
-            jogador.atacar(jogador.getSetor().getInimigo(2));
-        } else {
-            if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(0).isVivo()) {
-                jogador.atacar(jogador.getSetor().getInimigo(0));
-            } else if(jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(1).isVivo()) {
-                jogador.atacar(jogador.getSetor().getInimigo(1));
-            } else if(jogador.getSetor().getInimigo(2) != null && jogador.getSetor().getInimigo(2).isVivo()) {
-                jogador.atacar(jogador.getSetor().getInimigo(2));
-            }
-            
-        }
     }
 }
 
