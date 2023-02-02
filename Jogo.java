@@ -4,15 +4,12 @@ public class Jogo{
     public static void main(String args[]) {
         Scanner input = new Scanner(System.in);
         ArrayList<Jogador> jogadoresTeste = new ArrayList<Jogador>(2);
-        ArrayList<ArrayList<Inimigo>> inimigos = new ArrayList<>(2);
         PartidaVirus partida = new PartidaVirus(jogadoresTeste, new Tabuleiro(5,5), true);
-        Jogador p1 = new Jogador(2,6,0,null);
-        Jogador p2 = new Suporte(1,7,0,null);
-        p1.setSetor(partida.getTabuleiro().getSetor(2, 2));
-        p2.setSetor(partida.getTabuleiro().getSetor(2, 2));
-        p1.getSetor().setVisitado(true);
+        Jogador p1 = new Jogador(partida.getTabuleiro().getSetor(2, 2));
+        Jogador p2 = new Suporte(partida.getTabuleiro().getSetor(2, 2));
         int cont = 0;
 
+        p1.getSetor().setVisitado(true);
         jogadoresTeste.add(p1);
         jogadoresTeste.add(p2);
 

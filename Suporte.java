@@ -1,5 +1,10 @@
 public class Suporte extends Jogador {
 
+    public Suporte(Setor setor) {
+        super(1, 7);
+        this.setSetor(setor);
+    }
+
     public Suporte(int atk, int def, int pontuacao, Setor setor) {
         super(atk, def, pontuacao, setor);
     }

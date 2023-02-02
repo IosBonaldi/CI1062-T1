@@ -4,6 +4,24 @@ public class Jogador extends Personagem {
     protected int pontuacao;
     protected Setor setor;
 
+    public Jogador(Setor setor) {
+        super(2, 6);
+        this.setPontuacao(0);
+        this.setSetor(setor);
+    }
+
+    public Jogador(int atk, int def) {
+        super(atk, def);
+        this.setPontuacao(0);
+        this.setSetor(null);
+    }
+
+    public Jogador(int atk, int def, Setor setor) {
+        super(atk, def);
+        this.setPontuacao(0);
+        this.setSetor(setor);
+    }
+
     public Jogador(int atk, int def, int pontuacao, Setor setor) {
         super(atk, def);
         this.setPontuacao(pontuacao);
