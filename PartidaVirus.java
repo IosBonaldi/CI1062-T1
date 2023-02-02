@@ -82,55 +82,33 @@ public class PartidaVirus {
                 Direcao dEntrada = null;
                 while (dEntrada == null) {
                     System.out.printf("Where to go PLAYER 1 (P1)?\n");
-                    opcoesDeMovimento();
-                    dEntrada = validaEntrada(input.nextLine().charAt(0));
+                    showMovementOptions();
+                    dEntrada = validadeEntry(input.nextLine().charAt(0));
                 }
                 this.getTabuleiro().movimentar(p1, dEntrada);
                 System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
             }
 
-            // Ações (verificar entrada)
+            // Ações
             for (int i = 0; i < 2; i++) {
-                opcoesDeAcao(p1);
+                actionOptions(p1);
                 entrada = input.nextLine().charAt(0);
-                if(p1.getSetor().isThereEnemyAlife()) {
-                    while((entrada != 'a') && (entrada != 'b')) {
-                        entrada = input.nextLine().charAt(0);
-                    }
-                } else {
-                    while((entrada != 'b')) {
-                        entrada = input.nextLine().charAt(0);
-                    }
+                while(!checkInput(p1, entrada, true)) {
+                    entrada = input.nextLine().charAt(0);
                 }
                 
                 if (entrada == 'a') {
-                    if(p1.getSetor().getInimigos().size() == 1) {
-                        p1.atacar(p1.getSetor().getInimigo(0));
-                    } else {
-                        whoToAttack(p1.getSetor().getInimigos().size());
+                    entrada = 'x';
+                    if(whoToAttack(p1)) {
                         entrada = input.nextLine().charAt(0);
-                        if(p1.getSetor().getInimigos().size() == 3) {
-                            while((entrada != 'a') && (entrada != 'b') && (entrada != 'c')) {
-                                entrada = input.nextLine().charAt(0);
-                            } 
-                        } else if(p1.getSetor().getInimigos().size() == 2) {
-                            while((entrada != 'a') && (entrada != 'b')) {
-                                entrada = input.nextLine().charAt(0);
-                            }
-                        }
-                        
-                        if(entrada == 'a') {
-                            p1.atacar(p1.getSetor().getInimigo(0));
-                        } else if(entrada == 'b') {
-                            p1.atacar(p1.getSetor().getInimigo(1));
-                        } else {
-                            p1.atacar(p1.getSetor().getInimigo(2));
+                        while(!checkInput(p1, entrada, false)) {
+                            entrada = input.nextLine().charAt(0);
                         }
                     }
-                    System.out.println("Escolheu atacar");
+                     
+                    performAttack(p1, entrada);
                 } else {
                     p1.procurar();
-                    System.out.println("Escolheu procurar");
                 }
             }
         } else {
@@ -143,55 +121,33 @@ public class PartidaVirus {
                 Direcao dEntrada = null;
                 while (dEntrada == null) {
                     System.out.printf("Where to go PLAYER 2 (P2)?\n");
-                    opcoesDeMovimento();
-                    dEntrada = validaEntrada(input.nextLine().charAt(0));
+                    showMovementOptions();
+                    dEntrada = validadeEntry(input.nextLine().charAt(0));
                 }
                 this.getTabuleiro().movimentar(p2, dEntrada);
                 System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
             }
 
-            // Ações (verificar entrada)
+            // Ações
             for (int i = 0; i < 2; i++) {
-                opcoesDeAcao(p2);
+                actionOptions(p2);
                 entrada = input.nextLine().charAt(0);
-                if(p2.getSetor().isThereEnemyAlife()) {
-                    while((entrada != 'a') && (entrada != 'b') && (entrada != 'c')) {
-                        entrada = input.nextLine().charAt(0);
-                    }
-                } else {
-                    while((entrada != 'b') && (entrada != 'c')) {
-                        entrada = input.nextLine().charAt(0);
-                    }
+                while(!checkInput(p2, entrada, true)) {
+                    entrada = input.nextLine().charAt(0);
                 }
                 
                 if (entrada == 'a') {
-                    if(p2.getSetor().getInimigos().size() == 1) {
-                        p2.atacar(p2.getSetor().getInimigo(0));
-                    } else {
-                        whoToAttack(p2.getSetor().getInimigos().size());
+                    entrada = 'x';
+                    if(whoToAttack(p2)) {
                         entrada = input.nextLine().charAt(0);
-                        if(p2.getSetor().getInimigos().size() == 3) {
-                            while((entrada != 'a') && (entrada != 'b') && (entrada != 'c')) {
-                                entrada = input.nextLine().charAt(0);
-                            } 
-                        } else if(p2.getSetor().getInimigos().size() == 2) {
-                            while((entrada != 'a') && (entrada != 'b')) {
-                                entrada = input.nextLine().charAt(0);
-                            }
-                        }
-                        
-                        if(entrada == 'a') {
-                            p2.atacar(p2.getSetor().getInimigo(0));
-                        } else if(entrada == 'b') {
-                            p2.atacar(p2.getSetor().getInimigo(1));
-                        } else {
-                            p2.atacar(p2.getSetor().getInimigo(2));
+                        while(!checkInput(p2, entrada, false)) {
+                            entrada = input.nextLine().charAt(0);
                         }
                     }
-                    System.out.println("Escolheu atacar");
+                    System.out.println(entrada);
+                    performAttack(p2, entrada);
                 } else if (entrada == 'b') {
                     p2.procurar();
-                    System.out.println("Escolheu procurar");
                 } else {
                     System.out.printf("Who do u wanna heal?\n");
                     System.out.printf("    a- P1\n");
@@ -228,14 +184,14 @@ public class PartidaVirus {
         }
     }
 
-    public void opcoesDeMovimento() {
+    public void showMovementOptions() {
         System.out.printf("    U- Up\n");
         System.out.printf("    D- Down\n");
         System.out.printf("    L- Left\n");
         System.out.printf("    R- Right\n");
     }
 
-    public void opcoesDeAcao(Jogador personagem) {
+    public void actionOptions(Jogador personagem) {
         System.out.printf("What do u wanna do?\n");
         if(!(personagem.getSetor().isThereEnemyAlife())) {
             System.out.printf("    b- search\n");
@@ -247,7 +203,7 @@ public class PartidaVirus {
             System.out.printf("    c- heal\n");
     }
 
-    public Direcao validaEntrada(char entrada) {
+    public Direcao validadeEntry(char entrada) {
         switch (entrada) {
             case 'U':
                 return Direcao.CIMA;
@@ -273,22 +229,96 @@ public class PartidaVirus {
         this.setCiclos(this.getCiclos() + 1);
     }
 
-    public void whoToAttack(int enemiesQuantity) {
-        switch(enemiesQuantity) {
-            case 2:
-                System.out.printf("Who do u wanna attack:\n");
-                System.out.printf("    a- first enemy\n");
-                System.out.printf("    b- second enemy\n");
-                break;
-
-            case 3:
+    /* Retorna true se tem quem atacar, se não retorna false */
+    public boolean whoToAttack(Jogador jogador) {
+        if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(2) != null
+        && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(1).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {
                 System.out.printf("Who do u wanna attack:\n");
                 System.out.printf("    a- first enemy\n");
                 System.out.printf("    b- second enemy\n");
                 System.out.printf("    c- third enemy\n");
+                return true;
+        } else if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(1) != null
+        && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(1).isVivo()) {
+                System.out.printf("Who do u wanna attack:\n");
+                System.out.printf("    a- first enemy\n");
+                System.out.printf("    b- second enemy\n");
+                return true;
+        } else if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(2) != null
+        && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {
+                System.out.printf("Who do u wanna attack:\n");
+                System.out.printf("    a- first enemy\n");
+                System.out.printf("    c- third enemy\n");
+                return true;
+        } else if(jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(2) != null
+        && jogador.getSetor().getInimigo(1).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {
+                System.out.printf("Who do u wanna attack:\n");
+                System.out.printf("    b- second enemy\n");
+                System.out.printf("    c- third enemy\n");
+                return true;      
+        }
 
-            default:
-                break;
+        return false;
+    }
+
+    /* Retorna true se a entrada eh válida, se não retorna false */
+    public boolean checkInput(Jogador jogador, char entrada, boolean action) {
+        if(action && !(jogador instanceof Suporte)) {
+            if(jogador.getSetor().isThereEnemyAlife()) {
+                if((entrada == 'a') || (entrada == 'b'))
+                    return true;
+            } else {
+                if(entrada == 'b')
+                    return true;
+            }
+        } else if(action && (jogador instanceof Suporte)) {
+            if(jogador.getSetor().isThereEnemyAlife()) {
+                if((entrada == 'a') || (entrada == 'b') || (entrada == 'c'))
+                    return true;
+            } else {
+                if((entrada == 'b') || (entrada == 'c'))
+                    return true;
+            }
+        } else if(!action) {
+            if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(2) != null
+            && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(1).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {
+                    if((entrada == 'a') || (entrada == 'b') || (entrada == 'c'))
+                        return true;
+            } else if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(1) != null
+            && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(1).isVivo()) {
+                    if((entrada == 'a') || (entrada == 'b'))
+                        return true;
+            } else if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(2) != null 
+            && jogador.getSetor().getInimigo(0).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {   
+                    if((entrada == 'a') || (entrada == 'c'))
+                        return true; 
+            } else if(jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(2) != null
+            && jogador.getSetor().getInimigo(1).isVivo() && jogador.getSetor().getInimigo(2).isVivo()) {  
+                    if((entrada == 'b') || (entrada == 'c'))
+                        return true;
+            }
+        }
+
+        return false;
+    }
+
+    /* Realiza o ataque do jogador */
+    public void performAttack(Jogador jogador, char entrada) {
+        if(entrada == 'a') {
+            jogador.atacar(jogador.getSetor().getInimigo(0));
+        } else if(entrada == 'b') {
+            jogador.atacar(jogador.getSetor().getInimigo(1));
+        } else if(entrada == 'c') {
+            jogador.atacar(jogador.getSetor().getInimigo(2));
+        } else {
+            if(jogador.getSetor().getInimigo(0) != null && jogador.getSetor().getInimigo(0).isVivo()) {
+                jogador.atacar(jogador.getSetor().getInimigo(0));
+            } else if(jogador.getSetor().getInimigo(1) != null && jogador.getSetor().getInimigo(1).isVivo()) {
+                jogador.atacar(jogador.getSetor().getInimigo(1));
+            } else if(jogador.getSetor().getInimigo(2) != null && jogador.getSetor().getInimigo(2).isVivo()) {
+                jogador.atacar(jogador.getSetor().getInimigo(2));
+            }
+            
         }
     }
 }
