@@ -31,7 +31,7 @@ public class Jogador extends Personagem {
      *
      * @param alvo o inimigo que será atacado.
      */
-    public void atacar(Personagem alvo) {
+    public boolean atacar(Personagem alvo) {
         // Gera uma constante de ataque aleatória entre 0 e 1
         Random r = new Random();
         int acao = r.nextInt(2);
@@ -47,7 +47,9 @@ public class Jogador extends Personagem {
             if (!alvo.isVivo()) {
                 this.setPontuacao(this.getPontuacao() + alvo.getAtk() * 10);
             }
+            return true;
         }
+        return false;
     }
 
     /**

@@ -135,7 +135,7 @@ public class Setor {
         return (int) (Math.random() * (max - min + 1) + min);
     }
 
-    public boolean areEnemiesAlive() {
+    public boolean isThereEnemyAlive() {
         for(Inimigo i: this.getInimigos()) {
             if(i.isVivo())
                 return true;
