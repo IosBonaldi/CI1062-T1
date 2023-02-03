@@ -14,25 +14,32 @@ public class Jogo{
         jogadoresTeste.add(p2);
 
         while((jogadoresTeste.get(0).isVivo()) && (partida.getCiclos() < 2)) {
-            System.out.println(partida.getTabuleiro().strTabuleiro(jogadoresTeste));
             switch(cont) {
                 case 0:
-                    partida.chamarTurno(jogadoresTeste.get(0), input);
+                    System.out.println(partida.getTabuleiro().strTabuleiro(jogadoresTeste));
+                    partida.displayShift(jogadoresTeste.get(0), input);
                     cont++;
                     break;
                 case 1:
-                    partida.chamarTurno(jogadoresTeste.get(1), input);
+                    System.out.println(partida.getTabuleiro().strTabuleiro(jogadoresTeste));
+                    partida.displayShift(jogadoresTeste.get(1), input);
                     cont++;
                     break;
                 case 2:
+                    System.out.println("-----------------------------");
+                    System.out.println("| Turno dos inimigos de P1  |");
+                    System.out.println("-----------------------------");
                     for(Inimigo inimigo: p1.getSetor().getInimigos()) {
-                        partida.chamarTurno(inimigo, p1);
+                        partida.displayShift(inimigo, p1);
                     }
                     cont++;
                     break;
                 case 3:
+                    System.out.println("-----------------------------");
+                    System.out.println("| Turno dos inimigos de P2  |");
+                    System.out.println("-----------------------------");
                     for(Inimigo inimigo: p2.getSetor().getInimigos()) {
-                        partida.chamarTurno(inimigo, p2);
+                        partida.displayShift(inimigo, p2);
                     }
                     cont = 0;
                     partida.incrementaCiclo();
@@ -49,3 +56,4 @@ public class Jogo{
         input.close();
     }
 }
+

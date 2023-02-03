@@ -24,7 +24,7 @@ public class Inimigo extends Personagem {
      *
      * @param alvo o jogador que será atacado.
      */
-    public void atacar(Personagem alvo) {
+    public boolean atacar(Personagem alvo) {
         // Gera uma constante de ataque aleatória entre 1 e 6
         Random r = new Random();
         int acao = r.nextInt(6) + 1;
@@ -32,6 +32,7 @@ public class Inimigo extends Personagem {
         if (acao % 2 == 0 && alvo.isVivo()) {
             alvo.setDef((alvo.getDef() > this.getAtk()) ? (alvo.getDef() - this.getAtk()) : 0);
         }
+        return true;
     }
 
     /**
