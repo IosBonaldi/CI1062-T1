@@ -129,6 +129,26 @@ public class Setor {
     }
 
     /**
+     * Verifica se há inimigo vivo.
+     */
+    public boolean isThereEnemyAlive(){
+        for(Inimigo i: this.getInimigos())
+            if(i.isVivo()) return true;
+        return false;
+    }
+
+    /**
+     * 
+     * @param Jogador
+     */
+    public int countEnemiesAlive(){
+        int count = 0;
+        for(Inimigo i: this.getInimigos())
+            if(i.isVivo()) count++;
+        return count;
+    }
+
+    /**
      * Método auxiliar para gerar números inteiros aleatórios.
      */
     public int randomNumber(int max, int min) {
