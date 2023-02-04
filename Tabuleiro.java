@@ -260,12 +260,14 @@ public class Tabuleiro {
     }
 
     /**
-     * Retorna o texto correspondente ao interior de um setor específico.
+     * Fornece texto correspondente ao interior de um Setor específico.
      *
      * @param p uma ArrayList contendo os dois Jogadores existentes no jogo.
      * @param s o Setor cujo interior deseja-se visualizar.
+     * @return uma String contendo o interior do Setor, mostrando o(s) jogador(es)
+     *         (P1, P2 ou P12), a fonte ( X ) ou vazio( ).
      */
-    public String strCorpoSetor(ArrayList<Jogador> p, Setor s) {
+    private String strSectionBody(ArrayList<Jogador> p, Setor s) {
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
 
@@ -278,77 +280,110 @@ public class Tabuleiro {
         } else if (s.isFonte()) {
             return " X ";
         }
-
         return "   ";
     }
 
     /**
-     * Movimenta o jogador através dos setores do tabuleiro atualizando seu atributo
-     * setor.
+     * Movimenta o Jogador através dos Setores do Tabuleiro, atualizando seu
+     * atributo Setor.
      *
-     * @param t o tabuleiro no qual o jogador está inserido.
-     * @param d a direção para a qual deseja-se mover o jogador.
+     * @param j o Jogador que será movimentado.
+     * @param d a Direção para a qual deseja-se mover o Jogador.
+     * @return true se o jogador tiver sido movido, false caso o movimento seja
+     *         inválido
      */
-    public void movimentar(Jogador j, Direcao d) {
-        int linhaAtual = j.getSetor().getCoordenada().getLinha();
-        int colunaAtual = j.getSetor().getCoordenada().getColuna();
-        ArrayList<Construcao> construcoes = j.getSetor().getConstrucoes();
+    public boolean movimentar(Jogador j, Direcao d) {
+        Setor curSection = j.getSetor();
+        Setor newSection = this.bordererSection(curSection, d);
+        ArrayList<Construcao> constructions = curSection.getConstrucoes();
 
-        // Impede movimentação em setores que ainda possuam inimigos
-        if (j.getSetor().getInimigos().isEmpty()) {
-            // Atualiza o atributo setor de acordo com a direção recebida, checando
-            // eventuais colisões com as bordas
-            switch (d) {
-                case CIMA:
-                    if (linhaAtual > 0 && construcoes.get(0) == Construcao.PORTA) {
-                        j.setSetor(this.getSetor(linhaAtual - 1, colunaAtual));
-                    }
-                    break;
-                case DIREITA:
-                    if (colunaAtual < this.getLargura() - 1 && construcoes.get(1) == Construcao.PORTA) {
-                        j.setSetor(this.getSetor(linhaAtual, colunaAtual + 1));
-                    }
-                    break;
-                case BAIXO:
-                    if (linhaAtual < this.getAltura() - 1 && construcoes.get(2) == Construcao.PORTA) {
-                        j.setSetor(this.getSetor(linhaAtual + 1, colunaAtual));
-                    }
-                    break;
-                case ESQUERDA:
-                    if (colunaAtual > 0 && construcoes.get(3) == Construcao.PORTA) {
-                        j.setSetor(this.getSetor(linhaAtual, colunaAtual - 1));
-                    }
-                    break;
-            }
+        // Checa se não há mais inimigos no Setor, se o novo Setor é válido e se há uma
+        // PORTA para o Jogador passar
+        if (curSection.getInimigos().isEmpty() && newSection != null
+                && constructions.get(d.ordinal()) == Construcao.PORTA) {
+            j.setSetor(newSection);
+            newSection.setVisitado(true);
+            return true;
+        }
 
-            j.getSetor().setVisitado(true);
+        return false;
+    }
+
+    /**
+     * Fornece o Setor fronteiriço (vizinho) à um Setor específico.
+     *
+     * @param s o Setor cujo vizinho deseja-se obter.
+     * @param d a Direção do vizinho desejado.
+     * @return o Setor fronteiriço ao Setor fornecido na Direção fornecida.
+     */
+    private Setor bordererSection(Setor s, Direcao d) {
+        int curLine = s.getCoordenada().getLinha();
+        int curColumn = s.getCoordenada().getColuna();
+        switch (d) {
+            case CIMA:
+                return ((curLine > 0) ? this.getSetores()[curLine - 1][curColumn] : null);
+            case DIREITA:
+                return ((curColumn < (this.getLargura() - 1)) ? this.getSetores()[curLine][curColumn + 1] : null);
+            case BAIXO:
+                return ((curLine < (this.getAltura() - 1)) ? this.getSetores()[curLine + 1][curColumn] : null);
+            case ESQUERDA:
+                return ((curColumn > 0) ? this.getSetores()[curLine][curColumn - 1] : null);
+            default:
+                return null;
         }
     }
 
     /**
-     * Retorna o texto correspondente à uma construção específica de um setor
+     * Informa se uma Construção é visível ou não.
+     *
+     * @param s o Setor da Construção cuja visibilidade deseja-se conhecer.
+     * @param d a Direção do construção no referido Setor.
+     * @return true se a Construção é visível, false caso contrário.
+     */
+    private boolean constructionVisibility(Setor s, Direcao d) {
+        int curLine = s.getCoordenada().getLinha();
+        int curColumn = s.getCoordenada().getColuna();
+
+        switch (d) {
+            case CIMA:
+                return (curLine > 0 && (s.isVisitado()
+                        || this.bordererSection(s, Direcao.CIMA).isVisitado()));
+            case DIREITA:
+                return (curColumn < (this.getLargura() - 1) && (s.isVisitado()
+                        || this.bordererSection(s, Direcao.DIREITA).isVisitado()));
+            case BAIXO:
+                return (curLine < (this.getAltura() - 1) && (s.isVisitado()
+                        || this.bordererSection(s, Direcao.BAIXO).isVisitado()));
+            case ESQUERDA:
+                return (curColumn > 0 && (s.isVisitado()
+                        || this.bordererSection(s, Direcao.ESQUERDA).isVisitado()));
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Fornece o texto correspondente à uma construção específica de um setor
      * específico
      *
      * @param s o Setor ao qual a Construção que deseja-se visualizar pertence.
      * @param d a Direção correspondente ao Setor desejado dentro de seu setor.
+     * @return uma String correspondente a Construção solicitada, seja ela PORTA (*)
+     *         ou PAREDE(| ou -)
      */
-    public String strConstruction(Setor s, Direcao d) {
+    private String strConstruction(Setor s, Direcao d) {
         switch (d) {
             case CIMA:
-                return ((s.getConstrucoes().get(0) == Construcao.PORTA && s.isVisitado()
-                        && s.getCoordenada().getLinha() > 0) ? "*" : "-");
+            case BAIXO:
+                return ((s.getConstrucoes().get(d.ordinal()) == Construcao.PORTA && this.constructionVisibility(s, d))
+                        ? "*"
+                        : "-");
 
             case DIREITA:
-                return ((s.getConstrucoes().get(1) == Construcao.PORTA && s.isVisitado()
-                        && s.getCoordenada().getColuna() < this.getLargura() - 1) ? "*" : "|");
-
-            case BAIXO:
-                return ((s.getConstrucoes().get(2) == Construcao.PORTA && s.isVisitado()
-                        && s.getCoordenada().getLinha() < this.getAltura() - 1) ? "*" : "-");
-
             case ESQUERDA:
-                return ((s.getConstrucoes().get(3) == Construcao.PORTA && s.isVisitado()
-                        && s.getCoordenada().getColuna() > 0) ? "*" : "|");
+                return ((s.getConstrucoes().get(d.ordinal()) == Construcao.PORTA && this.constructionVisibility(s, d))
+                        ? "*"
+                        : "|");
 
             default:
                 return "\\";
@@ -356,38 +391,42 @@ public class Tabuleiro {
     }
 
     /**
-     * Retorna o texto correspondente aos interiores e construções verticais de uma
+     * Fornece o texto correspondente aos interiores e construções verticais de uma
      * linha de Setores específica.
      *
      * @param p uma ArrayList contendo os dois Jogadores existentes no jogo.
      * @param s um array contendo a linha de Setores a qual deseja-se visualizar.
+     * @return uma String correspondente à linha se Setores solicitada no formato
+     *         | Setor Construção ... Construção Setor |
      * @see inconsistencia em caso de Construções inconsistentes horizontalmente,
      *      prevalecerá a Construção DIREITA do Setor ESQUERDO em detrimento da
      *      Construção ESQUERDA do Setor DIREITO.
      */
-    public String strBoardVConstructions(ArrayList<Jogador> p, Setor[] s) {
+    private String strBoardVConstructions(ArrayList<Jogador> p, Setor[] s) {
         String l = new String();
 
         l += "|";
         for (int i = 0; i < this.getLargura() - 1; i++) {
-            l += strCorpoSetor(p, s[i]) + strConstruction(s[i], Direcao.DIREITA);
+            l += strSectionBody(p, s[i]) + strConstruction(s[i], Direcao.DIREITA);
         }
-        l += strCorpoSetor(p, s[this.getLargura() - 1]) + "|";
+        l += strSectionBody(p, s[this.getLargura() - 1]) + "|";
 
         return l;
     }
 
     /**
-     * Retorna o texto correspondente às construções horizontais inferiores de uma
+     * Fornece o texto correspondente às construções horizontais inferiores de uma
      * linha de Setores específica.
      *
      * @param s um array contendo a linha de Setores cujas bases desejam-se
      *          visualizar.
+     * @return uma String correspondente à linha de construções inferiores
+     *         solicitada no formato |-Construção-|...|-Construção-|
      * @see inconsistencia em caso de Construções inconsistentes verticalmente,
      *      prevalecerá a Construção INFERIOR do Setor SUPERIOR em detrimento da
      *      Construção SUPERIOR do Setor INFERIOR.
      */
-    public String strBoardHConstructions(Setor[] s) {
+    private String strBoardHConstructions(Setor[] s) {
         // String que armazenará o retorno
         String l = new String();
 
@@ -401,32 +440,38 @@ public class Tabuleiro {
     }
 
     /**
-     * Retorna o texto correspondente ao zoom das construções horizontais de um
+     * Fornece o texto correspondente ao zoom das construções horizontais de um
      * Setor específico
      *
      * @param s um Setor cujas construções horizontais deseja-se visualizar.
+     * @return uma String correspondente ao zoom das construções solicitadas no
+     *         formato |------Construção------|.
      */
-    public String strZoomHConstruction(Setor s, Direcao d) {
+    private String strZoomHConstruction(Setor s, Direcao d) {
         return "|------" + strConstruction(s, d) + "------|";
     }
 
     /**
-     * Retorna o texto correspondente ao zoom das construções verticais de um
+     * Fornece o texto correspondente ao zoom das construções verticais de um
      * Setor específico
      *
-     * @param s um Setor cujas construções verticais deseja-se visualizar.
+     * @param s um Setor cujas construções verticais deseja-se visualizar em zoom.
+     * @return uma String correspondente ao zoom das Construções solicitadas no
+     *         formato Construção Construção
      */
-    public String strZoomVConstructions(Setor s) {
+    private String strZoomVConstructions(Setor s) {
         return strConstruction(s, Direcao.ESQUERDA) + "             " + strConstruction(s, Direcao.DIREITA);
     }
 
     /**
-     * Retorna o texto correspondente ao conjunto de Inimigos de um Setor
+     * Fornece o texto correspondente ao conjunto de Inimigos de um Setor
      * específico.
      *
      * @param s o Setor cujos Inimigos desejam-se visualizar.
+     * @return uma String correspondente aos Inimigos solicitados no formato
+     *         | ATK/DEF ATK/DEF ATK/DEF |
      */
-    public String strEnemiesAttrs(Setor s) {
+    private String strEnemiesAttrs(Setor s) {
         // String que armazenará o retorno
         String r = new String();
 
@@ -443,13 +488,16 @@ public class Tabuleiro {
     }
 
     /**
-     * Retorna o texto correspondente aos atributos ATK/DEF de um Jogador
+     * Fornece o texto correspondente ao(s) nome(s) do(s) Jogador(es) de um zoom de
+     * Setor específico
      * específico.
      *
      * @param p lista de Jogadores cujos atributos desejam-se visualizar.
-     * @param i número do mini-setor a ser impresso.
+     * @param i número do zoom de setor a ser impresso.
+     * @return uma String correspondente aos nomes solicitados no formato
+     *         | P1 P2 |
      */
-    public String strPlayersName(ArrayList<Jogador> p, int i) {
+    private String strPlayersName(ArrayList<Jogador> p, int i) {
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
@@ -466,13 +514,15 @@ public class Tabuleiro {
     }
 
     /**
-     * Retorna o texto correspondente aos atributos ATK/DEF de um Jogador
-     * específico.
+     * Fornece o texto correspondente aos atributos ATK/DEF do(s) Jogador(es) de um
+     * zoom de Setor específico
      *
      * @param p lista de Jogadores cujos atributos desejam-se visualizar.
-     * @param i número do mini-setor a ser impresso.
+     * @param i número do zoom de setor a ser impresso.
+     * @return uma String correspondente aos atributos solicitados no formato
+     *         | ATK/DEF ATK/DEF |
      */
-    public String strZoomPlayersAttrs(ArrayList<Jogador> p, int i) {
+    private String strZoomPlayersAttrs(ArrayList<Jogador> p, int i) {
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
@@ -488,7 +538,12 @@ public class Tabuleiro {
         return "";
     }
 
-    public String strBoardHeader() {
+    /**
+     * Fornece o texto correspondente ao cabeçalho do Tabuleiro
+     *
+     * @return uma String correspondente o cabeçalho do Tabuleiro
+     */
+    private String strBoardHeader() {
         String r = new String();
         r += "   ";
         for (int i = 1; i <= this.getLargura(); i++) {
@@ -508,19 +563,22 @@ public class Tabuleiro {
     }
 
     /**
-     * Retorna o texto correspondente às Coordenadas de um Jogador específico.
+     * Fornece o texto correspondente às Coordenadas de um Jogador específico.
      *
      * @param p o Jogador cujas Coordenadas desejam-se visualizar.
+     * @return uma String correspondente à Coordenada solicitada no formado Setor
+     *         [X, Y].
      */
-    public String strPlayerCoordinates(Jogador p) {
+    private String strPlayerCoordinates(Jogador p) {
         return "Setor [" + p.getSetor().getCoordenada().getLinha() + "," + p.getSetor().getCoordenada().getColuna()
                 + "]";
     }
 
     /**
-     * Retorna o texto correspondente ao Tabuleiro completo do jogo.
+     * Fornece o texto correspondente ao Tabuleiro completo do jogo.
      *
      * @param p uma ArrayList contendo os dois Jogadores existentes no jogo.
+     * @return uma String correspondente ao Tabuleiro.
      */
     public String strTabuleiro(ArrayList<Jogador> p) {
         // String que armazenará o retorno
@@ -545,7 +603,8 @@ public class Tabuleiro {
         // Nome dos players no zoom
         String zoomPN = strPlayersName(p, 1) + "   " + strPlayersName(p, 2);
 
-        // Texto correspondente ao tabuleiro, inserido linha a linha
+        // Texto correspondente ao tabuleiro, inserido linha a linha até a quinta linha
+        // do tabuleiro
         r += "-----------------------------\n";
         r += "|   Antivírus por um dia    |\n";
         r += "-----------------------------\n";
@@ -560,6 +619,7 @@ public class Tabuleiro {
         r += "    " + strBoardHConstructions(setores[3]) + "     " + zoomPA + "\n";
         r += "5   " + strBoardVConstructions(p, setores[4]) + "     " + zoomHCB + "\n";
         r += "    " + strBoardHConstructions(setores[4]) + "\n";
+        // Linhas posteriores a quinta linha do tabuleiro
         for (int i = 5; i < this.getAltura(); i++) {
             if (i < 9) {
                 r += (i + 1) + "   " + strBoardVConstructions(p, setores[i]) + "\n";
