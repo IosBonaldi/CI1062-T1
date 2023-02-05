@@ -7,7 +7,7 @@ public class Tabuleiro {
     final private int largura;
 
     public Tabuleiro(int altura, int largura) {
-        if (5 > altura || altura > 20 || 5 > altura || altura > 20)
+        if (5 > altura || altura > 20 || 5 > largura || largura > 20)
             throw new IllegalArgumentException("Altura e/ou largura invalidas!");
 
         this.altura = altura;
