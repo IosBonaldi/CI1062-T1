@@ -574,6 +574,10 @@ public class Tabuleiro {
                 + "]";
     }
 
+    private String paddedString(String s, int length) {
+        return String.format("%-" + length + "." + length + "s", s);
+    }
+
     /**
      * Fornece o texto correspondente ao Tabuleiro completo do jogo.
      *
@@ -602,6 +606,8 @@ public class Tabuleiro {
         String zoomPA = strZoomPlayersAttrs(p, 1) + "   " + strZoomPlayersAttrs(p, 2);
         // Nome dos players no zoom
         String zoomPN = strPlayersName(p, 1) + "   " + strPlayersName(p, 2);
+        String sp1Type = paddedString(sp1.getTipo().name().toLowerCase(), 7);
+        String sp2Type = paddedString(sp2.getTipo().name().toLowerCase(), 7);
 
         // Texto correspondente ao tabuleiro, inserido linha a linha até a quinta linha
         // do tabuleiro
@@ -610,7 +616,7 @@ public class Tabuleiro {
         r += "-----------------------------\n";
         r += strBoardHeader();
         r += "1   " + strBoardVConstructions(p, setores[0]) + "       " + zoomPC + "\n";
-        r += "    " + strBoardHConstructions(setores[0]) + "\n";
+        r += "    " + strBoardHConstructions(setores[0]) + "       " + sp1Type + "           " + sp2Type + "\n";
         r += "2   " + strBoardVConstructions(p, setores[1]) + "     " + zoomHCT + "\n";
         r += "    " + strBoardHConstructions(setores[1]) + "     " + zoomEA + "\n";
         r += "3   " + strBoardVConstructions(p, setores[2]) + "     |             |   |             |\n";
@@ -621,11 +627,7 @@ public class Tabuleiro {
         r += "    " + strBoardHConstructions(setores[4]) + "\n";
         // Linhas posteriores a quinta linha do tabuleiro
         for (int i = 5; i < this.getAltura(); i++) {
-            if (i < 9) {
-                r += (i + 1) + "   " + strBoardVConstructions(p, setores[i]) + "\n";
-            } else {
-                r += (i + 1) + "  " + strBoardVConstructions(p, setores[i]) + "\n";
-            }
+            r += paddedString(Integer.toString(i + 1), 2) + "  " + strBoardVConstructions(p, setores[i]) + "\n";
             r += "    " + strBoardHConstructions(setores[i]) + "\n";
         }
 
