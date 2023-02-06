@@ -575,8 +575,18 @@ public class Tabuleiro {
                 + "]";
     }
 
-    private String paddedString(String s, int length) {
-        return String.format("%-" + length + "." + length + "s", s);
+    /**
+     * Fornece uma string de tamanho fixado a partir de uma String base maior ou
+     * menor.
+     *
+     * @param s      a String base.
+     * @param length o tamanho da String desejada.
+     * @return a String base concatenada à whitespaces caso seja menor que o tamanho
+     *         fixado ou a String base cortada caso seja maior que o tamanho fixado
+     */
+    private String sizedString(String s, int length) {
+        return (s.length() < length) ? String.format("%-" + length + "." + length + "s", s)
+                : s.substring(0, length);
     }
 
     /**
@@ -607,8 +617,8 @@ public class Tabuleiro {
         String zoomPA = strZoomPlayersAttrs(p, 1) + "   " + strZoomPlayersAttrs(p, 2);
         // Nome dos players no zoom
         String zoomPN = strPlayersName(p, 1) + "   " + strPlayersName(p, 2);
-        String sp1Type = paddedString(sp1.getTipo().name().toLowerCase(), 7);
-        String sp2Type = paddedString(sp2.getTipo().name().toLowerCase(), 7);
+        String sp1Type = sizedString(sp1.getTipo().name().toLowerCase(), 7);
+        String sp2Type = sizedString(sp2.getTipo().name().toLowerCase(), 7);
 
         // Texto correspondente ao tabuleiro, inserido linha a linha até a quinta linha
         // do tabuleiro
@@ -628,7 +638,7 @@ public class Tabuleiro {
         r += "    " + strBoardHConstructions(setores[4]) + "\n";
         // Linhas posteriores a quinta linha do tabuleiro
         for (int i = 5; i < this.getAltura(); i++) {
-            r += paddedString(Integer.toString(i + 1), 2) + "  " + strBoardVConstructions(p, setores[i]) + "\n";
+            r += sizedString(Integer.toString(i + 1), 2) + "  " + strBoardVConstructions(p, setores[i]) + "\n";
             r += "    " + strBoardHConstructions(setores[i]) + "\n";
         }
 
