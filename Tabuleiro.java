@@ -481,7 +481,7 @@ public class Tabuleiro {
         for (int i = 0; i < 3; i++) {
             Inimigo e = s.getInimigo(i);
             boolean eIsNull = (e == null);
-            r += (eIsNull || sIsHidden) ? "    " : s.getInimigo(i).getAtk() + "/" + s.getInimigo(i).getDef() + " ";
+            r += (eIsNull || sIsHidden) ? "    " : e.getAtk() + "/" + e.getDef() + " ";
         }
         r += "|";
 
