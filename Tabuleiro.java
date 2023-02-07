@@ -474,15 +474,16 @@ public class Tabuleiro {
     private String strEnemiesAttrs(Setor s) {
         // String que armazenará o retorno
         String r = new String();
+        boolean sIsHidden = (s.getTipo() == SetorTipos.OCULTO);
 
         // Texto correspondente aos Inimigos, inserido Inimigo a Inimigo
         r += "| ";
-        for (int i = 0; i < 2; i++) {
-            r += s.getInimigo(i) == null ? "   " : s.getInimigo(i).getAtk() + "/" + s.getInimigo(i).getDef();
-            r += " ";
+        for (int i = 0; i < 3; i++) {
+            Inimigo e = s.getInimigo(i);
+            boolean eIsNull = (e == null);
+            r += (eIsNull || sIsHidden) ? "    " : e.getAtk() + "/" + e.getDef() + " ";
         }
-        r += s.getInimigo(2) == null ? "   " : s.getInimigo(2).getAtk() + "/" + s.getInimigo(2).getDef();
-        r += " |";
+        r += "|";
 
         return r;
     }
@@ -575,6 +576,20 @@ public class Tabuleiro {
     }
 
     /**
+     * Fornece uma string de tamanho fixado a partir de uma String base maior ou
+     * menor.
+     *
+     * @param s      a String base.
+     * @param length o tamanho da String desejada.
+     * @return a String base concatenada à whitespaces caso seja menor que o tamanho
+     *         fixado ou a String base cortada caso seja maior que o tamanho fixado
+     */
+    private String sizedString(String s, int length) {
+        return (s.length() < length) ? String.format("%-" + length + "." + length + "s", s)
+                : s.substring(0, length);
+    }
+
+    /**
      * Fornece o texto correspondente ao Tabuleiro completo do jogo.
      *
      * @param p uma ArrayList contendo os dois Jogadores existentes no jogo.
@@ -602,6 +617,8 @@ public class Tabuleiro {
         String zoomPA = strZoomPlayersAttrs(p, 1) + "   " + strZoomPlayersAttrs(p, 2);
         // Nome dos players no zoom
         String zoomPN = strPlayersName(p, 1) + "   " + strPlayersName(p, 2);
+        String sp1Type = sizedString(sp1.getTipo().name().toLowerCase(), 7);
+        String sp2Type = sizedString(sp2.getTipo().name().toLowerCase(), 7);
 
         // Texto correspondente ao tabuleiro, inserido linha a linha até a quinta linha
         // do tabuleiro
@@ -610,7 +627,7 @@ public class Tabuleiro {
         r += "-----------------------------\n";
         r += strBoardHeader();
         r += "1   " + strBoardVConstructions(p, setores[0]) + "       " + zoomPC + "\n";
-        r += "    " + strBoardHConstructions(setores[0]) + "\n";
+        r += "    " + strBoardHConstructions(setores[0]) + "       " + sp1Type + "           " + sp2Type + "\n";
         r += "2   " + strBoardVConstructions(p, setores[1]) + "     " + zoomHCT + "\n";
         r += "    " + strBoardHConstructions(setores[1]) + "     " + zoomEA + "\n";
         r += "3   " + strBoardVConstructions(p, setores[2]) + "     |             |   |             |\n";
@@ -621,11 +638,7 @@ public class Tabuleiro {
         r += "    " + strBoardHConstructions(setores[4]) + "\n";
         // Linhas posteriores a quinta linha do tabuleiro
         for (int i = 5; i < this.getAltura(); i++) {
-            if (i < 9) {
-                r += (i + 1) + "   " + strBoardVConstructions(p, setores[i]) + "\n";
-            } else {
-                r += (i + 1) + "  " + strBoardVConstructions(p, setores[i]) + "\n";
-            }
+            r += sizedString(Integer.toString(i + 1), 2) + "  " + strBoardVConstructions(p, setores[i]) + "\n";
             r += "    " + strBoardHConstructions(setores[i]) + "\n";
         }
 
