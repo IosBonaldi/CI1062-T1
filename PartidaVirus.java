@@ -16,6 +16,12 @@ public class PartidaVirus {
         this.setJogadores(jogadores);
     }
 
+    public PartidaVirus(Tabuleiro tabuleiro, boolean ativo) {
+        this.setTabuleiro(tabuleiro);
+        this.setCiclos(0);
+        this.setAtivo(ativo);
+    }
+
     public PartidaVirus(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, boolean ativo) {
         this.setJogadores(jogadores);
         this.setTabuleiro(tabuleiro);
@@ -63,9 +69,30 @@ public class PartidaVirus {
         this.ativo = ativo;
     }
 
-    /* Outros métodos */
-    public void iniciarJogo() {
+    // Outros métodos
+    public void startGame(Jogador p1, Jogador p2) {
+        p1.setSetor(getTabuleiro().getSetor(2, 2));
+        p2.setSetor(getTabuleiro().getSetor(2, 2));
+        getJogadores().add(p1);
+        getJogadores().add(p2);
+    }
 
+    public boolean checkGameConditions() {
+        if((getJogadores().get(0).isVivo()) && (getCiclos() < 25) && (!(getJogadores().get(0).getSetor().isFonte()) && !(getJogadores().get(1).getSetor().isFonte())))
+            return true;
+        return false;
+    }
+
+    public void displayGameResult() {
+        if((getJogadores().get(0).isVivo() && getJogadores().get(0).getSetor().isFonte()) || (getJogadores().get(1).isVivo() && getJogadores().get(1).getSetor().isFonte())) {
+            System.out.printf("#################################\n");
+            System.out.printf("### You have won the game!!! ###\n");
+            System.out.printf("#################################\n");
+        } else {
+            System.out.printf("#################################\n");
+            System.out.printf("### You have lost the game!!! ###\n");
+            System.out.printf("#################################\n");
+        }
     }
 
     /**
@@ -169,6 +196,10 @@ public class PartidaVirus {
             default:
                 return null;
         }
+    }
+    
+    public void displayBoard() {
+        System.out.println(getTabuleiro().strTabuleiro(getJogadores()));
     }
 
     /**
@@ -319,9 +350,6 @@ public class PartidaVirus {
         }
 
         return true;
-    }
-
-    public void imprimirTabuleiro() {
     }
 
     public void incrementaCiclo() {
