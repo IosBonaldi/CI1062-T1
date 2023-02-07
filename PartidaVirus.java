@@ -17,6 +17,12 @@ public class PartidaVirus {
         this.setJogadores(jogadores);
     }
 
+    public PartidaVirus(Tabuleiro tabuleiro, boolean ativo) {
+        this.setTabuleiro(tabuleiro);
+        this.setCiclos(0);
+        this.setAtivo(ativo);
+    }
+
     public PartidaVirus(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, boolean ativo) {
         this.setJogadores(jogadores);
         this.setTabuleiro(tabuleiro);
@@ -65,12 +71,15 @@ public class PartidaVirus {
     }
 
     // Outros métodos
-    public void iniciarJogo() {
-
+    public void startGame(Jogador p1, Jogador p2) {
+        p1.setSetor(getTabuleiro().getSetor(2, 2));
+        p2.setSetor(getTabuleiro().getSetor(2, 2));
+        getJogadores().add(p1);
+        getJogadores().add(p2);
     }
 
     public boolean checkGameConditions() {
-        if((getJogadores().get(0).isVivo()) && (getCiclos() < 2) && (!(getJogadores().get(0).getSetor().isFonte()) && !(getJogadores().get(1).getSetor().isFonte())))
+        if((getJogadores().get(0).isVivo()) && (getCiclos() < 25) && (!(getJogadores().get(0).getSetor().isFonte()) && !(getJogadores().get(1).getSetor().isFonte())))
             return true;
         return false;
     }
