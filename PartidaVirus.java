@@ -69,6 +69,24 @@ public class PartidaVirus {
 
     }
 
+    public boolean checkGameConditions() {
+        if((getJogadores().get(0).isVivo()) && (getCiclos() < 2) && (!(getJogadores().get(0).getSetor().isFonte()) && !(getJogadores().get(1).getSetor().isFonte())))
+            return true;
+        return false;
+    }
+
+    public void displayGameResult() {
+        if((getJogadores().get(0).isVivo() && getJogadores().get(0).getSetor().isFonte()) || (getJogadores().get(1).isVivo() && getJogadores().get(1).getSetor().isFonte())) {
+            System.out.printf("#################################\n");
+            System.out.printf("### You have won the game!!! ###\n");
+            System.out.printf("#################################\n");
+        } else {
+            System.out.printf("#################################\n");
+            System.out.printf("### You have lost the game!!! ###\n");
+            System.out.printf("#################################\n");
+        }
+    }
+
     public void chamarTurno(Jogador jogador, Scanner input) {
         char entrada;
 
@@ -208,7 +226,8 @@ public class PartidaVirus {
         }
     }
     
-    public void imprimirTabuleiro() {
+    public void displayBoard() {
+        System.out.println(getTabuleiro().strTabuleiro(getJogadores()));
     }
 
     public void incrementaCiclo() {
