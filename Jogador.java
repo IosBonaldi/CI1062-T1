@@ -3,6 +3,21 @@ import java.util.Random;
 public class Jogador extends Personagem {
     protected int pontuacao;
     protected Setor setor;
+    protected int vidaMaxima;
+
+    public Jogador(Setor setor) {
+        super(2, 6);
+        this.setPontuacao(0);
+        this.setSetor(setor);
+        this.setVidaMaxima(6);
+    }
+
+    public Jogador(int atk, int def, Setor setor, int vidaMaxima) {
+        super(atk, def);
+        this.setPontuacao(0);
+        this.setSetor(setor);
+        this.setVidaMaxima(vidaMaxima);
+    }
 
     public Jogador(int atk, int def, int pontuacao, Setor setor) {
         super(atk, def);
@@ -26,12 +41,21 @@ public class Jogador extends Personagem {
         this.setor = setor;
     }
 
+    
+    public int getVidaMaxima() {
+        return vidaMaxima;
+    }
+
+    public void setVidaMaxima(int vidaMaxima) {
+        this.vidaMaxima = vidaMaxima;
+    }
+
     /**
      * Realiza o ataque de um jogador à um inimigo.
      *
      * @param alvo o inimigo que será atacado.
      */
-    public void atacar(Personagem alvo) {
+    public boolean atacar(Personagem alvo) {
         // Gera uma constante de ataque aleatória entre 0 e 1
         Random r = new Random();
         int acao = r.nextInt(2);
@@ -47,7 +71,9 @@ public class Jogador extends Personagem {
             if (!alvo.isVivo()) {
                 this.setPontuacao(this.getPontuacao() + alvo.getAtk() * 10);
             }
+            return true;
         }
+        return false;
     }
 
     /**
@@ -64,10 +90,12 @@ public class Jogador extends Personagem {
             switch (achado) {
                 case 4:
                     this.setDef(this.getDef() + 1);
+                    this.setVidaMaxima(this.getVidaMaxima()+ 1);
                     break;
 
                 case 5:
                     this.setDef(this.getDef() + 2);
+                    this.setVidaMaxima(this.getVidaMaxima()+ 2);
                     break;
 
                 case 6:

@@ -27,5 +27,5 @@ public abstract class Personagem {
         return (this.getDef() > 0);
     }
 
-    public abstract void atacar(Personagem alvo);
+    public abstract boolean atacar(Personagem alvo);
 }
