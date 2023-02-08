@@ -1,18 +1,18 @@
 import java.util.*;
 
-public class Jogo{
+public class Jogo {
     public static void main(String args[]) {
         Scanner input = new Scanner(System.in);
-        PartidaVirus match = new PartidaVirus(new Tabuleiro(5,5), true);
-        Jogador p1 = new Jogador(2,6,0,null);
-        Jogador p2 = new Suporte(1,7,0,null);
+        PartidaVirus match = new PartidaVirus(5, 5);
+
+        match.startGame();
+        Jogador p1 = match.getJogadores().get(0);
+        Jogador p2 = match.getJogadores().get(1);
         Turno turn = Turno.PLAYER1;
 
-        match.startGame(p1, p2);
-
-        while(match.checkGameConditions()) {
+        while (match.checkGameConditions()) {
             match.displayBoard();
-            switch(turn) {
+            switch (turn) {
                 case PLAYER1:
                     match.displayShift(match.getJogadores().get(0), input);
                     turn = Turno.PLAYER2;
@@ -25,7 +25,7 @@ public class Jogo{
                     System.out.println("-----------------------------");
                     System.out.println("| Turno dos inimigos de P1  |");
                     System.out.println("-----------------------------");
-                    for(Inimigo inimigo: p1.getSetor().getInimigos()) {
+                    for (Inimigo inimigo : p1.getSetor().getInimigos()) {
                         match.displayShift(inimigo, p1);
                     }
                     turn = Turno.ENEMIES2;
@@ -34,7 +34,7 @@ public class Jogo{
                     System.out.println("-----------------------------");
                     System.out.println("| Turno dos inimigos de P2  |");
                     System.out.println("-----------------------------");
-                    for(Inimigo inimigo: p2.getSetor().getInimigos()) {
+                    for (Inimigo inimigo : p2.getSetor().getInimigos()) {
                         match.displayShift(inimigo, p2);
                     }
                     turn = Turno.PLAYER1;
@@ -50,4 +50,3 @@ public class Jogo{
         input.close();
     }
 }
-
