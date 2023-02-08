@@ -89,7 +89,7 @@ public class PartidaVirus {
      */
     public void displayShift(Jogador player, Scanner input) {
         performMovement(player, input);
-        if(player.setor.isFonte())
+        if (player.setor.isFonte())
             return;
         performAction(player, input);
     }
@@ -101,15 +101,7 @@ public class PartidaVirus {
      * @param alvoInimigo
      */
     public void displayShift(Inimigo inimigo, Jogador alvoInimigo) {
-        Random random = new Random();
-        int num;
-
-        if (inimigo.isVivo()) {
-            num = random.nextInt(6) + 1;
-            // Caso o número aleatório seja par
-            if ((num % 2) == 0)
-                inimigo.atacar(alvoInimigo);
-        }
+        inimigo.atacar(alvoInimigo);
     }
 
     /**
