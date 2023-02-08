@@ -7,6 +7,11 @@ public class Jogo{
         Jogador p1 = new Jogador(2,6,0,null);
         Jogador p2 = new Suporte(1,7,0,null);
         Turno turn = Turno.PLAYER1;
+        LogHandler log = new LogHandler("./gameLog.txt");
+
+        if(!log.logFileExist())
+            log.createLogFile();
+
 
         match.startGame(p1, p2);
 
@@ -44,6 +49,11 @@ public class Jogo{
                     break;
             }
         }
+
+        if(p1.setor.isFonte())
+            log.logFileManipulation(p1.pontuacao);
+        else 
+            log.logFileManipulation(p2.pontuacao);
 
         match.displayGameResult();
 
