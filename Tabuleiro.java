@@ -527,16 +527,13 @@ public class Tabuleiro {
         // Variáveis auxiliares para legibilidade
         Jogador p1 = p.get(0);
         Jogador p2 = p.get(1);
-        if (p1.getSetor() == p2.getSetor()) {
-            return "|  " + p1.getAtk() + "/" + p1.getDef() + "   " + p2.getAtk() + "/" + p2.getDef() + "  |";
-        } else {
-            if (i == 1) {
-                return "|  " + p1.getAtk() + "/" + p1.getDef() + "        |";
-            } else if (i == 2) {
-                return "|  " + p2.getAtk() + "/" + p2.getDef() + "        |";
-            }
-        }
-        return "";
+        boolean arePlayersTogether = (p1.getSetor() == p2.getSetor());
+        String pAttr[] = {
+                (p1.getAtk() + "/" + sizedString(Integer.toString(p1.getDef()), 3)),
+                (p2.getAtk() + "/" + sizedString(Integer.toString(p2.getDef()), 3))
+        };
+
+        return "|  " + (arePlayersTogether ? pAttr[0] + " " + pAttr[1] : pAttr[i - 1] + "      ") + "|";
     }
 
     /**
