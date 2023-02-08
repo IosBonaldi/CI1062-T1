@@ -299,7 +299,7 @@ public class Tabuleiro {
 
         // Checa se não há mais inimigos no Setor, se o novo Setor é válido e se há uma
         // PORTA para o Jogador passar
-        if (curSection.getInimigos().isEmpty() && newSection != null
+        if (!curSection.isThereEnemyAlive() && newSection != null
                 && constructions.get(d.ordinal()) == Construcao.PORTA) {
             j.setSetor(newSection);
             newSection.setVisitado(true);
