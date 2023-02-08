@@ -3,6 +3,11 @@ import java.util.*;
 public class Jogo {
     public static void main(String args[]) {
         Scanner input = new Scanner(System.in);
+        LogHandler log = new LogHandler("./gameLog.txt");
+
+        if(!log.logFileExist())
+            log.createLogFile();
+
         PartidaVirus match = new PartidaVirus(5, 5);
 
         match.startGame();
@@ -44,6 +49,11 @@ public class Jogo {
                     break;
             }
         }
+
+        if(p1.setor.isFonte())
+            log.logFileManipulation(p1.pontuacao);
+        else 
+            log.logFileManipulation(p2.pontuacao);
 
         match.displayGameResult();
 
