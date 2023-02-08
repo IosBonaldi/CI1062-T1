@@ -88,34 +88,10 @@ public class PartidaVirus {
      * @param input
      */
     public void displayShift(Jogador player, Scanner input) {
-
-        /* Turno do Player 1 */
-        if (!(player instanceof Suporte)) {
-
-            /*
-             * Movimentação
-             * Se não tem inimigo vivo deixa movimentar
-             * Se ele movimentar, mostra o novo Setor e depois parte para as ações
-             */
-            performMovement(player, input);
-
-            /* Ações */
-            performAction(player, input);
-
-        } else {
-            /* Turno do Player 2 */
-            Suporte p2 = (Suporte) player;
-
-            /*
-             * Movimentação
-             * Se não tem inimigo vivo deixa movimentar
-             * Se ele movimentar, mostra o novo Setor e depois pede as ações
-             */
-            performMovement(p2, input);
-
-            /* Ações */
-            performAction(p2, input);
-        }
+        performMovement(player, input);
+        if(player.setor.isFonte())
+            return;
+        performAction(player, input);
     }
 
     /**
