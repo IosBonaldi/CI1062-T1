@@ -3,40 +3,21 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class PartidaVirus {
-    /* Atributos */ 
+    /* Atributos */
     private ArrayList<Jogador> jogadores;
     private Tabuleiro tabuleiro;
     private int ciclos;
     private boolean ativo;
 
-    /* Construtores */ 
-    public PartidaVirus() {};
-
-    public PartidaVirus(ArrayList<Jogador> jogadores) {
-        this.setJogadores(jogadores);
-    }
-
-    public PartidaVirus(Tabuleiro tabuleiro, boolean ativo) {
-        this.setTabuleiro(tabuleiro);
+    /* Construtores */
+    public PartidaVirus(int altura, int largura) {
+        this.setTabuleiro(new Tabuleiro(altura, largura));
         this.setCiclos(0);
-        this.setAtivo(ativo);
+        this.setJogadores(new ArrayList<Jogador>());
+        this.setAtivo(true);
     }
 
-    public PartidaVirus(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, boolean ativo) {
-        this.setJogadores(jogadores);
-        this.setTabuleiro(tabuleiro);
-        this.setCiclos(0);
-        this.setAtivo(ativo);
-    }
-
-    public PartidaVirus(ArrayList<Jogador> jogadores, Tabuleiro tabuleiro, int ciclos, boolean ativo) {
-        this.setJogadores(jogadores);
-        this.setTabuleiro(tabuleiro);
-        this.setCiclos(ciclos);
-        this.setAtivo(ativo);
-    }
-
-    /* Métodos get/set */ 
+    /* Métodos get/set */
     public ArrayList<Jogador> getJogadores() {
         return jogadores;
     }
@@ -70,21 +51,25 @@ public class PartidaVirus {
     }
 
     // Outros métodos
-    public void startGame(Jogador p1, Jogador p2) {
-        p1.setSetor(getTabuleiro().getSetor(2, 2));
-        p2.setSetor(getTabuleiro().getSetor(2, 2));
-        getJogadores().add(p1);
-        getJogadores().add(p2);
+    public void startGame() {
+        int iniLine = this.getTabuleiro().getAltura() / 2;
+        int iniColumn = this.getTabuleiro().getLargura() / 2;
+        Setor iniSection = this.getTabuleiro().getSetor(iniLine, iniColumn);
+        iniSection.setVisitado(true);
+        getJogadores().add(new Jogador(iniSection));
+        getJogadores().add(new Suporte(iniSection));
     }
 
     public boolean checkGameConditions() {
-        if((getJogadores().get(0).isVivo()) && (getCiclos() < 25) && (!(getJogadores().get(0).getSetor().isFonte()) && !(getJogadores().get(1).getSetor().isFonte())))
+        if ((getJogadores().get(0).isVivo()) && (getCiclos() < 25)
+                && (!(getJogadores().get(0).getSetor().isFonte()) && !(getJogadores().get(1).getSetor().isFonte())))
             return true;
         return false;
     }
 
     public void displayGameResult() {
-        if((getJogadores().get(0).isVivo() && getJogadores().get(0).getSetor().isFonte()) || (getJogadores().get(1).isVivo() && getJogadores().get(1).getSetor().isFonte())) {
+        if ((getJogadores().get(0).isVivo() && getJogadores().get(0).getSetor().isFonte())
+                || (getJogadores().get(1).isVivo() && getJogadores().get(1).getSetor().isFonte())) {
             System.out.printf("#################################\n");
             System.out.printf("### You have won the game!!! ###\n");
             System.out.printf("#################################\n");
@@ -96,7 +81,9 @@ public class PartidaVirus {
     }
 
     /**
-     * Chama o turno dos jogadores e mostra as respectivas opções de movimentação/ação.
+     * Chama o turno dos jogadores e mostra as respectivas opções de
+     * movimentação/ação.
+     * 
      * @param player
      * @param input
      */
@@ -109,6 +96,7 @@ public class PartidaVirus {
 
     /**
      * Sobrecarga de métodos porque os parâmetros pra inimigos eh diferente.
+     * 
      * @param inimigo
      * @param alvoInimigo
      */
@@ -136,26 +124,28 @@ public class PartidaVirus {
 
     /**
      * Exibe as opções de ação.
+     * 
      * @param player
      */
     public void displayActionOptions(Jogador player) {
-        if(!(player instanceof Suporte)) {
+        if (!(player instanceof Suporte)) {
             System.out.printf("What do you want to do P1:\n");
         } else {
             System.out.printf("What do you want to do P2:\n");
         }
-        if(!(player.getSetor().isThereEnemyAlive())) {
+        if (!(player.getSetor().isThereEnemyAlive())) {
             System.out.printf("    b- search\n");
         } else {
             System.out.printf("    a- attack\n");
             System.out.printf("    b- search\n");
-        }    
+        }
         if (player instanceof Suporte)
             System.out.printf("    c- heal\n");
     }
 
     /**
      * Valida a entrada de direção.
+     * 
      * @param entrada
      * @return
      */
@@ -177,17 +167,18 @@ public class PartidaVirus {
                 return null;
         }
     }
-    
+
     public void displayBoard() {
         System.out.println(getTabuleiro().strTabuleiro(getJogadores()));
     }
 
     /**
      * Exibe quais inimigos o player pode atacar.
+     * 
      * @param player
      */
-    public void displayEnemiesToAttack(Jogador player) {    
-        String[][] enemiesTexts = {{"a", "First"}, {"b", "Second"}, {"c", "Third"}};
+    public void displayEnemiesToAttack(Jogador player) {
+        String[][] enemiesTexts = { { "a", "First" }, { "b", "Second" }, { "c", "Third" } };
         System.out.println("Who do you want to attack:");
         for (int i = 0; i < player.getSetor().countEnemiesAlive(); i++) {
             System.out.printf("    %s - %s enemy\n", enemiesTexts[i][0], enemiesTexts[i][1]);
@@ -196,34 +187,35 @@ public class PartidaVirus {
 
     /**
      * Retorna true se a entrada eh válida, se não retorna false.
+     * 
      * @param player
      * @param input
      * @param attack
      * @return
      */
     public boolean checkInput(Jogador player, char input, boolean attack) {
-        if(! attack) {
-            if(player.getSetor().isThereEnemyAlive()) {
-                if(!(player instanceof Suporte)) {
-                    if((input == 'a') || (input == 'b'))
+        if (!attack) {
+            if (player.getSetor().isThereEnemyAlive()) {
+                if (!(player instanceof Suporte)) {
+                    if ((input == 'a') || (input == 'b'))
                         return true;
                 } else {
-                    if((input == 'a') || (input == 'b') || (input == 'c'))
+                    if ((input == 'a') || (input == 'b') || (input == 'c'))
                         return true;
                 }
             } else {
-                if(!(player instanceof Suporte)) {
-                    if(input == 'b')
+                if (!(player instanceof Suporte)) {
+                    if (input == 'b')
                         return true;
                 } else {
-                    if((input == 'b') || (input == 'c'))
+                    if ((input == 'b') || (input == 'c'))
                         return true;
                 }
             }
         } else {
-            char[] inputChars = {'a', 'b', 'c'};
+            char[] inputChars = { 'a', 'b', 'c' };
             for (int i = 0; i < player.getSetor().countEnemiesAlive(); i++) {
-                if((input == inputChars[i]))
+                if ((input == inputChars[i]))
                     return true;
             }
         }
@@ -233,33 +225,34 @@ public class PartidaVirus {
 
     /**
      * Realiza as duas ações do player.
+     * 
      * @param player
      * @param input
      */
     public void performAction(Jogador player, Scanner input) {
         char localInput;
-        
+
         for (int i = 0; i < 2; i++) {
             displayActionOptions(player);
             localInput = input.nextLine().charAt(0);
-            while(!checkInput(player, localInput, false)) {
+            while (!checkInput(player, localInput, false)) {
                 System.out.println("Entrada inválida");
                 displayActionOptions(player);
                 localInput = input.nextLine().charAt(0);
             }
-            
+
             if (localInput == 'a') {
-                if(player.getSetor().countEnemiesAlive() > 1) {
+                if (player.getSetor().countEnemiesAlive() > 1) {
                     displayEnemiesToAttack(player);
                     localInput = input.nextLine().charAt(0);
-                    while(!checkInput(player, localInput, true)) {
+                    while (!checkInput(player, localInput, true)) {
                         System.out.println("Entrada inválida");
                         displayEnemiesToAttack(player);
                         localInput = input.nextLine().charAt(0);
                     }
                 }
-                 
-                if(! performAttack(player, localInput))
+
+                if (!performAttack(player, localInput))
                     System.out.println("Ataque falhou!");
             } else if (localInput == 'b') {
                 player.procurar();
@@ -270,7 +263,7 @@ public class PartidaVirus {
                 System.out.printf("    a- P1\n");
                 System.out.printf("    b- P2\n");
                 localInput = input.nextLine().charAt(0);
-                while((localInput != 'a') && (localInput != 'b')) {
+                while ((localInput != 'a') && (localInput != 'b')) {
                     localInput = input.nextLine().charAt(0);
                 }
                 if (localInput == 'a') {
@@ -279,13 +272,14 @@ public class PartidaVirus {
                     sup.curar(sup);
                 }
             }
-            if(i == 0)
+            if (i == 0)
                 System.out.println(this.getTabuleiro().strTabuleiro(jogadores));
         }
     }
 
     /**
      * Verifica se o jogador pode movimentar, se sim, movimenta.
+     * 
      * @param player
      * @param input
      */
@@ -293,7 +287,7 @@ public class PartidaVirus {
         if (!(player.getSetor().isThereEnemyAlive())) {
             Direcao dInput = null;
             while (dInput == null) {
-                if(!(player instanceof Suporte)) {
+                if (!(player instanceof Suporte)) {
                     System.out.printf("Where to go PLAYER 1 (P1):\n");
                 } else {
                     System.out.printf("Where to go PLAYER 2 (P2):\n");
@@ -308,6 +302,7 @@ public class PartidaVirus {
 
     /**
      * Realiza o ataque do player. Se funcionar, retorna true, senão, false.
+     * 
      * @param player
      * @param input
      * @return
@@ -315,15 +310,15 @@ public class PartidaVirus {
     public boolean performAttack(Jogador player, char input) {
         int cont = 1, flag = 1;
 
-        if(input == 'b') {
+        if (input == 'b') {
             flag = 2;
-        } else if(input == 'c') {
+        } else if (input == 'c') {
             flag = 3;
         }
 
-        for(Inimigo enemy: player.getSetor().getInimigos()) {
-            if(enemy.isVivo()) {
-                if(cont == flag)
+        for (Inimigo enemy : player.getSetor().getInimigos()) {
+            if (enemy.isVivo()) {
+                if (cont == flag)
                     return player.atacar(enemy);
                 cont++;
             }

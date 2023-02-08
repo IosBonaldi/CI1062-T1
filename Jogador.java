@@ -6,23 +6,14 @@ public class Jogador extends Personagem {
     protected int vidaMaxima;
 
     public Jogador(Setor setor) {
-        super(2, 6);
-        this.setPontuacao(0);
-        this.setSetor(setor);
-        this.setVidaMaxima(6);
+        this(2, 6, setor);
     }
 
-    public Jogador(int atk, int def, Setor setor, int vidaMaxima) {
+    public Jogador(int atk, int def, Setor setor) {
         super(atk, def);
         this.setPontuacao(0);
         this.setSetor(setor);
-        this.setVidaMaxima(vidaMaxima);
-    }
-
-    public Jogador(int atk, int def, int pontuacao, Setor setor) {
-        super(atk, def);
-        this.setPontuacao(pontuacao);
-        this.setSetor(setor);
+        this.setVidaMaxima(def);
     }
 
     public int getPontuacao() {
@@ -41,7 +32,6 @@ public class Jogador extends Personagem {
         this.setor = setor;
     }
 
-    
     public int getVidaMaxima() {
         return vidaMaxima;
     }
@@ -90,12 +80,12 @@ public class Jogador extends Personagem {
             switch (achado) {
                 case 4:
                     this.setDef(this.getDef() + 1);
-                    this.setVidaMaxima(this.getVidaMaxima()+ 1);
+                    this.setVidaMaxima(this.getVidaMaxima() + 1);
                     break;
 
                 case 5:
                     this.setDef(this.getDef() + 2);
-                    this.setVidaMaxima(this.getVidaMaxima()+ 2);
+                    this.setVidaMaxima(this.getVidaMaxima() + 2);
                     break;
 
                 case 6:
