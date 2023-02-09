@@ -14,6 +14,8 @@ public class Score implements Comparable<Score> {
   }
 
   public void setScore(Integer score) {
+    if (0 > score || score < this.score)
+      throw new IllegalArgumentException();
     this.score = score;
   }
 

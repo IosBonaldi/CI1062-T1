@@ -51,7 +51,7 @@ public class LogHandler {
       try {
         file.createNewFile();
         try (FileWriter fw = new FileWriter(file)) {
-          fw.write("***** ANTIVÍRUS GAME LOG *****");
+          fw.write("***** ANTIVIRUS GAME LOG *****");
           fw.write("\n\n");
         }
       } catch (IOException e) {
