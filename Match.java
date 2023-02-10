@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Match {
@@ -82,7 +83,31 @@ public class Match {
         executeMovement(player, input);
         if (player.section.isSource())
             return;
-        executeAction(player, input);
+
+        displayActionOptions(player);
+        char inputedAction = inputAction(player, input, 3);
+
+        switch (inputedAction) {
+            case 'a':
+                Boolean attackSucceed;
+                if(player.getSection().countEnemiesAlive() > 1){
+                    displayEnemiesToAttack(player);
+                    char inputedAttack = inputAction(player, input, 1);
+                    attackSucceed = executeAttack(player, inputedAttack);
+                }
+                if(!attackSucceed)
+                    System.out.printf("Missed attack!");
+                break;
+            case 'b':
+                player.search();
+                break;
+            case 'c':
+                break;
+            default:
+                break;
+        }
+        
+        executeAction(player, inputAction(player, input));
     }
 
     /**
@@ -163,72 +188,87 @@ public class Match {
      * 
      * @param player
      * @param input
-     * @param attack
+     * @param context diz o contexto em que o checkInput foi chamado. Sendo 1:ataque, 2:curar e 3:outros
      * @return
      */
-    public boolean checkInput(Player player, char input, boolean attack) {
-        if (!attack) {
-            if (player.getSection().existAnEnemyAlive()) {
-                if (!(player instanceof Support)) {
-                    if ((input == 'a') || (input == 'b'))
-                        return true;
-                } else {
-                    if ((input == 'a') || (input == 'b') || (input == 'c'))
-                        return true;
+    public boolean checkInput(Player player, char input, int context) {
+        char [] actions = {'a', 'b', 'c'};
+
+        int charPosition = 0;
+        while(charPosition < actions.length && input != actions[charPosition])
+            charPosition++;
+        /* O input nao eh um caracter valido */
+        if(charPosition == actions.length)
+            return false;
+        
+        /* A posicao a onde o char input colidiu no while define qual eh a letra recebida 
+         * sabendo disse eh possivel usar ela para validar os inputs  
+        */
+        charPosition += 1;
+        switch (context) {
+            case 1:
+                if(charPosition > player.getSection().countEnemiesAlive())
+                    return false;
+                break;
+            case 2:
+                /* Se charPosition + 1 > 2, entao a letra recebida foi a c */
+                if(charPosition > 2)
+                    return false;
+                break;
+            case 3:
+                if(player.getSection().existAnEnemyAlive()) {
+                    if(!(player instanceof Support) && charPosition > 2)
+                        return false;
+                    /* Nao eh necessario testar para o suporte */
+                }else{
+                    if(!(player instanceof Support) && charPosition != 2)
+                        return false;
+                    else if(charPosition != 2 && charPosition != 3)
+                        return false;
                 }
-            } else {
-                if (!(player instanceof Support)) {
-                    if (input == 'b')
-                        return true;
-                } else {
-                    if ((input == 'b') || (input == 'c'))
-                        return true;
-                }
-            }
-        } else {
-            char[] inputChars = { 'a', 'b', 'c' };
-            for (int i = 0; i < player.getSection().countEnemiesAlive(); i++) {
-                if ((input == inputChars[i]))
-                    return true;
-            }
+                break;
+            default:
+                break;
         }
 
-        return false;
+        return true;
     }
 
+
+    /**
+     * Realiza o input da acao e o retorna.
+     * 
+     * @param player
+     * @param input
+     * @param context diz o contexto em que o checkInput foi chamado. Sendo 1:ataque, 2:curar e 3:outros
+     * @return acao recebida
+     */
+    public char inputAction(Player player, Scanner input, int context){
+        char actionInput;
+        actionInput = input.nextLine().charAt(0);
+        while (!checkInput(player, actionInput, context)) {
+            System.out.println("Invalid input");
+            displayActionOptions(player);
+            actionInput = input.nextLine().charAt(0);
+        }
+        return actionInput;
+    }
+
+    public void displayHealOptions(){
+        System.out.printf("Who do you want to heal?\n");
+        System.out.printf("    a- P1\n");
+        System.out.printf("    b- P2\n");
+    }
     /**
      * Realiza as duas ações do player.
      * 
      * @param player
      * @param input
      */
-    public void executeAction(Player player, Scanner input) {
-        char localInput;
-
+    public void executeAction(Player player, Char action) {
         for (int i = 0; i < 2; i++) {
-            displayActionOptions(player);
-            localInput = input.nextLine().charAt(0);
-            while (!checkInput(player, localInput, false)) {
-                System.out.println("Invalid input");
-                displayActionOptions(player);
-                localInput = input.nextLine().charAt(0);
-            }
-
-            if (localInput == 'a') {
-                if (player.getSection().countEnemiesAlive() > 1) {
-                    displayEnemiesToAttack(player);
-                    localInput = input.nextLine().charAt(0);
-                    while (!checkInput(player, localInput, true)) {
-                        System.out.println("Invalid input");
-                        displayEnemiesToAttack(player);
-                        localInput = input.nextLine().charAt(0);
-                    }
-                }
-
-                if (!executeAttack(player, localInput))
-                    System.out.println("Missed attack!");
+            if (action == 'a') {
             } else if (localInput == 'b') {
-                player.search();
             } else if (localInput == 'c') {
                 Support sup = (Support) player;
 
