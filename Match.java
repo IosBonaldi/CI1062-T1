@@ -80,21 +80,28 @@ public class Match {
      * @param input
      */
     public void callTurn(Player player, Scanner input) {
-        executeMovement(player, input);
+        System.out.println(this.getBoard().strTabuleiro(players));
+        callMovement(player, input);
         if (player.section.isSource())
             return;
+        
+        System.out.println(this.getBoard().strTabuleiro(players));
+        callAction(player, input);
+        System.out.println(this.getBoard().strTabuleiro(players));
+        callAction(player, input);
+    }
 
+    
+    public void callAction(Player player, Scanner input) {
         displayActionOptions(player);
         char inputedAction = inputAction(player, input, 3);
 
         switch (inputedAction) {
             case 'a':
                 Boolean attackSucceed;
-                if(player.getSection().countEnemiesAlive() > 1){
-                    displayEnemiesToAttack(player);
-                    char inputedAttack = inputAction(player, input, 1);
-                    attackSucceed = executeAttack(player, inputedAttack);
-                }
+                displayEnemiesToAttack(player);
+                char inputedAttack = inputAction(player, input, 1);
+                attackSucceed = executeAttack(player, inputedAttack);
                 if(!attackSucceed)
                     System.out.printf("Missed attack!");
                 break;
@@ -102,12 +109,13 @@ public class Match {
                 player.search();
                 break;
             case 'c':
+                displayHealOptions();
+                char inputedHeal = inputAction(player, input, 2);
+                executeHeal((Support)player, inputedHeal);
                 break;
             default:
                 break;
         }
-        
-        executeAction(player, inputAction(player, input));
     }
 
     /**
@@ -259,35 +267,12 @@ public class Match {
         System.out.printf("    a- P1\n");
         System.out.printf("    b- P2\n");
     }
-    /**
-     * Realiza as duas ações do player.
-     * 
-     * @param player
-     * @param input
-     */
-    public void executeAction(Player player, Char action) {
-        for (int i = 0; i < 2; i++) {
-            if (action == 'a') {
-            } else if (localInput == 'b') {
-            } else if (localInput == 'c') {
-                Support sup = (Support) player;
 
-                System.out.printf("Who do you want to heal?\n");
-                System.out.printf("    a- P1\n");
-                System.out.printf("    b- P2\n");
-                localInput = input.nextLine().charAt(0);
-                while ((localInput != 'a') && (localInput != 'b')) {
-                    localInput = input.nextLine().charAt(0);
-                }
-                if (localInput == 'a') {
-                    sup.heal(players.get(0));
-                } else {
-                    sup.heal(sup);
-                }
-            }
-            if (i == 0)
-                System.out.println(this.getBoard().strTabuleiro(players));
-        }
+    public void executeHeal(Support playerHealing, char playerHealed) {
+        if(playerHealed == 'a')
+            playerHealing.heal(players.get(0));
+        else
+            playerHealing.heal(players.get(1));
     }
 
     /**
@@ -296,7 +281,7 @@ public class Match {
      * @param player
      * @param input
      */
-    public void executeMovement(Player player, Scanner input) {
+    public void callMovement(Player player, Scanner input) {
         if (!(player.getSection().existAnEnemyAlive())) {
             Direction dirInput = null;
             while (dirInput == null) {
@@ -309,7 +294,6 @@ public class Match {
                 dirInput = validateDirectionInput(input.nextLine().charAt(0));
             }
             this.getBoard().movePlayer(player, dirInput);
-            System.out.println(this.getBoard().strTabuleiro(players));
         }
     }
 
