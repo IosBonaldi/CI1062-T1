@@ -1,8 +1,8 @@
-public abstract class Personagem {
+public abstract class Character {
     protected int atk;
     protected int def;
 
-    public Personagem(int atk, int def) {
+    public Character(int atk, int def) {
         this.setAtk(atk);
         this.setDef(def);
     }
@@ -23,9 +23,9 @@ public abstract class Personagem {
         this.def = def;
     }
 
-    public boolean isVivo() {
+    public boolean isAlive() {
         return (this.getDef() > 0);
     }
 
-    public abstract boolean atacar(Personagem alvo);
+    public abstract boolean attack(Character target);
 }
