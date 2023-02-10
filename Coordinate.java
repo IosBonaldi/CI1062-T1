@@ -12,8 +12,8 @@ public class Coordinate {
     }
 
     public void setRow(int row) {
-        // if (row < 0)
-        // throw new IllegalArgumentException();
+        if (row < 0)
+            throw new IllegalArgumentException();
         this.row = row;
     }
 
@@ -22,8 +22,8 @@ public class Coordinate {
     }
 
     public void setColumn(int column) {
-        // if (column < 0)
-        // throw new IllegalArgumentException();
+        if (column < 0)
+            throw new IllegalArgumentException();
         this.column = column;
     }
 }
