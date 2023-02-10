@@ -79,8 +79,10 @@ public class Match {
      * @param input
      */
     public void callTurn(Player player, Scanner input) {
+        if(player.section.isSource() || !player.isAlive())
+            return;
         executeMovement(player, input);
-        if (player.section.isSource())
+        if(player.section.isSource() || !player.isAlive())
             return;
         executeAction(player, input);
     }
