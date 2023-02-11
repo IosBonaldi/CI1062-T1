@@ -130,20 +130,19 @@ public class Board {
             ArrayList<Coordinate> visitedSections) {
         ArrayList<Coordinate> randomCoordinates = new ArrayList<Coordinate>();
         Random rand = new Random();
+        
+        int row = coord.getRow();
+        int column = coord.getColumn();
 
-        Coordinate coord1 = new Coordinate(coord.getRow() + 1, coord.getColumn());
-        Coordinate coord2 = new Coordinate(coord.getRow() - 1, coord.getColumn());
-        Coordinate coord3 = new Coordinate(coord.getRow(), coord.getColumn() + 1);
-        Coordinate coord4 = new Coordinate(coord.getRow(), coord.getColumn() - 1);
-
-        if (isCoordinateValid(coord1) && !isSectionVisited(coord1, visitedSections))
-            randomCoordinates.add(coord1);
-        if (isCoordinateValid(coord2) && !isSectionVisited(coord2, visitedSections))
-            randomCoordinates.add(coord2);
-        if (isCoordinateValid(coord3) && !isSectionVisited(coord3, visitedSections))
-            randomCoordinates.add(coord3);
-        if (isCoordinateValid(coord4) && !isSectionVisited(coord4, visitedSections))
-            randomCoordinates.add(coord4);
+        /* Gera as coordenadas */
+        if (isCoordinateValid(row + 1, column) && !isSectionVisited(row + 1, column, visitedSections))
+            randomCoordinates.add(new Coordinate(row + 1, column));
+        if (isCoordinateValid(row - 1, column) && !isSectionVisited(row - 1, column, visitedSections))
+            randomCoordinates.add(new Coordinate(row - 1, column));
+        if (isCoordinateValid(row, column + 1) && !isSectionVisited(row, column + 1, visitedSections))
+            randomCoordinates.add(new Coordinate(row, column + 1));
+        if (isCoordinateValid(row, column - 1) && !isSectionVisited(row, column - 1, visitedSections))
+            randomCoordinates.add(new Coordinate(row, column - 1));
 
         /* Embaralha as coordenadas */
         if (randomCoordinates.size() > 1) {
@@ -168,10 +167,10 @@ public class Board {
      * @param visitedSections
      * @return
      */
-    private boolean isSectionVisited(Coordinate coord, ArrayList<Coordinate> visitedSections) {
+    private boolean isSectionVisited(int row, int column, ArrayList<Coordinate> visitedSections) {
         for (int i = 0; i < visitedSections.size(); i++) {
             Coordinate aux = visitedSections.get(i);
-            if ((aux.getRow() == coord.getRow()) && (aux.getColumn() == coord.getColumn()))
+            if ((aux.getRow() == row) && (aux.getColumn() == column))
                 return true;
         }
         return false;
@@ -184,10 +183,10 @@ public class Board {
      * @param coord
      * @return
      */
-    private boolean isCoordinateValid(Coordinate coord) {
-        if (coord.getRow() >= height || coord.getRow() < 0)
+    private boolean isCoordinateValid(int row, int column) {
+        if (row >= height || row < 0)
             return false;
-        if (coord.getColumn() >= width || coord.getColumn() < 0)
+        if (column >= width || column < 0)
             return false;
 
         return true;
