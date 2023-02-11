@@ -91,7 +91,13 @@ public class Match {
         callAction(player, input);
     }
 
-    
+    /**
+     * 
+     * Chama um acao. 
+     * 
+     * @param player
+     * @param input
+     */
     public void callAction(Player player, Scanner input) {
         displayActionOptions(player);
         char inputedAction = inputAction(player, input, 3);
@@ -197,7 +203,7 @@ public class Match {
      * @param player
      * @param input
      * @param context diz o contexto em que o checkInput foi chamado. Sendo 1:ataque, 2:curar e 3:outros
-     * @return
+     * @return True se o inpute eh valido, do contrario false
      */
     public boolean checkInput(Player player, char input, int context) {
         char [] actions = {'a', 'b', 'c'};
