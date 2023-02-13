@@ -47,9 +47,9 @@ public class Game {
                             if(e.isAlive())
                                 e.attack(p2);
                         }
-                        match.increaseCycles();
                     }
                     turn = Turn.PLAYER1;
+                    match.increaseCycles();
                     break;
                 default:
                     break;
