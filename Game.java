@@ -28,7 +28,6 @@ public class Game {
                     break;
                 case ENEMIES1:
                     if(p1.getSection().countEnemiesAlive() != 0) {
-
                         System.out.println("-----------------------------");
                         System.out.println("|      P1 enemy turn        |");
                         System.out.println("-----------------------------");
