@@ -33,18 +33,20 @@ public class Game {
                         System.out.println("|      P1 enemy turn        |");
                         System.out.println("-----------------------------");
                         for (Enemy e : p1.getSection().getEnemies()) {
-                            e.attack(p1);
+                            if(e.isAlive())
+                                e.attack(p1);
                         }
                     }
                     turn = Turn.ENEMIES2;
                     break;
                 case ENEMIES2:
-                    if(p1.getSection().countEnemiesAlive() != 0) {
+                    if(p2.getSection().countEnemiesAlive() != 0) {
                         System.out.println("-----------------------------");
                         System.out.println("|      P2 enemy turn        |");
                         System.out.println("-----------------------------");
                         for (Enemy e : p2.getSection().getEnemies()) {
-                            e.attack(p2);
+                            if(e.isAlive())
+                                e.attack(p2);
                         }
                         match.increaseCycles();
                     }
