@@ -80,11 +80,12 @@ public class Match {
      * @param input
      */
     public void callTurn(Player player, Scanner input) {
+        if(!player.isAlive())
+            return;
         System.out.println(this.getBoard().strTabuleiro(players));
         callMovement(player, input);
-        if (player.section.isSource())
+        if(player.section.isSource())
             return;
-        
         System.out.println(this.getBoard().strTabuleiro(players));
         callAction(player, input);
         System.out.println(this.getBoard().strTabuleiro(players));
