@@ -75,7 +75,7 @@ public class Player extends Character {
      * Realiza a procura no setor, podendo aleatorimente incorrer em incremento de
      * vida ao jogador ou decremento dos inimigos.
      */
-    public void search() {
+    public int search() {
         // Impede ação em setores privados
         if (this.getSection().getType() != SectionType.PRIVATE) {
             // Gera uma constante de procura aleatória entre 1 e 6
@@ -86,12 +86,12 @@ public class Player extends Character {
                 case 4:
                     this.setDef(this.getDef() + 1);
                     this.setMaxDef(this.getMaxDef() + 1);
-                    break;
+                    return 1;
 
                 case 5:
                     this.setDef(this.getDef() + 2);
                     this.setMaxDef(this.getMaxDef() + 2);
-                    break;
+                    return 2;
 
                 case 6:
                     for (Enemy e : this.getSection().getEnemies()) {
@@ -105,11 +105,13 @@ public class Player extends Character {
                             }
                         }
                     }
-                    break;
+                    return 3;
 
                 default:
-                    break;
+                    return 0;
             }
         }
+
+        return 0;
     }
 }

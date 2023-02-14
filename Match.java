@@ -122,7 +122,27 @@ public class Match {
                     System.out.printf("Missed attack!");
                 break;
             case 'b':
-                player.search();
+                switch (player.search()) {
+                    case 0:
+                        System.out.println("Your search has no effect!");
+                        break;
+
+                    case 1:
+                        System.out.println("You gained 1 defense point for your search!");
+                        break;
+
+                    case 2:
+                        System.out.println("You gained 2 defense points for your search!");
+                        break;
+
+                    case 3:
+                        System.out.println("Your search took 1 point of defense from all enemies!");
+                        break;
+
+                    default:
+                        break;
+                }
+
                 break;
             case 'c':
                 displayHealOptions();
@@ -169,7 +189,8 @@ public class Match {
                     System.out.printf("    a- attack\n");
                     System.out.printf("    b- search\n");
                 }
-                if (player instanceof Support)
+                if (player instanceof Support && (player.getDef() < player.getMaxDef() || (this.getPlayers().get(0)
+                        .getDef() < this.getPlayers().get(0).getMaxDef() && areThePlayersInTheSameSection())))
                     System.out.printf("    c- heal\n");
                 break;
 
@@ -228,7 +249,7 @@ public class Match {
      * @param input
      * @param context diz o contexto em que o checkInput foi chamado. Sendo
      *                1:ataque, 2:curar e 3:outros
-     * @return True se o inpute eh valido, do contrario false
+     * @return True se o input eh valido, do contrario false
      */
     private boolean checkInput(Player player, char input, int context) {
         char[] actions = { 'a', 'b', 'c' };
@@ -255,10 +276,17 @@ public class Match {
                 /* Se charPosition + 1 > 2, entao a letra recebida foi a c */
                 if (charPosition > 2)
                     return false;
-                if (charPosition == 1 && !areThePlayersInTheSameSection())
+                if (charPosition == 1 && !areThePlayersInTheSameSection()
+                        && (player.getDef() == player.getMaxDef() || this.getPlayers().get(0).getDef() == this
+                                .getPlayers().get(0).getMaxDef()))
                     return false;
                 break;
             case 3:
+                if (charPosition == 3
+                        && (player.getDef() == player.getMaxDef() || this.getPlayers().get(0).getDef() == this
+                                .getPlayers().get(0).getMaxDef())) {
+                    return false;
+                }
                 if (player.getSection().existAnEnemyAlive()) {
                     if (!(player instanceof Support) && charPosition > 2)
                         return false;
@@ -310,9 +338,10 @@ public class Match {
 
     private void displayHealOptions() {
         System.out.printf("Who do you want to heal?\n");
-        if (areThePlayersInTheSameSection())
+        if (areThePlayersInTheSameSection() && this.getPlayers().get(0).getDef() < this.getPlayers().get(0).getMaxDef())
             System.out.printf("    a- P1\n");
-        System.out.printf("    b- P2\n");
+        if (this.getPlayers().get(1).getDef() < this.getPlayers().get(1).getMaxDef())
+            System.out.printf("    b- P2\n");
     }
 
     private void executeHeal(Support playerHealing, char playerHealed) {
