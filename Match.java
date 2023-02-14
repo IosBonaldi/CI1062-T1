@@ -152,7 +152,7 @@ public class Match {
             System.out.printf("    a- attack\n");
             System.out.printf("    b- search\n");
         }
-        if (player instanceof Support)
+        if (player instanceof Support && areThePlayersInTheSameSection())
             System.out.printf("    c- heal\n");
     }
 
@@ -231,7 +231,9 @@ public class Match {
                     return false;
                 break;
             case 3:
-                if(player.getSection().existAnEnemyAlive()) {
+                if(!areThePlayersInTheSameSection() && charPosition == 3) {
+                    return false;
+                }else if(player.getSection().existAnEnemyAlive()) {
                     if(!(player instanceof Support) && charPosition > 2)
                         return false;
                     /* Nao eh necessario testar para o suporte */
@@ -280,6 +282,11 @@ public class Match {
             playerHealing.heal(players.get(0));
         else
             playerHealing.heal(players.get(1));
+    }
+
+
+    private Boolean areThePlayersInTheSameSection() {
+        return getPlayers().get(0).section.equals(getPlayers().get(1).section);
     }
 
     /**
