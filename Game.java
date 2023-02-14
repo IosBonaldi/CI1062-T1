@@ -28,11 +28,11 @@ public class Game {
             match.displayBoard();
             switch (turn) {
                 case PLAYER1:
-                    match.callTurn(match.getPlayers().get(0), input);
+                    match.callTurn(p1, input);
                     turn = Turn.PLAYER2;
                     break;
                 case PLAYER2:
-                    match.callTurn(match.getPlayers().get(1), input);
+                    match.callTurn(p2, input);
                     turn = Turn.ENEMIES1;
                     break;
                 case ENEMIES1:
