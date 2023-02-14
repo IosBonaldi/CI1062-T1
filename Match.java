@@ -70,6 +70,17 @@ public class Match {
         }
     }
 
+    public void displayHighestScores(Scanner input, LogHandler handler) {
+        System.out.println("\nDo you want to see the highest scores so far? Y/N");
+        char in = input.next().charAt(0);
+        while (in != 'Y' && in != 'y' && in != 'N' && in != 'n') {
+            System.out.println("Invalid input. Only Y/y or N/n, please.");
+            in = input.next().charAt(0);
+        }
+
+        System.out.println((in == 'Y' || in == 'y') ? "\nHIGHEST SCORES\n" + handler.topTenToString() : "Goodbye!");
+    }
+
     /**
      * 
      * Chama o turno dos jogadores e mostra as respectivas opções de
@@ -159,13 +170,13 @@ public class Match {
                     System.out.printf("    b- search\n");
                 }
                 if (player instanceof Support)
-                    System.out.printf("    c- heal\n");   
+                    System.out.printf("    c- heal\n");
                 break;
-        
+
             default:
                 break;
         }
-            
+
     }
 
     /**
@@ -244,12 +255,12 @@ public class Match {
                 /* Se charPosition + 1 > 2, entao a letra recebida foi a c */
                 if (charPosition > 2)
                     return false;
-                if(charPosition == 1 && !areThePlayersInTheSameSection())
+                if (charPosition == 1 && !areThePlayersInTheSameSection())
                     return false;
                 break;
             case 3:
-                if(player.getSection().existAnEnemyAlive()) {
-                    if(!(player instanceof Support) && charPosition > 2)
+                if (player.getSection().existAnEnemyAlive()) {
+                    if (!(player instanceof Support) && charPosition > 2)
                         return false;
                     /* Nao eh necessario testar para o suporte */
                 } else {
@@ -299,7 +310,7 @@ public class Match {
 
     public void displayHealOptions() {
         System.out.printf("Who do you want to heal?\n");
-        if(areThePlayersInTheSameSection())
+        if (areThePlayersInTheSameSection())
             System.out.printf("    a- P1\n");
         System.out.printf("    b- P2\n");
     }

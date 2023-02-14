@@ -66,12 +66,13 @@ public class Game {
             }
         }
 
-        if (p1.section.isSource())
+        if (p1.section.isSource() || !p1.isAlive())
             log.logFileManipulation(p1.score.getPoints());
         else
             log.logFileManipulation(p2.score.getPoints());
 
         match.displayGameResult();
+        match.displayHighestScores(input, log);
 
         input.close();
     }
