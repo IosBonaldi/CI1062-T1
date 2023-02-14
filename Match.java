@@ -82,11 +82,10 @@ public class Match {
     public void callTurn(Player player, Scanner input) {
         if(!player.isAlive())
             return;
-        System.out.println(this.getBoard().strTabuleiro(players));
-        callMovement(player, input);
+        if(callMovement(player, input))
+            System.out.println(this.getBoard().strTabuleiro(players));
         if(player.section.isSource())
             return;
-        System.out.println(this.getBoard().strTabuleiro(players));
         callAction(player, input);
         System.out.println(this.getBoard().strTabuleiro(players));
         callAction(player, input);
@@ -287,8 +286,9 @@ public class Match {
      * 
      * @param player
      * @param input
+     * @return retorna true se um movimento foi realizado, do contrario false 
      */
-    public void callMovement(Player player, Scanner input) {
+    public boolean callMovement(Player player, Scanner input) {
         if (!(player.getSection().existAnEnemyAlive())) {
             Direction dirInput = null;
             while (dirInput == null) {
@@ -301,7 +301,9 @@ public class Match {
                 dirInput = validateDirectionInput(input.nextLine().charAt(0));
             }
             this.getBoard().movePlayer(player, dirInput);
+            return true;
         }
+        return false;
     }
 
     /**
