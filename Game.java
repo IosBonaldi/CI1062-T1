@@ -26,7 +26,6 @@ public class Game {
         Turn turn = Turn.PLAYER1;
 
         while (match.checkGameConditions()) {
-            match.displayBoard();
             switch (turn) {
                 case PLAYER1:
                     match.callTurn(p1, input);

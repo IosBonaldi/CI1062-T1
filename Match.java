@@ -90,6 +90,7 @@ public class Match {
      * @param input
      */
     public void callTurn(Player player, Scanner input) {
+        System.out.println(getBoard().strTabuleiro(getPlayers()));
         if (!player.isAlive())
             return;
         if (callMovement(player, input))
@@ -225,10 +226,6 @@ public class Match {
             default:
                 return null;
         }
-    }
-
-    public void displayBoard() {
-        System.out.println(getBoard().strTabuleiro(getPlayers()));
     }
 
     /**
