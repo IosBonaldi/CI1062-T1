@@ -97,7 +97,7 @@ public class Match {
      * @param player
      * @param input
      */
-    public void callAction(Player player, Scanner input) {
+    private void callAction(Player player, Scanner input) {
         displayActionOptions(player, 3);
         char inputedAction = inputAction(player, input, 3);
 
@@ -126,7 +126,7 @@ public class Match {
     /**
      * Exibe as opções de movimento.
      */
-    public void displayMovementOptions() {
+    private void displayMovementOptions() {
         System.out.printf("    U- Up\n");
         System.out.printf("    D- Down\n");
         System.out.printf("    L- Left\n");
@@ -138,7 +138,7 @@ public class Match {
      * 
      * @param player
      */
-    public void displayActionOptions(Player player, int context) {
+    private void displayActionOptions(Player player, int context) {
         switch (context) {
             case 1:
                 displayEnemiesToAttack(player);
@@ -174,7 +174,7 @@ public class Match {
      * @param input
      * @return
      */
-    public Direction convertCharToDirection(char input) {
+    private Direction convertCharToDirection(char input) {
         switch (input) {
             case 'U':
                 return Direction.UP;
@@ -202,7 +202,7 @@ public class Match {
      * 
      * @param player
      */
-    public void displayEnemiesToAttack(Player player) {
+    private void displayEnemiesToAttack(Player player) {
         String[][] enemiesTexts = { { "a", "First" }, { "b", "Second" }, { "c", "Third" } };
         System.out.println("Who do you want to attack:");
         for (int i = 0; i < player.getSection().countEnemiesAlive(); i++) {
@@ -219,7 +219,7 @@ public class Match {
      *                1:ataque, 2:curar e 3:outros
      * @return True se o inpute eh valido, do contrario false
      */
-    public boolean checkInput(Player player, char input, int context) {
+    private boolean checkInput(Player player, char input, int context) {
         char[] actions = { 'a', 'b', 'c' };
 
         int charPosition = 0;
@@ -275,7 +275,7 @@ public class Match {
      *                1:ataque, 2:curar e 3:outros
      * @return acao recebida
      */
-    public char inputAction(Player player, Scanner input, int context) {
+    private char inputAction(Player player, Scanner input, int context) {
         char actionInput;
         actionInput = input.nextLine().charAt(0);
         while (!checkInput(player, actionInput, context)) {
@@ -297,14 +297,14 @@ public class Match {
         return actionInput;
     }
 
-    public void displayHealOptions() {
+    private void displayHealOptions() {
         System.out.printf("Who do you want to heal?\n");
         if(areThePlayersInTheSameSection())
             System.out.printf("    a- P1\n");
         System.out.printf("    b- P2\n");
     }
 
-    public void executeHeal(Support playerHealing, char playerHealed) {
+    private void executeHeal(Support playerHealing, char playerHealed) {
         if (playerHealed == 'a')
             playerHealing.heal(players.get(0));
         else
@@ -322,7 +322,7 @@ public class Match {
      * @param input
      * @return retorna true se um movimento foi realizado, do contrario false
      */
-    public boolean callMovement(Player player, Scanner input) {
+    private boolean callMovement(Player player, Scanner input) {
         if (!(player.getSection().existAnEnemyAlive())) {
             Direction dirInput = null;
 
@@ -367,7 +367,7 @@ public class Match {
      * @param input
      * @return
      */
-    public boolean executeAttack(Player player, char input) {
+    private boolean executeAttack(Player player, char input) {
         int counter = 1, flag = 1;
 
         if (input == 'b') {
