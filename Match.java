@@ -162,7 +162,7 @@ public class Match {
      * @param input
      * @return
      */
-    public Direction validateDirectionInput(char input) {
+    public Direction convertCharToDirection(char input) {
         switch (input) {
             case 'U':
                 return Direction.UP;
@@ -291,17 +291,37 @@ public class Match {
     public void callMovement(Player player, Scanner input) {
         if (!(player.getSection().existAnEnemyAlive())) {
             Direction dirInput = null;
-            while (dirInput == null) {
+
+            if (!(player instanceof Support)) {
+                System.out.printf("Where to move PLAYER 1 (P1):\n");
+            } else {
+                System.out.printf("Where to move PLAYER 2 (P2):\n");
+            }
+            displayMovementOptions();
+            dirInput = convertCharToDirection(input.nextLine().charAt(0));
+
+            while (!validateMovement(player, dirInput)) {
                 if (!(player instanceof Support)) {
                     System.out.printf("Where to move PLAYER 1 (P1):\n");
                 } else {
                     System.out.printf("Where to move PLAYER 2 (P2):\n");
                 }
                 displayMovementOptions();
-                dirInput = validateDirectionInput(input.nextLine().charAt(0));
+                dirInput = convertCharToDirection(input.nextLine().charAt(0));
             }
             this.getBoard().movePlayer(player, dirInput);
         }
+    }
+
+    private boolean validateMovement(Player player, Direction dir) {
+        if(dir == null) {
+            System.out.println("Hmmm... That's not a valid direction!");
+            return false;
+        }else if (!player.getSection().isADoor(dir)) {
+            System.out.println("Are you trying to pass through a Wall? I don't think you can do that...");
+            return false;
+        }
+        return true;
     }
 
     /**
