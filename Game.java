@@ -27,20 +27,26 @@ public class Game {
                     turn = Turn.ENEMIES1;
                     break;
                 case ENEMIES1:
-                    System.out.println("-----------------------------");
-                    System.out.println("|      P1 enemy turn        |");
-                    System.out.println("-----------------------------");
-                    for (Enemy e : p1.getSection().getEnemies()) {
-                        e.attack(p1);
+                    if(p1.getSection().countEnemiesAlive() != 0) {
+                        System.out.println("-----------------------------");
+                        System.out.println("|      P1 enemy turn        |");
+                        System.out.println("-----------------------------");
+                        for (Enemy e : p1.getSection().getEnemies()) {
+                            if(e.isAlive())
+                                e.attack(p1);
+                        }
                     }
                     turn = Turn.ENEMIES2;
                     break;
                 case ENEMIES2:
-                    System.out.println("-----------------------------");
-                    System.out.println("|      P2 enemy turn        |");
-                    System.out.println("-----------------------------");
-                    for (Enemy e : p2.getSection().getEnemies()) {
-                        e.attack(p2);
+                    if(p2.getSection().countEnemiesAlive() != 0) {
+                        System.out.println("-----------------------------");
+                        System.out.println("|      P2 enemy turn        |");
+                        System.out.println("-----------------------------");
+                        for (Enemy e : p2.getSection().getEnemies()) {
+                            if(e.isAlive())
+                                e.attack(p2);
+                        }
                     }
                     turn = Turn.PLAYER1;
                     match.increaseCycles();
