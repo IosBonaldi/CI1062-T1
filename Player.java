@@ -1,7 +1,8 @@
+import java.time.LocalDateTime;
 import java.util.Random;
 
 public class Player extends Character {
-    protected int score;
+    protected Score score;
     protected Section section;
     protected int maxDef;
 
@@ -11,17 +12,17 @@ public class Player extends Character {
 
     public Player(int atk, int def, Section section) {
         super(atk, def);
-        this.setScore(0);
+        this.score = new Score(0, LocalDateTime.now());
         this.setSection(section);
         this.setMaxDef(def);
     }
 
-    public int getScore() {
+    public Score getScore() {
         return score;
     }
 
-    public void setScore(int score) {
-        if (0 > score || score < this.score)
+    public void setScore(Score score) {
+        if (0 > score.getPoints() || score.getPoints() < this.score.getPoints())
             throw new IllegalArgumentException();
         this.score = score;
     }
@@ -63,7 +64,7 @@ public class Player extends Character {
             // Se eliminar o alvo haverá atualização do atributo vivo do alvo e
             // incremento da pontuação do jogador que matou o vírus;
             if (!target.isAlive()) {
-                this.setScore(this.getScore() + target.getAtk() * 10);
+                this.getScore().setPoints(this.getScore().getPoints() + target.getAtk() * 10);
             }
             return true;
         }
@@ -100,7 +101,7 @@ public class Player extends Character {
                         if (e.isAlive()) {
                             e.setDef(e.getDef() - 1);
                             if (!e.isAlive()) {
-                                this.setScore(this.getScore() + e.getAtk() * 10);
+                                this.getScore().setPoints(this.getScore().getPoints() + e.getAtk() * 10);
                             }
                         }
                     }

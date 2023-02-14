@@ -1,3 +1,4 @@
+
 /*
  * Paradigmas de Programação (CI1062) - Antivírus por um dia
  * Acadêmicos:  Izalorran Oliveira Santos Bonaldi - GRR20210582
@@ -36,24 +37,24 @@ public class Game {
                     turn = Turn.ENEMIES1;
                     break;
                 case ENEMIES1:
-                    if(p1.getSection().countEnemiesAlive() != 0) {
+                    if (p1.getSection().countEnemiesAlive() != 0) {
                         System.out.println("-----------------------------");
                         System.out.println("|      P1 enemy turn        |");
                         System.out.println("-----------------------------");
                         for (Enemy e : p1.getSection().getEnemies()) {
-                            if(e.isAlive())
+                            if (e.isAlive())
                                 e.attack(p1);
                         }
                     }
                     turn = Turn.ENEMIES2;
                     break;
                 case ENEMIES2:
-                    if(p2.getSection().countEnemiesAlive() != 0) {
+                    if (p2.getSection().countEnemiesAlive() != 0) {
                         System.out.println("-----------------------------");
                         System.out.println("|      P2 enemy turn        |");
                         System.out.println("-----------------------------");
                         for (Enemy e : p2.getSection().getEnemies()) {
-                            if(e.isAlive())
+                            if (e.isAlive())
                                 e.attack(p2);
                         }
                     }
@@ -66,9 +67,9 @@ public class Game {
         }
 
         if (p1.section.isSource())
-            log.logFileManipulation(p1.score);
+            log.logFileManipulation(p1.score.getPoints());
         else
-            log.logFileManipulation(p2.score);
+            log.logFileManipulation(p2.score.getPoints());
 
         match.displayGameResult();
 

@@ -116,7 +116,7 @@ public class LogHandler {
 
     String str = this.scores.stream()
         .limit(10)
-        .map(e -> String.format("%-15s", "Score: " + e.getScore()) + " Date: " +
+        .map(e -> String.format("%-15s", "Score: " + e.getPoints()) + " Date: " +
             e.getDate().format(dtFormatter))
         .collect(Collectors.joining("\n"));
 
