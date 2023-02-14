@@ -1,3 +1,12 @@
+/*
+ * Paradigmas de Programação (CI1062) - Antivírus por um dia
+ * Acadêmicos:  Izalorran Oliveira Santos Bonaldi - GRR20210582
+ *              Mateus Oliveira Silva - GRR20205669
+ *              Matheus Luiz de Oliveira Souza - GRR20210259
+ *              Yuri Junqueira Tobias - GRR20211767
+ * Docente: Rachel Carlos Duque Reis
+ * Data: 15/02/23
+ */
 import java.util.*;
 
 public class Game {
