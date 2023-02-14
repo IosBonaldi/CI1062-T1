@@ -99,7 +99,7 @@ public class Match {
      * @param input
      */
     public void callAction(Player player, Scanner input) {
-        displayActionOptions(player);
+        displayActionOptions(player, 3);
         char inputedAction = inputAction(player, input, 3);
 
         switch (inputedAction) {
@@ -139,20 +139,34 @@ public class Match {
      * 
      * @param player
      */
-    public void displayActionOptions(Player player) {
-        if (!(player instanceof Support)) {
-            System.out.printf("What do you want to do P1:\n");
-        } else {
-            System.out.printf("What do you want to do P2:\n");
+    public void displayActionOptions(Player player, int context) {
+        switch (context) {
+            case 1:
+                displayEnemiesToAttack(player);
+                break;
+            case 2:
+                displayHealOptions();
+                break;
+            case 3:
+                if (!(player instanceof Support)) {
+                    System.out.printf("What do you want to do P1:\n");
+                } else {
+                    System.out.printf("What do you want to do P2:\n");
+                }
+                if (!(player.getSection().existAnEnemyAlive())) {
+                    System.out.printf("    b- search\n");
+                } else {
+                    System.out.printf("    a- attack\n");
+                    System.out.printf("    b- search\n");
+                }
+                if (player instanceof Support)
+                    System.out.printf("    c- heal\n");   
+                break;
+        
+            default:
+                break;
         }
-        if (!(player.getSection().existAnEnemyAlive())) {
-            System.out.printf("    b- search\n");
-        } else {
-            System.out.printf("    a- attack\n");
-            System.out.printf("    b- search\n");
-        }
-        if (player instanceof Support && areThePlayersInTheSameSection())
-            System.out.printf("    c- heal\n");
+            
     }
 
     /**
@@ -228,11 +242,11 @@ public class Match {
                 /* Se charPosition + 1 > 2, entao a letra recebida foi a c */
                 if(charPosition > 2)
                     return false;
+                if(charPosition == 1 && !areThePlayersInTheSameSection())
+                    return false;
                 break;
             case 3:
-                if(!areThePlayersInTheSameSection() && charPosition == 3) {
-                    return false;
-                }else if(player.getSection().existAnEnemyAlive()) {
+                if(player.getSection().existAnEnemyAlive()) {
                     if(!(player instanceof Support) && charPosition > 2)
                         return false;
                     /* Nao eh necessario testar para o suporte */
@@ -263,8 +277,19 @@ public class Match {
         char actionInput;
         actionInput = input.nextLine().charAt(0);
         while (!checkInput(player, actionInput, context)) {
-            System.out.println("Invalid input");
-            displayActionOptions(player);
+            switch (context) {
+                case 1:
+                    System.out.println("You can't attack this! Please, enter a valid target.");
+                    break;
+                case 2:
+                    System.out.println("Your heal doesn't seem to work... maybe you could try a valid input?");
+                    break;
+                case 3:
+                    System.out.println("This isn't a valid input!");
+                default:
+                    break;
+            }
+            displayActionOptions(player, context);
             actionInput = input.nextLine().charAt(0);
         }
         return actionInput;
@@ -272,7 +297,8 @@ public class Match {
 
     public void displayHealOptions(){
         System.out.printf("Who do you want to heal?\n");
-        System.out.printf("    a- P1\n");
+        if(areThePlayersInTheSameSection())
+            System.out.printf("    a- P1\n");
         System.out.printf("    b- P2\n");
     }
 
