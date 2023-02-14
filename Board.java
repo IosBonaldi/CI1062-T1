@@ -130,7 +130,7 @@ public class Board {
             ArrayList<Coordinate> visitedSections) {
         ArrayList<Coordinate> randomCoordinates = new ArrayList<Coordinate>();
         Random rand = new Random();
-        
+
         int row = coord.getRow();
         int column = coord.getColumn();
 
@@ -563,8 +563,9 @@ public class Board {
      *         [X, Y].
      */
     private String strPlayerCoordinates(Player p) {
-        return "Setor [" + p.getSection().getCoordinate().getRow() + "," + p.getSection().getCoordinate().getColumn()
-                + "]";
+        String strRow = sizedString(Integer.toString(p.getSection().getCoordinate().getRow()), 2);
+        String strCol = sizedString(Integer.toString(p.getSection().getCoordinate().getColumn()), 2);
+        return "Section[" + strRow + "," + strCol + "]";
     }
 
     /**
@@ -596,7 +597,7 @@ public class Board {
         Section sp1 = p1.getSection();
         Section sp2 = p2.getSection();
         // Coordenadas dos players no zoom
-        String zoomPC = strPlayerCoordinates(p1) + "       " + strPlayerCoordinates(p2);
+        String zoomPC = strPlayerCoordinates(p1) + "    " + strPlayerCoordinates(p2);
         // Construções horizontais superiores no zoom
         String zoomHCT = strZoomHConstruction(sp1, Direction.UP) + "   " + strZoomHConstruction(sp2, Direction.UP);
         // Construções horizontais inferiores no zoom
@@ -616,11 +617,11 @@ public class Board {
         // Texto correspondente ao tabuleiro, inserido linha a linha até a quinta linha
         // do tabuleiro
         res += "-----------------------------\n";
-        res += "|   Antivírus por um dia    |\n";
+        res += "|    Antivirus for a day    |\n";
         res += "-----------------------------\n";
         res += strBoardHeader();
-        res += "1   " + strBoardVConstructions(p, section[0]) + "       " + zoomPC + "\n";
-        res += "    " + strBoardHConstructions(section[0]) + "       " + sp1Type + "           " + sp2Type + "\n";
+        res += "1   " + strBoardVConstructions(p, section[0]) + "      " + zoomPC + "\n";
+        res += "    " + strBoardHConstructions(section[0]) + "      " + sp1Type + "           " + sp2Type + "\n";
         res += "2   " + strBoardVConstructions(p, section[1]) + "     " + zoomHCT + "\n";
         res += "    " + strBoardHConstructions(section[1]) + "     " + zoomEA + "\n";
         res += "3   " + strBoardVConstructions(p, section[2]) + "     |             |   |             |\n";
