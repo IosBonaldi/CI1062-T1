@@ -12,10 +12,9 @@ public class Section {
         this.setType(initializeSectionType());
         this.setCoordinate(coordinate);
         this.setConstructions(initializeConstructions());
-        this.setEnemies(new ArrayList<Enemy>());
+        this.setEnemies(initializeEnemies());
         this.setSource(false);
         this.setVisited(false);
-        initializeEnemies();
     }
 
     public SectionType getType() {
@@ -89,7 +88,7 @@ public class Section {
      * 
      * @return Tipo do setor gerado.
      */
-    public SectionType initializeSectionType() {
+    private SectionType initializeSectionType() {
         int randomNumber = randomNumber(100, 0);
         if (randomNumber >= 40) {
             return SectionType.NORMAL;
@@ -105,7 +104,7 @@ public class Section {
      * 
      * @return
      */
-    public ArrayList<Construction> initializeConstructions() {
+    private ArrayList<Construction> initializeConstructions() {
         int wallsQuantity = 4;
         ArrayList<Construction> constructions = new ArrayList<Construction>();
         for (int i = 0; i < wallsQuantity; i++) {
@@ -117,15 +116,19 @@ public class Section {
     /**
      * Para cada posição é gerado ou não um novo inimigo.
      */
-    public void initializeEnemies() {
+    private ArrayList<Enemy> initializeEnemies() {
+        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+
         for (int position = 0; position < 3; position++) {
             int enemyAtPosition = randomNumber(100, 0);
             if (enemyAtPosition <= 70) {
                 int atkDef = randomNumber(3, 1);
                 Enemy enemy = new Enemy(atkDef, atkDef, position);
-                this.getEnemies().add(enemy);
+                enemies.add(enemy);
             }
         }
+
+        return enemies;
     }
 
     /**
