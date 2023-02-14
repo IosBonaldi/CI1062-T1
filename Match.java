@@ -276,14 +276,16 @@ public class Match {
                 /* Se charPosition + 1 > 2, entao a letra recebida foi a c */
                 if (charPosition > 2)
                     return false;
-                if (charPosition == 1 && !areThePlayersInTheSameSection()
-                        && (player.getDef() == player.getMaxDef() || this.getPlayers().get(0).getDef() == this
-                                .getPlayers().get(0).getMaxDef()))
+                if (charPosition == 2 && this.getPlayers().get(1).getDef() == this
+                        .getPlayers().get(1).getMaxDef())
+                    return false;
+                if (charPosition == 1 && (!areThePlayersInTheSameSection() || this.getPlayers().get(0).getDef() == this
+                        .getPlayers().get(0).getMaxDef()))
                     return false;
                 break;
             case 3:
                 if (charPosition == 3
-                        && (player.getDef() == player.getMaxDef() || this.getPlayers().get(0).getDef() == this
+                        && (player.getDef() == player.getMaxDef() && this.getPlayers().get(0).getDef() == this
                                 .getPlayers().get(0).getMaxDef())) {
                     return false;
                 }
