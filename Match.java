@@ -181,17 +181,9 @@ public class Match {
                 displayHealOptions();
                 break;
             case 3:
-                if (!(player instanceof Support)) {
-                    System.out.printf("What do you want to do P1:\n");
-                } else {
-                    System.out.printf("What do you want to do P2:\n");
-                }
-                if (!(player.getSection().existAnEnemyAlive())) {
-                    System.out.printf("    b- search\n");
-                } else {
-                    System.out.printf("    a- attack\n");
-                    System.out.printf("    b- search\n");
-                }
+                System.out.println("What do you want to do P" + (player instanceof Support ? 2 : 1) + ":");
+                System.out.print(player.getSection().existAnEnemyAlive() ? "    a- attack\n" : "");
+                System.out.print(player.getSection().getType() != SectionType.PRIVATE ? "    b- search\n" : "");
                 if (player instanceof Support && (player.getDef() < player.getMaxDef() || (this.getPlayers().get(0)
                         .getDef() < this.getPlayers().get(0).getMaxDef() && areThePlayersInTheSameSection())))
                     System.out.printf("    c- heal\n");
@@ -288,6 +280,8 @@ public class Match {
                                 .getPlayers().get(0).getMaxDef())) {
                     return false;
                 }
+                if (charPosition == 2 && player.getSection().getType() == SectionType.PRIVATE)
+                    return false;
                 if (player.getSection().existAnEnemyAlive()) {
                     if (!(player instanceof Support) && charPosition > 2)
                         return false;
