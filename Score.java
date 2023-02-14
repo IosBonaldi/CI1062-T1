@@ -1,22 +1,22 @@
 import java.time.LocalDateTime;
 
 public class Score implements Comparable<Score> {
-  private Integer score;
+  private int points;
   private LocalDateTime date;
 
-  public Score(Integer score, LocalDateTime date) {
-    this.setScore(score);
+  public Score(int points, LocalDateTime date) {
+    this.setPoints(points);
     this.setDate(date);
   }
 
-  public Integer getScore() {
-    return score;
+  public int getPoints() {
+    return points;
   }
 
-  public void setScore(Integer score) {
-    if (0 > score || score < this.score)
+  public void setPoints(int score) {
+    if (0 > score || score < this.points)
       throw new IllegalArgumentException();
-    this.score = score;
+    this.points = score;
   }
 
   public LocalDateTime getDate() {
@@ -33,9 +33,9 @@ public class Score implements Comparable<Score> {
    */
   @Override
   public int compareTo(Score arg0) {
-    if (this.getScore() < arg0.getScore())
+    if (this.getPoints() < arg0.getPoints())
       return 1;
-    if (this.getScore() > arg0.getScore())
+    if (this.getPoints() > arg0.getPoints())
       return -1;
     return 0;
   }

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Match {
@@ -80,11 +79,11 @@ public class Match {
      * @param input
      */
     public void callTurn(Player player, Scanner input) {
-        if(!player.isAlive())
+        if (!player.isAlive())
             return;
-        if(callMovement(player, input))
+        if (callMovement(player, input))
             System.out.println(this.getBoard().strTabuleiro(players));
-        if(player.section.isSource())
+        if (player.section.isSource())
             return;
         callAction(player, input);
         System.out.println(this.getBoard().strTabuleiro(players));
@@ -93,7 +92,7 @@ public class Match {
 
     /**
      * 
-     * Chama um acao. 
+     * Chama um acao.
      * 
      * @param player
      * @param input
@@ -108,7 +107,7 @@ public class Match {
                 displayEnemiesToAttack(player);
                 char inputedAttack = inputAction(player, input, 1);
                 attackSucceed = executeAttack(player, inputedAttack);
-                if(!attackSucceed)
+                if (!attackSucceed)
                     System.out.printf("Missed attack!");
                 break;
             case 'b':
@@ -117,7 +116,7 @@ public class Match {
             case 'c':
                 displayHealOptions();
                 char inputedHeal = inputAction(player, input, 2);
-                executeHeal((Support)player, inputedHeal);
+                executeHeal((Support) player, inputedHeal);
                 break;
             default:
                 break;
@@ -216,31 +215,34 @@ public class Match {
      * 
      * @param player
      * @param input
-     * @param context diz o contexto em que o checkInput foi chamado. Sendo 1:ataque, 2:curar e 3:outros
+     * @param context diz o contexto em que o checkInput foi chamado. Sendo
+     *                1:ataque, 2:curar e 3:outros
      * @return True se o inpute eh valido, do contrario false
      */
     public boolean checkInput(Player player, char input, int context) {
-        char [] actions = {'a', 'b', 'c'};
+        char[] actions = { 'a', 'b', 'c' };
 
         int charPosition = 0;
-        while(charPosition < actions.length && input != actions[charPosition])
+        while (charPosition < actions.length && input != actions[charPosition])
             charPosition++;
         /* O input nao eh um caracter valido */
-        if(charPosition == actions.length)
+        if (charPosition == actions.length)
             return false;
-        
-        /* A posicao a onde o char input colidiu no while define qual eh a letra recebida 
-         * sabendo disse eh possivel usar ela para validar os inputs  
-        */
+
+        /*
+         * A posicao a onde o char input colidiu no while define qual eh a letra
+         * recebida
+         * sabendo disse eh possivel usar ela para validar os inputs
+         */
         charPosition += 1;
         switch (context) {
             case 1:
-                if(charPosition > player.getSection().countEnemiesAlive())
+                if (charPosition > player.getSection().countEnemiesAlive())
                     return false;
                 break;
             case 2:
                 /* Se charPosition + 1 > 2, entao a letra recebida foi a c */
-                if(charPosition > 2)
+                if (charPosition > 2)
                     return false;
                 if(charPosition == 1 && !areThePlayersInTheSameSection())
                     return false;
@@ -250,10 +252,10 @@ public class Match {
                     if(!(player instanceof Support) && charPosition > 2)
                         return false;
                     /* Nao eh necessario testar para o suporte */
-                }else{
-                    if(!(player instanceof Support) && charPosition != 2)
+                } else {
+                    if (!(player instanceof Support) && charPosition != 2)
                         return false;
-                    else if(charPosition != 2 && charPosition != 3)
+                    else if (charPosition != 2 && charPosition != 3)
                         return false;
                 }
                 break;
@@ -264,16 +266,16 @@ public class Match {
         return true;
     }
 
-
     /**
      * Realiza o input da acao e o retorna.
      * 
      * @param player
      * @param input
-     * @param context diz o contexto em que o checkInput foi chamado. Sendo 1:ataque, 2:curar e 3:outros
+     * @param context diz o contexto em que o checkInput foi chamado. Sendo
+     *                1:ataque, 2:curar e 3:outros
      * @return acao recebida
      */
-    public char inputAction(Player player, Scanner input, int context){
+    public char inputAction(Player player, Scanner input, int context) {
         char actionInput;
         actionInput = input.nextLine().charAt(0);
         while (!checkInput(player, actionInput, context)) {
@@ -295,7 +297,7 @@ public class Match {
         return actionInput;
     }
 
-    public void displayHealOptions(){
+    public void displayHealOptions() {
         System.out.printf("Who do you want to heal?\n");
         if(areThePlayersInTheSameSection())
             System.out.printf("    a- P1\n");
@@ -303,12 +305,11 @@ public class Match {
     }
 
     public void executeHeal(Support playerHealing, char playerHealed) {
-        if(playerHealed == 'a')
+        if (playerHealed == 'a')
             playerHealing.heal(players.get(0));
         else
             playerHealing.heal(players.get(1));
     }
-
 
     private Boolean areThePlayersInTheSameSection() {
         return getPlayers().get(0).section.equals(getPlayers().get(1).section);
@@ -319,7 +320,7 @@ public class Match {
      * 
      * @param player
      * @param input
-     * @return retorna true se um movimento foi realizado, do contrario false 
+     * @return retorna true se um movimento foi realizado, do contrario false
      */
     public boolean callMovement(Player player, Scanner input) {
         if (!(player.getSection().existAnEnemyAlive())) {
@@ -349,10 +350,10 @@ public class Match {
     }
 
     private boolean validateMovement(Player player, Direction dir) {
-        if(dir == null) {
+        if (dir == null) {
             System.out.println("Hmmm... That's not a valid direction!");
             return false;
-        }else if (!player.getSection().isADoor(dir)) {
+        } else if (!player.getSection().isADoor(dir)) {
             System.out.println("Are you trying to pass through a Wall? I don't think you can do that...");
             return false;
         }
