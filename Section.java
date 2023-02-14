@@ -49,6 +49,12 @@ public class Section {
         this.constructions = construcoes;
     }
 
+    public boolean isADoor(Direction dir) {
+        if(constructions.get(dir.ordinal()) == Construction.DOOR)
+            return true;
+        return false;
+    }
+
     public boolean isSource() {
         return source;
     }
