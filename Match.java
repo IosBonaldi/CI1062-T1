@@ -119,7 +119,9 @@ public class Match {
                 char inputedAttack = inputAction(player, input, 1);
                 attackSucceed = executeAttack(player, inputedAttack);
                 if (!attackSucceed)
-                    System.out.printf("Missed attack!");
+                    System.out.println("Missed attack!");
+                else
+                    System.out.println("Successful attack!");
                 break;
             case 'b':
                 switch (player.search()) {
