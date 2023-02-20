@@ -1,5 +1,3 @@
-Link para o Diagrama de Classes: [LucidChart](<https://lucid.app/lucidchart/f53eec25-f735-47a0-a93c-4304c8a896d4/edit?viewport_loc=-429%2C18%2C3325%2C1286%2C0_0&invitationId=inv_7801bf39-634b-413d-84d7-70109d87997b>)
-
 |![](https://i.imgur.com/JHBC6GF.png)|<p>**Universidade Federal do Paraná** Centro Politécnico</p><p>CI1062 - Paradigmas de Programação CI062 - Técnicas Alternativas de Programação Profª Rachel Reis</p>|
 | - | :-: |
 
